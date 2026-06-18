@@ -5,25 +5,17 @@ interface HeaderProps {
   onSearchChange: (value: string) => void;
 }
 
-export function Header({
-  search,
-  onSearchChange,
-}: HeaderProps) {
+export function Header({ search, onSearchChange }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 bg-gradient-silver border-b border-border/60 backdrop-blur-xl shadow-silver">
       <div className="flex items-center gap-3 px-4 pt-4 pb-2">
         <div className="flex items-center gap-2">
           <div className="relative h-8 w-8 rounded-xl bg-gradient-neon shadow-glow grid place-items-center">
-            <span className="text-primary-foreground font-bold text-sm tracking-tight">
-              S
-            </span>
+            <span className="text-primary-foreground font-bold text-sm tracking-tight">S</span>
             <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/30" />
           </div>
           <h1 className="text-lg font-semibold tracking-tight">
-            Silver
-            <span className="text-neon">
-              Chat
-            </span>
+            Silver<span className="text-neon">Chat</span>
           </h1>
         </div>
         <button
@@ -40,9 +32,7 @@ export function Header({
           <input
             type="search"
             value={search}
-            onChange={(e) =>
-              onSearchChange(e.target.value)
-            }
+            onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search conversations…"
             className="flex-1 bg-transparent outline-hidden text-sm placeholder:text-muted-foreground"
           />
