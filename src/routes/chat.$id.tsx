@@ -1,65 +1,38 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  createFileRoute,
-  Link,
-  notFound,
-} from "@tanstack/react-router";
-import {
-  ArrowLeft,
-  Phone,
-  Video,
-  MoreVertical,
-} from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { ArrowLeft, Phone, Video, MoreVertical } from "lucide-react";
 import { mockChats } from "@/data/mockChats";
 import { getMessages } from "@/data/mockMessages";
-import type { Message } from "@/types/chat";
+import type { Msg } from "@/types/chat";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { ChatComposer } from "@/components/chat/ChatComposer";
 
-export const Route = createFileRoute("/chat/$id")(
-  {
-    head: ({ params }) => {
-      const chat = mockChats.find(
-        (c) => c.id === params.id,
-      );
-      const title = chat
-        ? `${chat.name} — SilverChat`
-        : "SilverChat";
-      return {
-        meta: [
-          { title },
-          {
-            name: "description",
-            content:
-              "Encrypted conversation on SilverChat.",
-          },
-        ],
-      };
-    },
-    loader: ({ params }) => {
-      const chat = mockChats.find(
-        (c) => c.id === params.id,
-      );
-      if (!chat) throw notFound();
-      return { chat };
-    },
-    component: ChatView,
+export const Route = createFileRoute("/chat/$id")({
+  head: ({ params }) => {
+    const chat = mockChats.find((c) => c.id === params.id);
+    const title = chat ? `${chat.name} — SilverChat` : "SilverChat";
+    return {
+      meta: [
+        { title },
+        {
+          name: "description",
+          content: "Encrypted conversation on SilverChat.",
+        },
+      ],
+    };
   },
-);
+  loader: ({ params }) => {
+    const chat = mockChats.find((c) => c.id === params.id);
+    if (!chat) throw notFound();
+    return { chat };
+  },
+  component: ChatView,
+});
 
 function ChatView() {
   const { chat } = Route.useLoaderData();
-  const initial = useMemo(
-    () => getMessages(chat.id),
-    [chat.id],
-  );
-  const [messages, setMessages] =
-    useState<Message[]>(initial);
+  const initial = useMemo(() => getMessages(chat.id), [chat.id]);
+  const [messages, setMessages] = useState<Msg[]>(initial);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -108,17 +81,9 @@ function ChatView() {
               )}
             </div>
             <div className="flex-1 min-w-0 ml-1">
-              <h2 className="text-sm font-semibold truncate">
-                {chat.name}
-              </h2>
+              <h2 className="text-sm font-semibold truncate">{chat.name}</h2>
               <p className="text-[11px] text-muted-foreground truncate">
-                {chat.online ? (
-                  <span className="text-neon">
-                    online
-                  </span>
-                ) : (
-                  "last seen recently"
-                )}
+                {chat.online ? <span className="text-neon">online</span> : "last seen recently"}
               </p>
             </div>
             <button
@@ -152,10 +117,7 @@ function ChatView() {
             </span>
           </div>
           {messages.map((m) => (
-            <MessageBubble
-              key={m.id}
-              message={m}
-            />
+            <MessageBubble key={m.id} message={m} />
           ))}
           <div ref={endRef} />
         </main>
