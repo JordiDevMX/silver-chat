@@ -7,14 +7,25 @@ export interface Chat {
   lastMessage: string;
   time: string;
   unread: number;
-  online?: boolean;
-  pinned?: boolean;
+  status: Msg["status"];
+  isOnline?: boolean;
+  isPinned?: boolean;
+  isMuted?: boolean;
+  isGroup?: boolean;
+  isVerified?: boolean;
+  isBlocked?: boolean;
+  isArchived?: boolean;
+  isFavorite?: boolean;
+  isDraft?: boolean;
+  isScheduled?: boolean;
+  isRestricted?: boolean;
+  fromSelf?: boolean;
 }
 
-export interface Message {
+export interface Msg {
   id: string;
   text: string;
   time: string;
   fromSelf: boolean;
-  status?: "sent" | "delivered" | "read";
+  status?: "sent" | "delivered" | "read" | "failed" | "pending" | "scheduled" | "draft" | "deleted";
 }

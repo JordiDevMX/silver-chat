@@ -1,8 +1,8 @@
-import type { Message } from "@/types/chat";
+import type { Msg } from "@/types/chat";
 import { Check, CheckCheck } from "lucide-react";
 
 interface MessageBubbleProps {
-  message: Message;
+  message: Msg;
 }
 
 export function MessageBubble({ message }: MessageBubbleProps) {
