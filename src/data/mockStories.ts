@@ -6,6 +6,7 @@ export interface Story {
   caption: string;
   time: string;
   viewed: boolean;
+  muted?: boolean;
 }
 
 // My story (the current user)
@@ -19,8 +20,8 @@ export const myStory: Story | null = {
   viewed: false,
 };
 
-// Friends' stories — recent updates (unviewed first)
-export const recentStories: Story[] = [
+// All friend stories — sorting/grouping happens in the Updates component
+export const friendStories: Story[] = [
   {
     id: "s1",
     author: "Aria Chen",
@@ -48,10 +49,6 @@ export const recentStories: Story[] = [
     time: "2 hr ago",
     viewed: false,
   },
-];
-
-// Already-viewed friend stories
-export const viewedStories: Story[] = [
   {
     id: "s4",
     author: "Theo Lindqvist",
@@ -78,5 +75,25 @@ export const viewedStories: Story[] = [
     caption: "Vinyl haul of the month",
     time: "2 days ago",
     viewed: true,
+  },
+  {
+    id: "s7",
+    author: "Daniela Vossen",
+    avatarGradient: "linear-gradient(135deg, oklch(0.7 0.1 200), oklch(0.5 0.12 220))",
+    preview: "linear-gradient(135deg, oklch(0.5 0.12 210), oklch(0.7 0.1 240))",
+    caption: "Long thread incoming…",
+    time: "3 days ago",
+    viewed: true,
+    muted: true,
+  },
+  {
+    id: "s8",
+    author: "Brand Updates",
+    avatarGradient: "linear-gradient(135deg, oklch(0.6 0.04 60), oklch(0.4 0.04 60))",
+    preview: "linear-gradient(135deg, oklch(0.4 0.04 60), oklch(0.6 0.04 60))",
+    caption: "Promo of the week",
+    time: "4 days ago",
+    viewed: false,
+    muted: true,
   },
 ];
