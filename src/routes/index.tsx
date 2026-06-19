@@ -34,15 +34,26 @@ function Index() {
   const [activeTab, setActiveTab] = useState<TabKey>("chats");
   const [search, setSearch] = useState("");
 
-  const totalUnread = mockChats.reduce((sum, c) => sum + c.unread, 0);
+  // 1. Sanitizamos los datos: Nos quedamos solo con el primer chat de cada ID único
+  const uniqueChats = useMemo(() => {
+    return mockChats.filter(
+      (chat, index, self) => self.findIndex((c) => c.id === chat.id) === index,
+    );
+  }, []); // Solo se calcula una vez al montar el componente
 
+  // 2. Usamos la lista limpia para el contador (ya no sumará duplicados)
+  const totalUnread = useMemo(() => {
+    return uniqueChats.reduce((sum, c) => sum + c.unread, 0);
+  }, [uniqueChats]);
+
+  // 3. Filtramos sobre la lista limpia
   const filteredChats = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return mockChats;
-    return mockChats.filter(
+    if (!q) return uniqueChats;
+    return uniqueChats.filter(
       (c) => c.name.toLowerCase().includes(q) || c.lastMessage.toLowerCase().includes(q),
     );
-  }, [search]);
+  }, [search, uniqueChats]);
 
   return (
     <Layout
