@@ -4,27 +4,17 @@ import { Layout } from "@/components/layout/Layout";
 import { ChatList } from "@/components/chat/ChatList";
 import { NewChatFAB } from "@/components/chat/NewChatFAB";
 import { Updates } from "@/components/updates/Updates";
+import { Communities } from "@/components/communities/Communities";
 import { mockChats } from "@/data/mockChats";
 import type { TabKey } from "@/types/chat";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      {
-        title: "SilverChat — Futuristic messaging",
-      },
-      {
-        name: "description",
-        content: "A sleek, silver-and-neon messaging experience.",
-      },
-      {
-        property: "og:title",
-        content: "SilverChat",
-      },
-      {
-        property: "og:description",
-        content: "A sleek, silver-and-neon messaging experience.",
-      },
+      { title: "SilverChat — Futuristic messaging" },
+      { name: "description", content: "A sleek, silver-and-neon messaging experience." },
+      { property: "og:title", content: "SilverChat" },
+      { property: "og:description", content: "A sleek, silver-and-neon messaging experience." },
     ],
   }),
   component: Index,
@@ -32,41 +22,44 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [activeTab, setActiveTab] = useState<TabKey>("chats");
+  const [communitiesOpen, setCommunitiesOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  // 1. Sanitizamos los datos: Nos quedamos solo con el primer chat de cada ID único
-  const uniqueChats = useMemo(() => {
-    return mockChats.filter(
-      (chat, index, self) => self.findIndex((c) => c.id === chat.id) === index,
-    );
-  }, []); // Solo se calcula una vez al montar el componente
+  const totalUnread = mockChats.reduce((sum, c) => sum + c.unread, 0);
 
-  // 2. Usamos la lista limpia para el contador (ya no sumará duplicados)
-  const totalUnread = useMemo(() => {
-    return uniqueChats.reduce((sum, c) => sum + c.unread, 0);
-  }, [uniqueChats]);
-
-  // 3. Filtramos sobre la lista limpia
   const filteredChats = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return uniqueChats;
-    return uniqueChats.filter(
+    if (!q) return mockChats;
+    return mockChats.filter(
       (c) => c.name.toLowerCase().includes(q) || c.lastMessage.toLowerCase().includes(q),
     );
-  }, [search, uniqueChats]);
+  }, [search]);
 
   return (
     <Layout
       activeTab={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={(t) => {
+        setActiveTab(t);
+        setCommunitiesOpen(false);
+      }}
       badges={{ chats: totalUnread, calls: 2 }}
       search={search}
       onSearchChange={setSearch}
     >
       {activeTab === "chats" && <ChatList chats={filteredChats} />}
-      {/* {activeTab !== "chats" && ( */}
       {activeTab === "updates" && <Updates />}
-      {activeTab !== "chats" && activeTab !== "updates" && (
+      {activeTab === "communities" && !communitiesOpen && <Communities onOpen={() => void 0} />}
+      {/* {activeTab === "communities" && !communitiesOpen && (
+        <Communities onOpen={() => setCommunitiesOpen(true)} />
+      )} */}
+
+      {/* {activeTab === "communities" && communitiesOpen && (
+        <div className="px-6 py-16 text-center text-sm text-muted-foreground">
+          <p className="capitalize text-foreground font-medium mb-1">{activeTab}</p>
+          <p>Coming soon.</p>
+        </div>
+      )} */}
+      {activeTab !== "chats" && activeTab !== "updates" && activeTab !== "communities" && (
         <div className="px-6 py-16 text-center text-sm text-muted-foreground">
           <p className="capitalize text-foreground font-medium mb-1">{activeTab}</p>
           <p>Coming soon.</p>
