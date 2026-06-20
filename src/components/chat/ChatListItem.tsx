@@ -1,5 +1,6 @@
-import type { Chat, Msg } from "@/types/chat";
+import type { Chat } from "@/types/chat";
 import { Link } from "@tanstack/react-router";
+import { MessageSquarePlus } from "lucide-react";
 import {
   Pin,
   BellOff,
@@ -25,6 +26,18 @@ const MESSAGE_STATUS_ICONS: Record<string, React.ReactNode> = {
   pending: <Clock className="h-4 w-5 text-muted-foreground" />,
   failed: <AlertCircle className="h-4 w-5 text-destructive" />,
 };
+
+export function ChatFAB() {
+  return (
+    <button
+      type="button"
+      aria-label="Start new chat"
+      className="absolute bottom-24 right-5 h-14 w-14 rounded-2xl bg-gradient-neon text-primary-foreground grid place-items-center shadow-glow hover:scale-105 active:scale-95 transition-transform ring-1 ring-inset ring-white/20"
+    >
+      <MessageSquarePlus className="h-6 w-6" />
+    </button>
+  );
+}
 
 interface ChatListItemProps {
   chat: Chat;

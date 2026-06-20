@@ -2,13 +2,13 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Layout } from "@/components/layout/Layout";
 import { ChatList } from "@/components/chat/ChatList";
-import { NewChatFAB } from "@/components/chat/NewChatFAB";
 import { Updates } from "@/components/updates/Updates";
 import { Communities } from "@/components/communities/Communities";
 import { Calls, CallsFAB } from "@/components/calls/Calls";
 import { mockChats } from "@/data/mockChats";
 import { mockCalls } from "@/data/mockCalls";
 import type { TabKey } from "@/types/chat";
+import { ChatFAB } from "#/components/chat/ChatListItem";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -58,12 +58,12 @@ function Index() {
       searchPlaceholder={
         activeTab === "calls" ? "Search calls by name or email..." : "Search conversations…"
       }
-      floating={activeTab === "calls" ? <CallsFAB /> : undefined}
+      floating={activeTab === "calls" ? <CallsFAB /> : activeTab === "chats" ? <ChatFAB /> : null}
     >
       {activeTab === "chats" && <ChatList chats={filteredChats} />}
       {activeTab === "updates" && <Updates />}
       {activeTab === "communities" && !communitiesOpen && <Communities onOpen={() => void 0} />}
-      {/* Openning communities logic (works for everything else)
+      {/* Open communities chats logic (works for everything else)
       {activeTab === "communities" && !communitiesOpen && (
         <Communities onOpen={() => setCommunitiesOpen(true)} />
       )} 
@@ -74,14 +74,7 @@ function Index() {
           <p>Coming soon.</p>
         </div>
       )} */}
-      {activeTab === "communities" && communitiesOpen && (
-        <div className="px-6 py-16 text-center text-sm text-muted-foreground">
-          <p className="capitalize text-foreground font-medium mb-1">communities</p>
-          <p>Coming soon.</p>
-        </div>
-      )}
       {activeTab === "calls" && <Calls calls={filteredCalls} />}
-      {activeTab === "chats" && <NewChatFAB />}
     </Layout>
   );
 }
