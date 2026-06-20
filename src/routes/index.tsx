@@ -5,7 +5,9 @@ import { ChatList } from "@/components/chat/ChatList";
 import { NewChatFAB } from "@/components/chat/NewChatFAB";
 import { Updates } from "@/components/updates/Updates";
 import { Communities } from "@/components/communities/Communities";
+import { Calls, CallsFAB } from "@/components/calls/Calls";
 import { mockChats } from "@/data/mockChats";
+import { mockCalls } from "@/data/mockCalls";
 import type { TabKey } from "@/types/chat";
 
 export const Route = createFileRoute("/")({
@@ -35,6 +37,14 @@ function Index() {
     );
   }, [search]);
 
+  const filteredCalls = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return mockCalls;
+    return mockCalls.filter(
+      (c) => c.name.toLowerCase().includes(q) || (c.email && c.email.toLowerCase().includes(q)),
+    );
+  }, [search]);
+
   return (
     <Layout
       activeTab={activeTab}
@@ -45,13 +55,18 @@ function Index() {
       badges={{ chats: totalUnread, calls: 2 }}
       search={search}
       onSearchChange={setSearch}
+      searchPlaceholder={
+        activeTab === "calls" ? "Search calls by name or email..." : "Search conversations…"
+      }
+      floating={activeTab === "calls" ? <CallsFAB /> : undefined}
     >
       {activeTab === "chats" && <ChatList chats={filteredChats} />}
       {activeTab === "updates" && <Updates />}
       {activeTab === "communities" && !communitiesOpen && <Communities onOpen={() => void 0} />}
-      {/* {activeTab === "communities" && !communitiesOpen && (
+      {/* Openning communities logic (works for everything else)
+      {activeTab === "communities" && !communitiesOpen && (
         <Communities onOpen={() => setCommunitiesOpen(true)} />
-      )} */}
+      )} 
 
       {/* {activeTab === "communities" && communitiesOpen && (
         <div className="px-6 py-16 text-center text-sm text-muted-foreground">
@@ -59,12 +74,13 @@ function Index() {
           <p>Coming soon.</p>
         </div>
       )} */}
-      {activeTab !== "chats" && activeTab !== "updates" && activeTab !== "communities" && (
+      {activeTab === "communities" && communitiesOpen && (
         <div className="px-6 py-16 text-center text-sm text-muted-foreground">
-          <p className="capitalize text-foreground font-medium mb-1">{activeTab}</p>
+          <p className="capitalize text-foreground font-medium mb-1">communities</p>
           <p>Coming soon.</p>
         </div>
       )}
+      {activeTab === "calls" && <Calls calls={filteredCalls} />}
       {activeTab === "chats" && <NewChatFAB />}
     </Layout>
   );

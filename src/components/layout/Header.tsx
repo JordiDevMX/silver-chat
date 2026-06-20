@@ -3,9 +3,10 @@ import { Search, Settings } from "lucide-react";
 interface HeaderProps {
   search: string;
   onSearchChange: (value: string) => void;
+  placeholder?: string;
 }
 
-export function Header({ search, onSearchChange }: HeaderProps) {
+export function Header({ search, onSearchChange, placeholder }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 bg-gradient-silver border-b border-border/60 backdrop-blur-xl shadow-silver">
       <div className="flex items-center gap-3 px-4 pt-4 pb-2">
@@ -33,7 +34,7 @@ export function Header({ search, onSearchChange }: HeaderProps) {
             type="search"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search conversations…"
+            placeholder={placeholder ?? "Search conversations…"}
             className="flex-1 bg-transparent outline-hidden text-sm placeholder:text-muted-foreground"
           />
         </label>
