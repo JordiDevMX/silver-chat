@@ -71,6 +71,15 @@ export function CallsFAB() {
 }
 
 export function Calls({ calls }: { calls: CallLog[] }) {
+  if (calls.length === 0) {
+    return (
+      <div className="px-6 py-16 text-center text-sm text-muted-foreground">
+        <p className="capitalize text-foreground font-medium mb-1">No calls found</p>
+        <p>Make sure either the email or name is well written</p>
+      </div>
+    );
+  }
+
   return (
     <div className="pb-4">
       <div className="px-4 pt-3 pb-2">

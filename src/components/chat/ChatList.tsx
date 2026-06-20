@@ -9,7 +9,8 @@ export function ChatList({ chats }: ChatListProps) {
   if (chats.length === 0) {
     return (
       <div className="px-6 py-16 text-center text-sm text-muted-foreground">
-        No conversations found.
+        <p className="capitalize text-foreground font-medium mb-1">No chats found</p>
+        <p>Make sure either the text or name is well written</p>
       </div>
     );
   }
