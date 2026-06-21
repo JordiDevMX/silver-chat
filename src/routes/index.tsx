@@ -58,7 +58,7 @@ function Index() {
       searchPlaceholder={
         activeTab === "calls" ? "Search calls by name or email..." : "Search conversations…"
       }
-      floating={activeTab === "calls" ? <CallsFAB /> : activeTab === "chats" ? <ChatFAB /> : null}
+      FAB={activeTab === "calls" ? <CallsFAB /> : activeTab === "chats" ? <ChatFAB /> : null}
     >
       {activeTab === "chats" && <ChatList chats={filteredChats} />}
       {activeTab === "updates" && <Updates />}
