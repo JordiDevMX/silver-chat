@@ -24,13 +24,13 @@ export function ChatComposer({ onSend }: ChatComposerProps) {
       <button
         type="button"
         aria-label="Attach"
-        className="h-10 w-10 grid place-items-center rounded-full bg-card/70 border border-border hover:bg-accent transition-colors shrink-0"
+        className="h-10 w-10 grid place-items-center rounded-full bg-card/70 border border-border hover:bg-accent transition-colors shrink-0 cursor-pointer"
       >
         <Plus className="h-4 w-4" />
       </button>
 
       <label className="flex-1 flex items-end gap-2 bg-card/80 border border-border rounded-2xl pl-3 pr-2 py-1.5 focus-within:ring-2 focus-within:ring-ring focus-within:border-ring transition">
-        <Smile className="h-4 w-4 text-muted-foreground shrink-0 mb-2" />
+        <Smile className="h-4 w-4 text-muted-foreground shrink-0 mb-2 cursor-pointer hover:text-primary" />
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -50,7 +50,7 @@ export function ChatComposer({ onSend }: ChatComposerProps) {
         type="submit"
         aria-label="Send"
         disabled={!text.trim()}
-        className="h-10 w-10 grid place-items-center rounded-full bg-gradient-neon text-primary-foreground shadow-glow shrink-0 disabled:opacity-40 disabled:shadow-none transition-all hover:-translate-y-0.5"
+        className="mb-0.5 h-10 w-10 grid place-items-center rounded-full bg-gradient-neon text-primary-foreground shadow-glow shrink-0 disabled:opacity-40 disabled:shadow-none transition-all disabled:cursor-not-allowed cursor-pointer"
       >
         <Send className="h-4 w-4" />
       </button>
