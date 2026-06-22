@@ -3,6 +3,7 @@ import { communities, type Community, type SubChannel } from "@/data/mockCommuni
 
 interface CommunitiesProps {
   onOpen: () => void;
+  search?: string;
 }
 
 function NewCommunityRow({ onClick }: { onClick: () => void }) {
@@ -85,19 +86,38 @@ function CommunityBlock({ community, onOpen }: { community: Community; onOpen: (
   );
 }
 
-export function Communities({ onOpen }: CommunitiesProps) {
+export function Communities({ onOpen, search = "" }: CommunitiesProps) {
+  const query = search.trim().toLowerCase();
+  const filtered = query
+    ? communities.filter((c) => c.name.toLowerCase().includes(query))
+    : communities;
+
+  const isSearching = query.length > 0;
+
   return (
     <div className="pb-24">
-      <h1 className="px-4 pt-4 pb-2 text-2xl font-semibold tracking-tight text-foreground">
-        Communities
-      </h1>
-
-      <NewCommunityRow onClick={onOpen} />
+      {!isSearching && (
+          <h1 className="px-4 pt-4 pb-2 text-2xl font-semibold tracking-tight text-foreground">
+            Communities
+          </h1>
+        ) && <NewCommunityRow onClick={onOpen} />}
 
       <div className="mt-2">
-        {communities.map((c) => (
-          <CommunityBlock key={c.id} community={c} onOpen={onOpen} />
-        ))}
+        {filtered.length > 0 ? (
+          filtered.map((c) => <CommunityBlock key={c.id} community={c} onOpen={onOpen} />)
+        ) : (
+          <div className="px-6 py-12 text-center">
+            <p className="text-sm text-muted-foreground mb-3">No communities found</p>
+            <button
+              type="button"
+              onClick={onOpen}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--neon)] hover:underline transition-colors cursor-pointer"
+            >
+              <Plus className="size-4" />
+              Create a new community
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -56,13 +56,21 @@ function Index() {
       search={search}
       onSearchChange={setSearch}
       searchPlaceholder={
-        activeTab === "calls" ? "Search calls by name or email..." : "Search conversations…"
+        activeTab === "calls"
+          ? "Search calls by name or email..."
+          : activeTab === "updates"
+            ? "Search stories and channels..."
+            : activeTab === "communities"
+              ? "Search communities..."
+              : "Search conversations…"
       }
       FAB={activeTab === "calls" ? <CallsFAB /> : activeTab === "chats" ? <ChatFAB /> : null}
     >
       {activeTab === "chats" && <ChatList chats={filteredChats} />}
       {activeTab === "updates" && <Updates />}
-      {activeTab === "communities" && !communitiesOpen && <Communities onOpen={() => void 0} />}
+      {activeTab === "communities" && !communitiesOpen && (
+        <Communities search={search} onOpen={() => void 0} />
+      )}
       {/* Open communities chats logic (works for everything else)
       {activeTab === "communities" && !communitiesOpen && (
         <Communities onOpen={() => setCommunitiesOpen(true)} />
