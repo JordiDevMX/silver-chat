@@ -1,5 +1,15 @@
 import { useMemo, useState } from "react";
-import { Plus, Camera, Compass, BadgeCheck, EyeOff, ChevronDown, Megaphone } from "lucide-react";
+import {
+  Plus,
+  Camera,
+  Compass,
+  BadgeCheck,
+  EyeOff,
+  ChevronDown,
+  Megaphone,
+  BellOff,
+  Pin,
+} from "lucide-react";
 import { myStory, friendStories, type Story } from "@/data/mockStories";
 import {
   followedChannels,
@@ -9,14 +19,22 @@ import {
 } from "@/data/mockChannels";
 import { Button } from "@/components/ui/button";
 
-function StoryCard({ story, isMine = false }: { story: Story; isMine?: boolean }) {
+function StoryCard({
+  story,
+  isMine = false,
+  isMuted = false,
+}: {
+  story: Story;
+  isMine?: boolean;
+  isMuted?: boolean;
+}) {
   const ringClass =
     isMine || story.viewed ? "ring-2 ring-border" : "ring-2 ring-[var(--neon)] shadow-glow";
 
   return (
     <button
       type="button"
-      className="relative shrink-0 w-28 h-44 rounded-2xl overflow-hidden text-left shadow-silver group hover:brightness-110 active:scale-95 transition-all"
+      className="relative shrink-0 w-28 h-44 rounded-2xl overflow-hidden text-left shadow-silver group hover:brightness-110 active:scale-95 transition-all cursor-pointer"
       style={{ background: story.preview }}
     >
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent group-hover:bg-white/5 transition-colors" />
@@ -43,7 +61,7 @@ function AddStoryCard() {
   return (
     <button
       type="button"
-      className="relative shrink-0 w-28 h-44 rounded-2xl overflow-hidden text-left border border-dashed border-border bg-muted/40 grid place-items-center hover:bg-accent/60 active:bg-accent transition-all"
+      className="relative shrink-0 w-28 h-44 rounded-2xl overflow-hidden text-left border border-dashed border-border bg-muted/40 grid place-items-center hover:bg-accent/60 active:bg-accent transition-all cursor-pointer"
     >
       <div className="flex flex-col items-center gap-2 text-muted-foreground">
         <div className="size-10 rounded-full bg-[var(--neon)] text-primary-foreground grid place-items-center shadow-glow">
@@ -68,7 +86,7 @@ function MutedCard({
     <button
       type="button"
       onClick={onToggle}
-      className="relative shrink-0 w-28 h-44 rounded-2xl overflow-hidden text-left bg-gradient-silver border border-border grid place-items-center hover:bg-accent/60 active:bg-accent transition-all"
+      className="relative shrink-0 w-28 h-44 rounded-2xl overflow-hidden text-left bg-gradient-silver border border-border grid place-items-center hover:bg-accent/60 active:bg-accent transition-all cursor-pointer"
     >
       <div className="flex flex-col items-center gap-2 text-muted-foreground px-2 text-center">
         <div className="size-10 rounded-full bg-muted grid place-items-center">
@@ -119,7 +137,7 @@ function DiscoverRow({ channel }: { channel: DiscoverChannel }) {
   return (
     <button
       type="button"
-      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors text-left"
+      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors duration-150 text-left cursor-pointer"
     >
       <div
         className="size-12 shrink-0 rounded-full border border-border"
@@ -135,7 +153,7 @@ function DiscoverRow({ channel }: { channel: DiscoverChannel }) {
       </div>
       <Button
         size="sm"
-        className="shrink-0 rounded-full bg-[var(--neon)] hover:bg-[var(--neon)]/90 text-primary-foreground shadow-glow"
+        className="shrink-0 rounded-full bg-[var(--neon)] hover:bg-[var(--neon)]/90 text-primary-foreground shadow-glow cursor-pointer"
       >
         Follow
       </Button>
@@ -143,8 +161,14 @@ function DiscoverRow({ channel }: { channel: DiscoverChannel }) {
   );
 }
 
-export function Updates() {
+interface UpdatesProps {
+  search: string;
+}
+
+export function Updates({ search = "" }: UpdatesProps) {
   const [showMuted, setShowMuted] = useState(false);
+  const query = search.trim().toLowerCase();
+  const isSearching = query.length > 0;
 
   const { visible, muted } = useMemo(() => {
     const m = friendStories.filter((s) => s.muted);
@@ -155,6 +179,56 @@ export function Updates() {
       .sort((a, b) => Number(a.viewed) - Number(b.viewed));
     return { visible: v, muted: m };
   }, []);
+
+  if (isSearching) {
+    const filteredStories = friendStories.filter((s) => s.author.toLowerCase().includes(query));
+    const filteredChannels = followedChannels.filter((c) => c.name.toLowerCase().includes(query));
+
+    return (
+      <div className="pb-24">
+        {/* Stories results */}
+        <section className="pt-4">
+          <h2 className="px-6 mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Stories
+          </h2>
+          {filteredStories.length > 0 ? (
+            <div className="flex gap-3 overflow-x-auto px-4 pb-3 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+              {filteredStories.map((s) => (
+                <StoryCard key={s.id} story={s} />
+              ))}
+            </div>
+          ) : (
+            <p className="px-6 py-6 text-center text-sm text-muted-foreground">No stories found</p>
+          )}
+        </section>
+
+        {/* Channels results — always rendered */}
+        <section className="mt-4">
+          <h2 className="px-6 mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Followed channels
+          </h2>
+          {filteredChannels.length > 0 ? (
+            <div className="flex flex-col">
+              {filteredChannels.map((c) => (
+                <ChannelRow key={c.id} channel={c} />
+              ))}
+            </div>
+          ) : (
+            <p className="px-6 py-6 text-center text-sm text-muted-foreground">
+              Can&apos;t find the channel you&apos;re looking for? Find more in the{" "}
+              <button
+                type="button"
+                className="text-[var(--neon)] hover:underline active:opacity-80 transition-colors cursor-pointer font-medium"
+              >
+                channel directory
+              </button>
+              .
+            </p>
+          )}
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="pb-24">

@@ -67,7 +67,7 @@ function Index() {
       FAB={activeTab === "calls" ? <CallsFAB /> : activeTab === "chats" ? <ChatFAB /> : null}
     >
       {activeTab === "chats" && <ChatList chats={filteredChats} />}
-      {activeTab === "updates" && <Updates />}
+      {activeTab === "updates" && <Updates search={search} />}
       {activeTab === "communities" && !communitiesOpen && (
         <Communities search={search} onOpen={() => void 0} />
       )}

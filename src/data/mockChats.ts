@@ -17,7 +17,7 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    isDraft: false,
+    draft: "",
     isScheduled: false,
     isRestricted: false,
     status: "delivered",
