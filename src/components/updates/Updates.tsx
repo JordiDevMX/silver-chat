@@ -8,7 +8,6 @@ import {
   ChevronDown,
   Megaphone,
   BellOff,
-  Pin,
 } from "lucide-react";
 import { myStory, friendStories, type Story } from "@/data/mockStories";
 import {
@@ -19,39 +18,71 @@ import {
 } from "@/data/mockChannels";
 import { Button } from "@/components/ui/button";
 
-function StoryCard({
-  story,
-  isMine = false,
-  isMuted = false,
-}: {
+interface StoryCardProps {
   story: Story;
-  isMine?: boolean;
-  isMuted?: boolean;
-}) {
-  const ringClass =
-    isMine || story.viewed ? "ring-2 ring-border" : "ring-2 ring-[var(--neon)] shadow-glow";
+}
+
+export function StoryCard({ story }: StoryCardProps) {
+  // 1. Ring Logic based on story state: blocked, mine, muted or viewed
+  const ringClass = story.isMuted
+    ? "ring-2 ring-muted-foreground/30"
+    : story.fromSelf || story.viewed
+      ? "ring-2 ring-[var(--neon)] shadow-glow"
+      : "ring-2 ring-border";
 
   return (
     <button
       type="button"
-      className="relative shrink-0 w-28 h-44 rounded-2xl overflow-hidden text-left shadow-silver group hover:brightness-110 active:scale-95 transition-all cursor-pointer"
-      style={{ background: story.preview }}
+      disabled={story.isMuted}
+      aria-label={
+        story.isMuted ? `Story from muted user ${story.author}` : `View story from ${story.author}`
+      }
+      className={`relative shrink-0 w-28 h-44 rounded-2xl overflow-hidden text-left shadow-silver group transition-all hover:brightness-110 active:scale-95 cursor-pointer `}
+      style={{
+        background: story.isMuted
+          ? "linear-gradient(135deg, oklch(0.3 0.22 250), oklch(0.4 0.18 245))"
+          : story.preview,
+      }}
     >
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent group-hover:bg-white/5 transition-colors" />
-      <div className={`absolute top-2 left-2 size-10 rounded-full p-[2px] ${ringClass}`}>
+      {/* 2. Filter for blurred and darkened effect for blocked stories */}
+      <div
+        className={`absolute inset-0 transition-colors z-10
+          ${
+            story.isMuted
+              ? "bg-yellow/60 backdrop-blur-[3px] grayscale"
+              : "bg-gradient-to-t from-black/70 via-black/10 to-transparent group-hover:bg-white/5"
+          }`}
+      />
+
+      {/* 3. Avatar Container */}
+      <div className={`absolute top-2 left-2 size-10 rounded-full p-[2px] z-20 ${ringClass}`}>
         <div
-          className="size-full rounded-full border-2 border-black/30 grid place-items-center"
+          className="size-full rounded-full border-2 border-black/30 grid place-items-center overflow-hidden"
           style={{ background: story.avatarGradient }}
         >
-          {isMine && (
+          {story.fromSelf && !story.isMuted && (
             <span className="absolute -bottom-0.5 -right-0.5 size-4 rounded-full bg-[var(--neon)] text-primary-foreground grid place-items-center border-2 border-background">
               <Plus className="size-2.5" strokeWidth={3} />
             </span>
           )}
         </div>
       </div>
-      <p className="absolute bottom-2 left-2 right-2 text-xs font-medium text-white truncate">
-        {isMine ? "My status" : story.author.split(" ")[0]}
+      {/* 4. Muted Indicator */}
+      {story.isMuted && (
+        <div className="absolute inset-2 grid place-items-end z-20 animate-fade-in">
+          <BellOff
+            className="size-5 text-[var(--neon)]"
+            style={{ filter: "drop-shadow(0 0 12px rgba(56,189,248,0.9))" }}
+          />
+        </div>
+      )}
+
+      {/* 5. Autor's Name */}
+      <p
+        className={`absolute bottom-2 left-2 right-2 text-xs font-medium truncate z-20
+        ${story.isMuted ? "text-muted-foreground line-through" : "text-white"}`}
+      >
+        {story.fromSelf ? "My status" : story.author.split(" ")[0]}
       </p>
     </button>
   );
@@ -171,10 +202,10 @@ export function Updates({ search = "" }: UpdatesProps) {
   const isSearching = query.length > 0;
 
   const { visible, muted } = useMemo(() => {
-    const m = friendStories.filter((s) => s.muted);
+    const m = friendStories.filter((s) => s.isMuted);
     // visible: unviewed first, then viewed (viewed shifted to the end)
     const v = friendStories
-      .filter((s) => !s.muted)
+      .filter((s) => !s.isMuted)
       .slice()
       .sort((a, b) => Number(a.viewed) - Number(b.viewed));
     return { visible: v, muted: m };
@@ -239,7 +270,7 @@ export function Updates({ search = "" }: UpdatesProps) {
         </h2>
         <div className="flex gap-3 overflow-x-auto px-4 pb-3 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
           <AddStoryCard />
-          {myStory && <StoryCard story={myStory} isMine />}
+          {myStory && <StoryCard story={myStory} />}
           {visible.map((s) => (
             <StoryCard key={s.id} story={s} />
           ))}
