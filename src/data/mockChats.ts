@@ -68,7 +68,7 @@ export const rawChats: Chat[] = [
     isArchived: false,
     isFavorite: false,
 
-    status: "read",
+    status: "sent",
   },
   {
     id: "5",
@@ -84,7 +84,7 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    status: "read",
+    status: "failed",
   },
   {
     id: "6",
@@ -117,7 +117,7 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    status: "read",
+    status: "pending",
   },
   {
     id: "8",
@@ -139,7 +139,7 @@ export const rawChats: Chat[] = [
     id: "9",
     name: "Nova Vega",
     avatar: "NV",
-    lastMessage: "Sent you the encrypted file ✨",
+    lastMessage: "Sent you the encrypted file",
     time: "09:42",
     unread: 2,
     isOnline: true,

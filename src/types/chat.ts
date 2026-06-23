@@ -1,4 +1,12 @@
 export type TabKey = "chats" | "updates" | "communities" | "calls";
+export type MessageStatus =
+  | "sent"
+  | "delivered"
+  | "read"
+  | "failed"
+  | "pending"
+  | "draft"
+  | "deleted";
 
 export interface GroupUser {
   id: string;
@@ -14,7 +22,7 @@ export interface Chat {
   lastMessage: string;
   time: string;
   unread: number;
-  status: Msg["status"];
+  status?: Msg["status"];
   isOnline?: boolean;
   isPinned?: boolean;
   isMuted?: boolean;
@@ -36,5 +44,5 @@ export interface Msg {
   time: string;
   fromSelf: boolean;
   senderName?: string;
-  status?: "sent" | "delivered" | "read" | "failed" | "pending" | "draft" | "deleted";
+  status: MessageStatus;
 }

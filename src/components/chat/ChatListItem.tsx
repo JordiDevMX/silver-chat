@@ -2,7 +2,7 @@ import type { Chat } from "@/types/chat";
 import { Link } from "@tanstack/react-router";
 import { MessageSquarePlus } from "lucide-react";
 import { Pin, BellOff, BadgeCheck, Ban, Archive, Star, UsersRound } from "lucide-react";
-import { MESSAGE_STATUS_ICONS } from "@/constants/chatIcons";
+import { MESSAGE_STATUS_ICONS, renderMessagePreview } from "@/constants/chatIcons";
 
 export function ChatFAB() {
   return (
@@ -56,34 +56,21 @@ export function ChatListItem({ chat }: ChatListItemProps) {
             {chat.time}
           </span>
         </div>
+        {/*  */}
         <div className="flex items-center gap-2 mt-0.5">
           <p className="flex-1 truncate text-xs text-muted-foreground">
-            {/* If group chat and last message is not from self, show sender */}
-            {chat.isGroup && !chat.fromSelf && chat.lastMessageSender && (
-              <span className="text-foreground/80 font-medium mr-1">{chat.lastMessageSender}:</span>
-            )}
-            {/* If it's a group chat and the last message is from self, don't show the sender */}
-            {chat.isGroup && chat.fromSelf && (
-              <span className="text-foreground/80 font-medium mr-1">You:</span>
-            )}
-            {/* If it's a draft */}
-            {chat.status === "draft" && (
-              <span className="text-foreground/80 font-medium mr-1">Draft:</span>
-            )}
-            {/* If msg was deleted */}
-            {chat.status === "deleted" && (
-              <span className="italic text-foreground/80 font-medium mr-1">Message deleted</span>
-            )}
-            {chat.status !== "deleted" && chat.lastMessage}
+            {/* 💡 Inyectamos el helper limpio que maneja todo el texto del renglón */}
+            {renderMessagePreview(chat)}
           </p>
 
-          {/* Message status icons */}
-          {chat.status && MESSAGE_STATUS_ICONS[chat.status]}
+          {/* Iconos de estado de envío (ignora automáticamente draft/deleted gracias al Partial) */}
 
-          {chat.unread > 0 && (
+          {chat.unread ? (
             <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-gradient-neon text-primary-foreground text-[10px] font-bold grid place-items-center shadow-glow">
               {chat.unread}
             </span>
+          ) : (
+            chat.status && MESSAGE_STATUS_ICONS[chat.status]
           )}
         </div>
       </div>
