@@ -1,28 +1,8 @@
 import type { Chat } from "@/types/chat";
 import { Link } from "@tanstack/react-router";
 import { MessageSquarePlus } from "lucide-react";
-import {
-  Pin,
-  BellOff,
-  BadgeCheck,
-  Ban,
-  Archive,
-  Star,
-  Check,
-  CheckCheck,
-  CheckLine,
-  Clock,
-  AlertCircle,
-  UsersRound,
-} from "lucide-react";
-
-const MESSAGE_STATUS_ICONS: Record<string, React.ReactNode> = {
-  sent: <Check className="h-4 w-5 text-primary-foreground" />,
-  delivered: <CheckCheck className="h-4 w-5 text-primary-foreground" />,
-  read: <CheckLine className="h-4 w-5 text-primary" />,
-  pending: <Clock className="h-4 w-5 text-muted-foreground" />,
-  failed: <AlertCircle className="h-4 w-5 text-destructive" />,
-};
+import { Pin, BellOff, BadgeCheck, Ban, Archive, Star, UsersRound } from "lucide-react";
+import { MESSAGE_STATUS_ICONS } from "@/constants/chatIcons";
 
 export function ChatFAB() {
   return (
