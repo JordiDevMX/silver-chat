@@ -18,8 +18,6 @@ export const rawChats: Chat[] = [
     isArchived: false,
     isFavorite: false,
     draft: "",
-    isScheduled: false,
-    isRestricted: false,
     status: "delivered",
     fromSelf: true,
   },
@@ -37,8 +35,7 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    isScheduled: false,
-    isRestricted: false,
+
     status: "read",
   },
   {
@@ -55,8 +52,6 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    isScheduled: false,
-    isRestricted: false,
     status: "delivered",
   },
   {
@@ -73,8 +68,7 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    isScheduled: false,
-    isRestricted: false,
+
     status: "read",
   },
   {
@@ -91,8 +85,6 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    isScheduled: false,
-    isRestricted: false,
     status: "read",
   },
   {
@@ -109,8 +101,7 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    isScheduled: false,
-    isRestricted: false,
+
     status: "delivered",
   },
   {
@@ -127,8 +118,6 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    isScheduled: false,
-    isRestricted: false,
     status: "read",
   },
   {
@@ -145,8 +134,7 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    isScheduled: false,
-    isRestricted: false,
+
     status: "read",
   },
   {
@@ -204,6 +192,26 @@ export const rawChats: Chat[] = [
     isPinned: true,
     isFavorite: true,
     status: "read",
+  },
+  {
+    id: "group_1",
+    name: "Discord Group",
+    avatar: "DG",
+    lastMessage: "manco de mierda", // 👈 El último mensaje de Blast
+    time: "08:46 PM",
+    unread: 0,
+    status: "read",
+    fromSelf: false,
+    isGroup: true,
+    lastMessageSender: "Blast", // 👈 Así tu interfaz sabe quién tiró el veneno al final
+    participants: [
+      { id: "u_jordi", name: "Jordi", avatar: "J", role: "member" },
+      { id: "u_blast", name: "Blast", avatar: "B", role: "admin" },
+      { id: "u_gustambo", name: "Gustambo", avatar: "G", role: "member" },
+      { id: "u_wilbert", name: "Wilbert", avatar: "W", role: "member" },
+      { id: "u_roy", name: "Roy", avatar: "R", role: "member" },
+      { id: "u_random", name: "+52 33 1234 5678", avatar: "#", role: "member" },
+    ],
   },
 ];
 

@@ -1,5 +1,5 @@
 import type { Msg } from "@/types/chat";
-import { Check, CheckCheck } from "lucide-react";
+import { Check, CheckCheck, CheckLine } from "lucide-react";
 
 interface MessageBubbleProps {
   message: Msg;
@@ -27,7 +27,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           <span>{message.time}</span>
           {self &&
             (message.status === "read" ? (
-              <CheckCheck className="h-3 w-3 text-white" />
+              <CheckLine className="h-3 w-3 text-white" />
             ) : message.status === "delivered" ? (
               <CheckCheck className="h-3 w-3" />
             ) : (

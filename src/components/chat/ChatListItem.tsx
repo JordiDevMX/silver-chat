@@ -4,19 +4,17 @@ import { MessageSquarePlus } from "lucide-react";
 import {
   Pin,
   BellOff,
-  Users,
   BadgeCheck,
   Ban,
   Archive,
   Star,
   FileText,
-  CalendarClock,
-  Shield,
   Check,
   CheckCheck,
   CheckLine,
   Clock,
   AlertCircle,
+  UsersRound,
 } from "lucide-react";
 
 const MESSAGE_STATUS_ICONS: Record<string, React.ReactNode> = {
@@ -65,15 +63,13 @@ export function ChatListItem({ chat }: ChatListItemProps) {
             <span className="truncate">{chat.name}</span>
             <span className="ml-2 inline-flex items-center gap-1 text-muted-foreground">
               {chat.isVerified && <BadgeCheck className="h-3 w-3 text-primary" />}
-              {chat.isGroup && <Users className="h-3 w-3" />}
               {chat.isMuted && <BellOff className="h-3 w-3" />}
               {chat.isBlocked && <Ban className="h-3 w-3 text-red-600" />}
               {chat.isArchived && <Archive className="h-3 w-3" />}
               {chat.isFavorite && <Star className="h-3 w-3" />}
-              {chat.isDraft && <FileText className="h-3 w-3" />}
-              {chat.isScheduled && <CalendarClock className="h-3 w-3" />}
-              {chat.isRestricted && <Shield className="h-3 w-3" />}
+              {chat.draft && <FileText className="h-3 w-3" />}
               {chat.isPinned && <Pin className="h-3 w-3 text-primary" />}
+              {chat.isGroup && <UsersRound className="h-3 w-3" />}
             </span>
           </h3>
           <span
@@ -83,11 +79,20 @@ export function ChatListItem({ chat }: ChatListItemProps) {
           </span>
         </div>
         <div className="flex items-center gap-2 mt-0.5">
-          <p className="flex-1 truncate text-xs text-muted-foreground">{chat.lastMessage}</p>
+          <p className="flex-1 truncate text-xs text-muted-foreground">
+            {/* Si es un grupo y el último mensaje NO lo mandaste tú, pintamos el remitente */}
+            {chat.isGroup && !chat.fromSelf && chat.lastMessageSender && (
+              <span className="text-foreground/80 font-medium mr-1">{chat.lastMessageSender}:</span>
+            )}
+
+            {chat.lastMessage}
+          </p>
+
           {chat.fromSelf && chat.status && MESSAGE_STATUS_ICONS[chat.status]}
+
           {chat.unread > 0 && (
             <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-gradient-neon text-primary-foreground text-[10px] font-bold grid place-items-center shadow-glow">
-              {chat.unread > 99 ? "99+" : chat.unread}
+              {chat.unread}
             </span>
           )}
         </div>
