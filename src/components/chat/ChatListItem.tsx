@@ -8,7 +8,6 @@ import {
   Ban,
   Archive,
   Star,
-  FileText,
   Check,
   CheckCheck,
   CheckLine,
@@ -66,8 +65,7 @@ export function ChatListItem({ chat }: ChatListItemProps) {
               {chat.isMuted && <BellOff className="h-3 w-3" />}
               {chat.isBlocked && <Ban className="h-3 w-3 text-red-600" />}
               {chat.isArchived && <Archive className="h-3 w-3" />}
-              {chat.isFavorite && <Star className="h-3 w-3" />}
-              {chat.draft && <FileText className="h-3 w-3" />}
+              {chat.isFavorite && <Star className="h-3 w-3 text-yellow-500" />}
               {chat.isPinned && <Pin className="h-3 w-3 text-primary" />}
               {chat.isGroup && <UsersRound className="h-3 w-3" />}
             </span>
@@ -80,15 +78,27 @@ export function ChatListItem({ chat }: ChatListItemProps) {
         </div>
         <div className="flex items-center gap-2 mt-0.5">
           <p className="flex-1 truncate text-xs text-muted-foreground">
-            {/* Si es un grupo y el último mensaje NO lo mandaste tú, pintamos el remitente */}
+            {/* If group chat and last message is not from self, show sender */}
             {chat.isGroup && !chat.fromSelf && chat.lastMessageSender && (
               <span className="text-foreground/80 font-medium mr-1">{chat.lastMessageSender}:</span>
             )}
-
-            {chat.lastMessage}
+            {/* If it's a group chat and the last message is from self, don't show the sender */}
+            {chat.isGroup && chat.fromSelf && (
+              <span className="text-foreground/80 font-medium mr-1">You:</span>
+            )}
+            {/* If it's a draft */}
+            {chat.status === "draft" && (
+              <span className="text-foreground/80 font-medium mr-1">Draft:</span>
+            )}
+            {/* If msg was deleted */}
+            {chat.status === "deleted" && (
+              <span className="italic text-foreground/80 font-medium mr-1">Message deleted</span>
+            )}
+            {chat.status !== "deleted" && chat.lastMessage}
           </p>
 
-          {chat.fromSelf && chat.status && MESSAGE_STATUS_ICONS[chat.status]}
+          {/* Message status icons */}
+          {chat.status && MESSAGE_STATUS_ICONS[chat.status]}
 
           {chat.unread > 0 && (
             <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-gradient-neon text-primary-foreground text-[10px] font-bold grid place-items-center shadow-glow">

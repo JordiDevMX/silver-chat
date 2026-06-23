@@ -13,7 +13,6 @@ export interface Chat {
   avatar: string; // initials or URL
   lastMessage: string;
   time: string;
-  draft?: string; // TODO
   unread: number;
   status: Msg["status"];
   isOnline?: boolean;

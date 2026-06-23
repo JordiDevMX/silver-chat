@@ -1,5 +1,6 @@
 import type { Msg } from "@/types/chat";
 
+// Represents the internal messages in each chat
 export const mockMessages: Record<string, Msg[]> = {
   1: [
     { id: "m1", text: "Sale un lol?", time: "09:30", fromSelf: false },
@@ -75,6 +76,28 @@ export const mockMessages: Record<string, Msg[]> = {
       time: "08:46 PM",
       fromSelf: false,
     },
+  ],
+  "14": [
+    {
+      id: "m1",
+      text: "There's nothing you can do to stop them. So, stop daydreaming.",
+      time: "09:30",
+      fromSelf: false,
+    },
+    {
+      id: "m2",
+      text: "I don't want to be a part of your world.",
+      time: "09:35",
+      fromSelf: true,
+      status: "read",
+    },
+    {
+      id: "m3",
+      text: "You can't stop the future. You can't rewind the past. The only way to deal with this is... accept it is what it is",
+      time: "09:42",
+      fromSelf: false,
+    },
+    { id: "m4", text: "It's hard... you know, ", time: "09:43", fromSelf: true, status: "draft" },
   ],
 };
 

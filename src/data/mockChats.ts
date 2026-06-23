@@ -1,6 +1,6 @@
 import type { Chat } from "@/types/chat";
-import { useIsMobile } from "../hooks/use-mobile";
 
+// Represents the chat list
 export const rawChats: Chat[] = [
   {
     id: "1",
@@ -17,7 +17,6 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-    draft: "",
     status: "delivered",
     fromSelf: true,
   },
@@ -134,14 +133,13 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-
-    status: "read",
+    status: "deleted",
   },
   {
     id: "9",
     name: "Nova Vega",
     avatar: "NV",
-    lastMessage: "Sent you the encrypted file ✦",
+    lastMessage: "Sent you the encrypted file ✨",
     time: "09:42",
     unread: 2,
     isOnline: true,
@@ -197,13 +195,13 @@ export const rawChats: Chat[] = [
     id: "group_1",
     name: "Discord Group",
     avatar: "DG",
-    lastMessage: "manco de mierda", // 👈 El último mensaje de Blast
+    lastMessage: "manco de mierda",
     time: "08:46 PM",
     unread: 0,
     status: "read",
     fromSelf: false,
     isGroup: true,
-    lastMessageSender: "Blast", // 👈 Así tu interfaz sabe quién tiró el veneno al final
+    lastMessageSender: "Blast",
     participants: [
       { id: "u_jordi", name: "Jordi", avatar: "J", role: "member" },
       { id: "u_blast", name: "Blast", avatar: "B", role: "admin" },
@@ -211,6 +209,33 @@ export const rawChats: Chat[] = [
       { id: "u_wilbert", name: "Wilbert", avatar: "W", role: "member" },
       { id: "u_roy", name: "Roy", avatar: "R", role: "member" },
       { id: "u_random", name: "+52 33 1234 5678", avatar: "#", role: "member" },
+    ],
+  },
+  {
+    id: "14",
+    name: "Tio Salo",
+    avatar: "TS",
+    lastMessage: "It's hard... you know, I-",
+    time: "09:42",
+    unread: 0,
+    status: "draft",
+    fromSelf: false,
+  },
+  {
+    id: "group_2",
+    name: "Base Gatitos Felices 🐈🐈",
+    avatar: "BGF",
+    lastMessage: "Ahi andan siendo felices",
+    time: "08:46 PM",
+    unread: 0,
+    status: "read",
+    fromSelf: true,
+    isGroup: true,
+    lastMessageSender: "Jordi",
+    participants: [
+      { id: "u_jordi", name: "Jordi", avatar: "J", role: "member" },
+      { id: "u_gibi", name: "Gibi", avatar: "G", role: "member" },
+      { id: "u_angii", name: "Angii", avatar: "A", role: "admin" },
     ],
   },
 ];
