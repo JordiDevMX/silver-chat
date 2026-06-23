@@ -6,7 +6,8 @@ export interface Story {
   caption: string;
   time: string;
   viewed: boolean;
-  muted?: boolean;
+  isMuted?: boolean;
+  fromSelf?: boolean; // Indicates if the story is from the current user
 }
 
 // My story (the current user)
@@ -18,6 +19,7 @@ export const myStory: Story | null = {
   caption: "Late-night code sprint ✨",
   time: "32 min ago",
   viewed: false,
+  fromSelf: true,
 };
 
 // All friend stories — sorting/grouping happens in the Updates component
@@ -29,7 +31,7 @@ export const friendStories: Story[] = [
     preview: "linear-gradient(135deg, oklch(0.55 0.2 25), oklch(0.7 0.18 50))",
     caption: "Sunset over Lisbon 🌅",
     time: "12 min ago",
-    viewed: false,
+    viewed: true,
   },
   {
     id: "s2",
@@ -39,6 +41,7 @@ export const friendStories: Story[] = [
     caption: "Coffee + Cuban jazz",
     time: "1 hr ago",
     viewed: false,
+    isMuted: true,
   },
   {
     id: "s3",
@@ -84,7 +87,7 @@ export const friendStories: Story[] = [
     caption: "Long thread incoming…",
     time: "3 days ago",
     viewed: true,
-    muted: true,
+    isMuted: true,
   },
   {
     id: "s8",
@@ -94,6 +97,6 @@ export const friendStories: Story[] = [
     caption: "Promo of the week",
     time: "4 days ago",
     viewed: false,
-    muted: true,
+    isMuted: true,
   },
 ];
