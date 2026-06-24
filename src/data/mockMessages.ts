@@ -1,8 +1,8 @@
 import type { Msg } from "@/types/chat";
 
-// Represents the internal messages in each chat
+// Represents the individual messages in each chat
 export const mockMessages: Record<string, Msg[]> = {
-  1: [
+  "1": [
     { id: "m1", text: "Sale un lol?", time: "09:30", fromSelf: false, status: "delivered" },
     {
       id: "m2",
@@ -58,6 +58,7 @@ export const mockMessages: Record<string, Msg[]> = {
       time: "08:15 PM",
       fromSelf: false,
       status: "delivered",
+      isOnline: true,
     },
     {
       id: "msg_d2",
@@ -66,6 +67,7 @@ export const mockMessages: Record<string, Msg[]> = {
       time: "08:16 PM",
       fromSelf: false,
       status: "delivered",
+      isOnline: false,
     },
     {
       id: "msg_d3",
@@ -74,6 +76,7 @@ export const mockMessages: Record<string, Msg[]> = {
       time: "08:18 PM",
       fromSelf: false,
       status: "delivered",
+      isOnline: false,
     },
     {
       id: "msg_d4",
@@ -82,6 +85,7 @@ export const mockMessages: Record<string, Msg[]> = {
       time: "08:42 PM",
       fromSelf: false,
       status: "delivered",
+      isOnline: false,
     },
     {
       id: "msg_d5",
@@ -90,6 +94,7 @@ export const mockMessages: Record<string, Msg[]> = {
       time: "08:45 PM",
       fromSelf: false,
       status: "delivered",
+      isOnline: false,
     },
     {
       id: "msg_d6",
@@ -97,7 +102,8 @@ export const mockMessages: Record<string, Msg[]> = {
       text: "vayanse alv todos",
       time: "08:46 PM",
       fromSelf: true,
-      status: "delivered", // Asumiendo que ya fue leído por los demás
+      status: "delivered",
+      isOnline: true, // ¡Tú siempre estás online dándole duro!
     },
     {
       id: "msg_d7",
@@ -106,6 +112,7 @@ export const mockMessages: Record<string, Msg[]> = {
       time: "08:46 PM",
       fromSelf: false,
       status: "delivered",
+      isOnline: true, // 👈 Blast online
     },
   ],
   "14": [

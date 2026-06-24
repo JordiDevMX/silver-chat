@@ -3,7 +3,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Phone, Video, MoreVertical } from "lucide-react";
 import { mockChats } from "@/data/mockChats";
 import { getMessages } from "@/data/mockMessages";
-import type { Msg } from "@/types/chat";
+import type { Msg, Chat } from "@/types/chat";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { ChatComposer } from "@/components/chat/ChatComposer";
 
@@ -29,8 +29,14 @@ export const Route = createFileRoute("/chat/$id")({
   component: ChatView,
 });
 
+interface ChatViewProps {
+  chat: Chat;
+}
+
 function ChatView() {
-  const { chat } = Route.useLoaderData();
+  const { chat }: ChatViewProps = Route.useLoaderData();
+  if (!chat) return <div className="h-full bg-background animate-pulse" />;
+
   const initial = useMemo(() => getMessages(chat.id), [chat.id]);
   const [messages, setMessages] = useState<Msg[]>(initial);
   const endRef = useRef<HTMLDivElement>(null);
@@ -76,14 +82,14 @@ function ChatView() {
               <div className="h-10 w-10 rounded-full bg-gradient-silver border border-border grid place-items-center text-xs font-semibold text-foreground/80 shadow-silver">
                 {chat.avatar}
               </div>
-              {chat.online && (
+              {chat.isOnline && (
                 <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-neon ring-2 ring-background shadow-glow" />
               )}
             </div>
             <div className="flex-1 min-w-0 ml-1">
               <h2 className="text-sm font-semibold truncate">{chat.name}</h2>
               <p className="text-[11px] text-muted-foreground truncate">
-                {chat.online ? <span className="text-neon">online</span> : "last seen recently"}
+                {chat.isOnline ? <span className="text-neon">online</span> : "last seen recently"}
               </p>
             </div>
             <button

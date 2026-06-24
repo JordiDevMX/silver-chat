@@ -8,13 +8,15 @@ export type MessageStatus =
   | "draft"
   | "deleted";
 
+// Groups
 export interface GroupUser {
   id: string;
   name: string;
   avatar: string; // initials or URL
-  isOnline?: boolean;
   role?: "admin" | "moderator" | "member";
 }
+
+// Chatslist
 export interface Chat {
   id: string;
   name: string;
@@ -38,6 +40,7 @@ export interface Chat {
   lastMessageSender?: string; // name of the last message sender in group chats
 }
 
+// Individual Chats
 export interface Msg {
   id: string;
   text: string;
@@ -45,4 +48,5 @@ export interface Msg {
   fromSelf: boolean;
   senderName?: string;
   status: MessageStatus;
+  isOnline?: boolean;
 }
