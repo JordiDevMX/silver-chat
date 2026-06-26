@@ -166,10 +166,7 @@ function ChannelRow({ channel }: { channel: Channel }) {
 
 function DiscoverRow({ channel }: { channel: DiscoverChannel }) {
   return (
-    <button
-      type="button"
-      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors duration-150 text-left cursor-pointer"
-    >
+    <div className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors duration-150 text-left cursor-pointer">
       <div
         className="size-12 shrink-0 rounded-full border border-border"
         style={{ background: channel.avatarGradient }}
@@ -188,7 +185,7 @@ function DiscoverRow({ channel }: { channel: DiscoverChannel }) {
       >
         Follow
       </Button>
-    </button>
+    </div>
   );
 }
 
