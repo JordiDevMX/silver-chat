@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Phone, Video, MoreVertical } from "lucide-react";
 import { mockChats } from "@/data/mockChats";
 import { getMessages } from "@/data/mockMessages";
-import type { Msg, Chat } from "@/types/chat";
+import type { Chat, Msg } from "@/types/chat";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { ChatComposer } from "@/components/chat/ChatComposer";
+import { useChatMessages, messagesQueryKey } from "@/hooks/useChatMessages";
+import { formatMessageDate, isSameDay } from "@/lib/format";
 
 export const Route = createFileRoute("/chat/$id")({
   head: ({ params }) => {
@@ -21,9 +23,10 @@ export const Route = createFileRoute("/chat/$id")({
       ],
     };
   },
-  loader: ({ params }) => {
+  loader: ({ params, context }) => {
     const chat = mockChats.find((c) => c.id === params.id);
     if (!chat) throw notFound();
+    context.queryClient.setQueryData(messagesQueryKey(params.id), getMessages(params.id));
     return { chat };
   },
   component: ChatView,
@@ -33,38 +36,52 @@ interface ChatViewProps {
   chat: Chat;
 }
 
+interface DateGroup {
+  key: string;
+  date: Date;
+  label: string;
+  messages: Msg[];
+}
+
+function groupByDate(messages: Msg[]): DateGroup[] {
+  const groups: DateGroup[] = [];
+  for (const message of messages) {
+    const last = groups[groups.length - 1];
+    if (last && isSameDay(last.date, message.date)) {
+      last.messages.push(message);
+    } else {
+      groups.push({
+        key: message.date.toISOString(),
+        date: message.date,
+        label: formatMessageDate(message.date),
+        messages: [message],
+      });
+    }
+  }
+  return groups;
+}
+
+function DateSeparator({ label }: { label: string }) {
+  return (
+    <div className="flex justify-center my-2" role="presentation">
+      <span className="text-[10px] uppercase tracking-wider text-muted-foreground bg-card/70 border border-border rounded-full px-3 py-0.5">
+        {label}
+      </span>
+    </div>
+  );
+}
+
 function ChatView() {
   const { chat }: ChatViewProps = Route.useLoaderData();
-  if (!chat) return <div className="h-full bg-background animate-pulse" />;
-
-  const initial = useMemo(() => getMessages(chat.id), [chat.id]);
-  const [messages, setMessages] = useState<Msg[]>(initial);
+  const { messages, isLoading, send, isSending } = useChatMessages(chat.id);
   const endRef = useRef<HTMLDivElement>(null);
+  const isGroup = chat.isGroup === true;
+
+  const groups = useMemo(() => groupByDate(messages), [messages]);
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
-  }, [messages]);
-
-  function handleSend(text: string) {
-    const now = new Date();
-    const time = now.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: `m-${prev.length + 1}-${now.getTime()}`,
-        text,
-        time,
-        fromSelf: true,
-        status: "sent",
-      },
-    ]);
-  }
+    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [groups]);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center">
@@ -116,19 +133,51 @@ function ChatView() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto px-3 py-4 space-y-2 bg-[radial-gradient(circle_at_top,hsl(var(--silver-light)/0.4),transparent_60%)]">
-          <div className="flex justify-center">
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground bg-card/70 border border-border rounded-full px-3 py-0.5">
-              End-to-end encrypted
-            </span>
-          </div>
-          {messages.map((m) => (
-            <MessageBubble key={m.id} message={m} />
-          ))}
-          <div ref={endRef} />
+        <main
+          aria-label={`Messages with ${chat.name}`}
+          aria-live="polite"
+          aria-relevant="additions"
+          className="flex-1 overflow-y-auto px-3 py-4 space-y-2 bg-[radial-gradient(circle_at_top,hsl(var(--silver-light)/0.4),transparent_60%)]"
+        >
+          {isLoading ? (
+            <div className="h-full grid place-items-center text-xs text-muted-foreground">
+              Loading conversation…
+            </div>
+          ) : (
+            <>
+              <div className="flex justify-center">
+                <span className="text-[10px] uppercase tracking-wider text-muted-foreground bg-card/70 border border-border rounded-full px-3 py-0.5">
+                  End-to-end encrypted
+                </span>
+              </div>
+              {groups.map((group) => (
+                <Fragment key={group.key}>
+                  <DateSeparator label={group.label} />
+                  {group.messages.map((message, index) => {
+                    const previous = group.messages[index - 1];
+                    const showSender =
+                      isGroup &&
+                      !message.fromSelf &&
+                      message.senderName !== undefined &&
+                      (previous === undefined ||
+                        previous.fromSelf ||
+                        previous.senderName !== message.senderName);
+                    return (
+                      <MessageBubble
+                        key={message.id}
+                        message={message}
+                        showSender={showSender}
+                      />
+                    );
+                  })}
+                </Fragment>
+              ))}
+              <div ref={endRef} />
+            </>
+          )}
         </main>
 
-        <ChatComposer onSend={handleSend} />
+        <ChatComposer onSend={send} disabled={isSending} />
       </div>
     </div>
   );

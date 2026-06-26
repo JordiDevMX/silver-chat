@@ -40,7 +40,7 @@ function CallRow({ call }: { call: Call }) {
         onClick={(e) => e.stopPropagation()}
         className="h-9 w-9 grid place-items-center rounded-full text-neon hover:bg-accent hover:text-neon-glow active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
-        <TypeIcon className="h-5 w-5 shadow-glow" strokeWidth={2.2} />
+        <TypeIcon className="h-5 w-5" strokeWidth={2.2} />
       </button>
     </div>
   );

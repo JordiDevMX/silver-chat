@@ -1,17 +1,19 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { Plus, Send, Smile } from "lucide-react";
 
 interface ChatComposerProps {
   onSend: (text: string) => void;
+  disabled?: boolean;
 }
 
-export function ChatComposer({ onSend }: ChatComposerProps) {
+export function ChatComposer({ onSend, disabled = false }: ChatComposerProps) {
   const [text, setText] = useState("");
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const value = text.trim();
-    if (!value) return;
+    if (!value || disabled) return;
     onSend(value);
     setText("");
   }
@@ -37,7 +39,7 @@ export function ChatComposer({ onSend }: ChatComposerProps) {
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              handleSubmit(e as unknown as FormEvent);
+              handleSubmit(e);
             }
           }}
           rows={1}
@@ -49,7 +51,7 @@ export function ChatComposer({ onSend }: ChatComposerProps) {
       <button
         type="submit"
         aria-label="Send"
-        disabled={!text.trim()}
+        disabled={!text.trim() || disabled}
         className="mb-0.5 h-10 w-10 grid place-items-center rounded-full bg-gradient-neon text-primary-foreground shadow-glow shrink-0 disabled:opacity-40 disabled:shadow-none transition-all disabled:cursor-not-allowed cursor-pointer"
       >
         <Send className="h-4 w-4" />

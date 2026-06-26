@@ -41,6 +41,7 @@ export interface Msg {
   id: string;
   text: string;
   time: string;
+  date: Date;
   fromSelf: boolean;
   senderName?: string;
   status: MessageStatus;
