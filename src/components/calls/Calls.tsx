@@ -14,7 +14,7 @@ function CallRow({ call }: { call: Call }) {
       tabIndex={0}
       className="group flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div className="relative h-12 w-12 rounded-full grid place-items-center bg-gradient-neon text-sm font-semibold text-primary-foreground ring-1 ring-inset ring-white/30 shadow-silver shrink-0">
+      <div className="relative h-12 w-12 rounded-full grid place-items-center bg-gradient-neon shadow-glow text-sm font-semibold text-primary-foreground ring-1 ring-inset ring-white/30 shrink-0">
         <span className="drop-shadow-sm">{call.avatar}</span>
       </div>
 
@@ -40,7 +40,7 @@ function CallRow({ call }: { call: Call }) {
         onClick={(e) => e.stopPropagation()}
         className="h-9 w-9 grid place-items-center rounded-full text-neon hover:bg-accent hover:text-neon-glow active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
-        <TypeIcon className="h-5 w-5" strokeWidth={2.2} />
+        <TypeIcon className="h-5 w-5 shadow-glow" strokeWidth={2.2} />
       </button>
     </div>
   );

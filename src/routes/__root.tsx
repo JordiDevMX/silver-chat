@@ -9,7 +9,10 @@ import {
 } from "@tanstack/react-router";
 import { type ReactNode } from "react";
 
+import { ThemeProvider } from "@/hooks/useTheme";
 import appCss from "../styles.css?url";
+
+const noFlashScript = `(function(){try{var m=localStorage.getItem('theme');if(m!=='light'&&m!=='dark'&&m!=='auto')m='auto';var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=m==='auto'?(d?'dark':'light'):m;if(m!=='auto'){document.documentElement.setAttribute('data-theme',m);}document.documentElement.style.colorScheme=r;}catch(e){}})();`;
 
 function NotFoundComponent() {
   return (
@@ -97,8 +100,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: noFlashScript }} />
         <HeadContent />
       </head>
       <body>
@@ -114,8 +118,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <ThemeProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

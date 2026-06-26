@@ -1,4 +1,5 @@
 import { Search, Settings } from "lucide-react";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 interface HeaderProps {
   search: string;
@@ -19,13 +20,16 @@ export function Header({ search, onSearchChange, placeholder }: HeaderProps) {
             Silver<span className="text-neon">Chat</span>
           </h1>
         </div>
-        <button
-          type="button"
-          aria-label="Settings"
-          className="ml-auto h-9 w-9 grid place-items-center rounded-full bg-card/70 border border-border hover:bg-accent hover:text-accent-foreground transition-colors"
-        >
-          <Settings className="h-4 w-4" />
-        </button>
+        <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            type="button"
+            aria-label="Settings"
+            className="h-9 w-9 grid place-items-center rounded-full bg-card/70 border border-border hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <Settings className="h-4 w-4" />
+          </button>
+        </div>
       </div>
       <div className="px-4 pb-3">
         <label className="flex items-center gap-2 h-10 rounded-full bg-card/80 border border-border px-4 focus-within:ring-2 focus-within:ring-ring focus-within:border-ring transition">
