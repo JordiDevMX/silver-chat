@@ -8,23 +8,22 @@ export type MessageStatus =
   | "draft"
   | "deleted";
 
-// Groups
 export interface GroupUser {
   id: string;
   name: string;
-  avatar: string; // initials or URL
+  avatar: string;
   role?: "admin" | "moderator" | "member";
 }
 
-// Chatslist
 export interface Chat {
   id: string;
   name: string;
-  avatar: string; // initials or URL
+  avatar: string;
+  avatarGradient?: string;
   lastMessage: string;
   time: string;
   unread: number;
-  status?: Msg["status"];
+  status?: MessageStatus;
   isOnline?: boolean;
   isPinned?: boolean;
   isMuted?: boolean;
@@ -33,14 +32,11 @@ export interface Chat {
   isArchived?: boolean;
   isFavorite?: boolean;
   fromSelf?: boolean;
-
-  // Chat Groups Props
   isGroup?: boolean;
   participants?: GroupUser[];
-  lastMessageSender?: string; // name of the last message sender in group chats
+  lastMessageSender?: string;
 }
 
-// Individual Chats
 export interface Msg {
   id: string;
   text: string;
