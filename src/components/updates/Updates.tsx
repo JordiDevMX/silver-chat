@@ -71,7 +71,7 @@ export function StoryCard({ story }: StoryCardProps) {
       {story.isMuted && (
         <div className="absolute inset-2 grid place-items-end z-20 animate-fade-in">
           <BellOff
-            className="size-5 text-[var(--neon)]"
+            className="size-5 text-[var(--neon)] animate-in fade-in-0 duration-300"
             style={{ filter: "drop-shadow(0 0 12px rgba(56,189,248,0.9))" }}
           />
         </div>
