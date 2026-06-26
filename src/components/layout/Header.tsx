@@ -5,9 +5,10 @@ interface HeaderProps {
   search: string;
   onSearchChange: (value: string) => void;
   placeholder?: string;
+  onOpenSettings?: () => void;
 }
 
-export function Header({ search, onSearchChange, placeholder }: HeaderProps) {
+export function Header({ search, onSearchChange, placeholder, onOpenSettings }: HeaderProps) {
   return (
     <header suppressHydrationWarning className="sticky top-0 z-30 bg-gradient-silver border-b border-border/60 backdrop-blur-xl shadow-silver">
       <div className="flex items-center gap-3 px-4 pt-4 pb-2">
@@ -25,6 +26,7 @@ export function Header({ search, onSearchChange, placeholder }: HeaderProps) {
           <button
             type="button"
             aria-label="Settings"
+            onClick={onOpenSettings}
             className="h-9 w-9 grid place-items-center rounded-full bg-card/70 border border-border hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Settings className="h-4 w-4" />

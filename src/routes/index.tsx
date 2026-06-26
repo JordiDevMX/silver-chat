@@ -7,6 +7,7 @@ import { Communities } from "@/components/communities/Communities";
 import { Calls, CallsFAB } from "@/components/calls/Calls";
 import { CallOverlay } from "@/components/calls/CallOverlay";
 import { CallSessionProvider } from "@/hooks/useCallSession";
+import { SettingsSheet } from "@/components/settings/SettingsSheet";
 import { mockChats } from "@/data/mockChats";
 import { mockCalls } from "@/data/mockCalls";
 import type { TabKey } from "@/types/chat";
@@ -28,6 +29,7 @@ function Index() {
   const [activeTab, setActiveTab] = useState<TabKey>("chats");
   const [communitiesOpen, setCommunitiesOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const totalUnread = mockChats.reduce((sum, c) => sum + c.unread, 0);
 
@@ -68,6 +70,7 @@ function Index() {
                 : "Search conversations…"
         }
         FAB={activeTab === "calls" ? <CallsFAB /> : activeTab === "chats" ? <ChatFAB /> : null}
+        onOpenSettings={() => setSettingsOpen(true)}
       >
         {activeTab === "chats" && <ChatList chats={filteredChats} />}
         {activeTab === "updates" && <Updates search={search} />}
@@ -88,6 +91,7 @@ function Index() {
         {activeTab === "calls" && <Calls calls={filteredCalls} />}
       </Layout>
       <CallOverlay />
+      <SettingsSheet open={settingsOpen} onOpenChange={setSettingsOpen} />
     </CallSessionProvider>
   );
 }

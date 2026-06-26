@@ -12,6 +12,7 @@ interface LayoutProps {
   onSearchChange: (value: string) => void;
   searchPlaceholder?: string;
   FAB?: ReactNode;
+  onOpenSettings?: () => void;
 }
 
 export function Layout({
@@ -23,11 +24,17 @@ export function Layout({
   onSearchChange,
   searchPlaceholder,
   FAB,
+  onOpenSettings,
 }: LayoutProps) {
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center">
       <div className="relative flex h-screen w-full max-w-md flex-col overflow-hidden bg-background mx-auto shadow-silver">
-        <Header search={search} onSearchChange={onSearchChange} placeholder={searchPlaceholder} />
+        <Header
+          search={search}
+          onSearchChange={onSearchChange}
+          placeholder={searchPlaceholder}
+          onOpenSettings={onOpenSettings}
+        />
         <main className="flex-1 overflow-y-auto pb-24">{children}</main>
         {FAB}
         <Footer active={activeTab} onChange={onTabChange} badges={badges} />
