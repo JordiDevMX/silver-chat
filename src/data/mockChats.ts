@@ -238,6 +238,16 @@ export const rawChats: Chat[] = [
       { id: "u_angii", name: "Angii", avatar: "A", role: "admin" },
     ],
   },
+  {
+    id: "15",
+    name: "Gustambo",
+    avatar: "GT",
+    lastMessage: "voice call",
+    time: "09:42",
+    unread: 1,
+    status: "delivered",
+    fromSelf: false,
+  },
 ];
 
 // Removes duplicated chats based on ID, keeping only the first occurrence

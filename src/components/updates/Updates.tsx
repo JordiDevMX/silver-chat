@@ -9,13 +9,10 @@ import {
   Megaphone,
   BellOff,
 } from "lucide-react";
-import { myStory, friendStories, type Story } from "@/data/mockStories";
-import {
-  followedChannels,
-  discoverChannels,
-  type Channel,
-  type DiscoverChannel,
-} from "@/data/mockChannels";
+import { myStory, friendStories } from "@/data/mockStories";
+import type { Story } from "@/types/story";
+import { followedChannels, discoverChannels } from "@/data/mockChannels";
+import type { Channel, DiscoverChannel } from "@/types/channel";
 import { Button } from "@/components/ui/button";
 
 interface StoryCardProps {

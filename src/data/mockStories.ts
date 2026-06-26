@@ -1,14 +1,4 @@
-export interface Story {
-  id: string;
-  author: string;
-  avatarGradient: string;
-  preview: string;
-  caption: string;
-  time: string;
-  viewed: boolean;
-  isMuted?: boolean;
-  fromSelf?: boolean; // Indicates if the story is from the current user
-}
+import type { Story } from "@/types/story";
 
 // My story (the current user)
 export const myStory: Story | null = {
