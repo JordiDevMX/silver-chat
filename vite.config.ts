@@ -16,55 +16,36 @@ const config = defineConfig({
     viteReact(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "robots.txt"],
-      // Para funcionar offline
+      includeAssets: ["favicon.ico", "robots.txt"],
       workbox: {
-        navigateFallback: "/index.html",
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg}"],
+        navigateFallback: "/",
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,webmanifest}"],
       },
       manifest: {
-        name: "First PWA",
-        short_name: "FPWA",
-        description: "App React+Vite PWA",
+        name: "SilverChat",
+        short_name: "SilverChat",
+        description: "SilverChat — silver glassmorphism messenger",
         start_url: "/",
-        // Habilita la instalacion en celulares
         display: "standalone",
-        background_color: "#fff",
-        theme_color: "#228be6",
-        screenshots: [
-          {
-            src: "/screenshots/728x410.png",
-            sizes: "728x410",
-            type: "image/png",
-            form_factor: "wide",
-          },
-          {
-            src: "/screenshots/736x1309.png",
-            sizes: "736x1309",
-            type: "image/png",
-            form_factor: "narrow",
-          },
-        ],
+        background_color: "#f5f7fa",
+        theme_color: "#2E7BFF",
         icons: [
           {
-            src: "/icons/icon-128x128.png",
-            sizes: "128x128",
-            type: "image/png",
+            src: "favicon.ico",
+            sizes: "64x64 32x32 24x24 16x16",
+            type: "image/x-icon",
           },
           {
-            src: "/icons/icon-144x144.png",
-            sizes: "144x144",
-            type: "image/png",
-          },
-          {
-            src: "/icons/icon-192x192.png",
+            src: "logo192.png",
             sizes: "192x192",
             type: "image/png",
+            purpose: "any maskable",
           },
           {
-            src: "/icons/icon-512x512.png",
+            src: "logo512.png",
             sizes: "512x512",
             type: "image/png",
+            purpose: "any maskable",
           },
         ],
       },
