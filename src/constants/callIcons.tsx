@@ -19,3 +19,10 @@ export const CALL_TYPE_ICONS: Record<CallType, LucideIcon> = {
   voice: Phone,
   video: Video,
 };
+
+export const CALL_STATUS_GRADIENTS: Record<CallStatus, string> = {
+  answered: "var(--gradient-neon)",
+  missed: "linear-gradient(135deg, oklch(0.62 0.23 25), oklch(0.45 0.2 30))",
+  rejected: "linear-gradient(135deg, oklch(0.55 0.18 25), oklch(0.4 0.15 30))",
+  ongoing: "linear-gradient(135deg, oklch(0.7 0.2 145), oklch(0.5 0.22 160))",
+};

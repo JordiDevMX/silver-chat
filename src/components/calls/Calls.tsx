@@ -1,29 +1,52 @@
 import { PhoneCall, Plus } from "lucide-react";
 import type { Call } from "@/types/call";
-import { CALL_DIRECTION_ICONS, CALL_STATUS_COLORS, CALL_TYPE_ICONS } from "@/constants/callIcons";
+import {
+  CALL_DIRECTION_ICONS,
+  CALL_STATUS_COLORS,
+  CALL_STATUS_GRADIENTS,
+  CALL_TYPE_ICONS,
+} from "@/constants/callIcons";
+import { useCallSession } from "@/hooks/useCallSession";
+import { mockCalls } from "@/data/mockCalls";
 
-function CallRow({ call }: { call: Call }) {
+interface CallRowProps {
+  call: Call;
+}
+
+function CallRow({ call }: CallRowProps) {
+  const { start } = useCallSession();
   const TypeIcon = CALL_TYPE_ICONS[call.type];
   const statusColor = CALL_STATUS_COLORS[call.status];
 
   const directionIcon = CALL_DIRECTION_ICONS[call.direction](statusColor);
 
+  function openCall() {
+    start(call);
+  }
+
   return (
     <div
       role="button"
       tabIndex={0}
+      onClick={openCall}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openCall();
+        }
+      }}
+      aria-label={`${call.type === "video" ? "Video" : "Voice"} call ${call.name}`}
       className="group flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div className="relative h-12 w-12 rounded-full grid place-items-center bg-gradient-neon shadow-glow text-sm font-semibold text-primary-foreground ring-1 ring-inset ring-white/30 shrink-0">
+      <div
+        className="relative h-12 w-12 rounded-full grid place-items-center text-sm font-semibold text-primary-foreground ring-1 ring-inset ring-white/30 shadow-silver shrink-0"
+        style={{ backgroundImage: CALL_STATUS_GRADIENTS[call.status] }}
+      >
         <span className="drop-shadow-sm">{call.avatar}</span>
       </div>
 
       <div className="flex-1 min-w-0">
-        <p
-          className={`text-sm font-semibold truncate ${call.status === "missed" ? "text-destructive" : "text-foreground"}`}
-        >
-          {call.name}
-        </p>
+        <p className={`text-sm font-semibold truncate ${statusColor}`}>{call.name}</p>
         {call.subtitle ? (
           <p className="text-xs text-muted-foreground truncate mb-0.5">{call.subtitle}</p>
         ) : null}
@@ -37,7 +60,10 @@ function CallRow({ call }: { call: Call }) {
       <button
         type="button"
         aria-label={call.type === "video" ? `Video call ${call.name}` : `Call ${call.name}`}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          openCall();
+        }}
         className="h-9 w-9 grid place-items-center rounded-full text-neon hover:bg-accent hover:text-neon-glow active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <TypeIcon className="h-5 w-5" strokeWidth={2.2} />
@@ -47,11 +73,19 @@ function CallRow({ call }: { call: Call }) {
 }
 
 export function CallsFAB() {
+  const { start } = useCallSession();
+  const fallback = mockCalls[0];
+
+  function openNewCall() {
+    if (fallback) start(fallback);
+  }
+
   return (
     <button
       type="button"
       aria-label="Start new call"
-      className="absolute bottom-24 right-5 z-40 h-14 w-14 rounded-2xl bg-gradient-neon text-primary-foreground grid place-items-center shadow-glow hover:scale-105 active:scale-95 active:brightness-90 transition-all ring-1 ring-inset ring-white/20"
+      onClick={openNewCall}
+      className="absolute bottom-24 right-5 z-40 h-14 w-14 rounded-2xl bg-gradient-neon text-primary-foreground grid place-items-center shadow-glow hover:scale-105 active:scale-95 active:brightness-90 transition-all ring-1 ring-inset ring-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <span className="relative">
         <PhoneCall className="h-6 w-6" />

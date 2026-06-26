@@ -5,6 +5,8 @@ import { ChatList } from "@/components/chat/ChatList";
 import { Updates } from "@/components/updates/Updates";
 import { Communities } from "@/components/communities/Communities";
 import { Calls, CallsFAB } from "@/components/calls/Calls";
+import { CallOverlay } from "@/components/calls/CallOverlay";
+import { CallSessionProvider } from "@/hooks/useCallSession";
 import { mockChats } from "@/data/mockChats";
 import { mockCalls } from "@/data/mockCalls";
 import type { TabKey } from "@/types/chat";
@@ -46,43 +48,46 @@ function Index() {
   }, [search]);
 
   return (
-    <Layout
-      activeTab={activeTab}
-      onTabChange={(t) => {
-        setActiveTab(t);
-        setCommunitiesOpen(false);
-      }}
-      badges={{ chats: totalUnread, calls: 2 }}
-      search={search}
-      onSearchChange={setSearch}
-      searchPlaceholder={
-        activeTab === "calls"
-          ? "Search calls by name or email..."
-          : activeTab === "updates"
-            ? "Search stories and channels..."
-            : activeTab === "communities"
-              ? "Search communities..."
-              : "Search conversations…"
-      }
-      FAB={activeTab === "calls" ? <CallsFAB /> : activeTab === "chats" ? <ChatFAB /> : null}
-    >
-      {activeTab === "chats" && <ChatList chats={filteredChats} />}
-      {activeTab === "updates" && <Updates search={search} />}
-      {activeTab === "communities" && !communitiesOpen && (
-        <Communities search={search} onOpen={() => void 0} />
-      )}
-      {/* Open communities chats logic (works for everything else)
-      {activeTab === "communities" && !communitiesOpen && (
-        <Communities onOpen={() => setCommunitiesOpen(true)} />
-      )} 
+    <CallSessionProvider>
+      <Layout
+        activeTab={activeTab}
+        onTabChange={(t) => {
+          setActiveTab(t);
+          setCommunitiesOpen(false);
+        }}
+        badges={{ chats: totalUnread, calls: 2 }}
+        search={search}
+        onSearchChange={setSearch}
+        searchPlaceholder={
+          activeTab === "calls"
+            ? "Search calls by name or email..."
+            : activeTab === "updates"
+              ? "Search stories and channels..."
+              : activeTab === "communities"
+                ? "Search communities..."
+                : "Search conversations…"
+        }
+        FAB={activeTab === "calls" ? <CallsFAB /> : activeTab === "chats" ? <ChatFAB /> : null}
+      >
+        {activeTab === "chats" && <ChatList chats={filteredChats} />}
+        {activeTab === "updates" && <Updates search={search} />}
+        {activeTab === "communities" && !communitiesOpen && (
+          <Communities search={search} onOpen={() => void 0} />
+        )}
+        {/* Open communities chats logic (works for everything else)
+        {activeTab === "communities" && !communitiesOpen && (
+          <Communities onOpen={() => setCommunitiesOpen(true)} />
+        )}
 
-      {/* {activeTab === "communities" && communitiesOpen && (
-        <div className="px-6 py-16 text-center text-sm text-muted-foreground">
-          <p className="capitalize text-foreground font-medium mb-1">{activeTab}</p>
-          <p>Coming soon.</p>
-        </div>
-      )} */}
-      {activeTab === "calls" && <Calls calls={filteredCalls} />}
-    </Layout>
+        {/* {activeTab === "communities" && communitiesOpen && (
+          <div className="px-6 py-16 text-center text-sm text-muted-foreground">
+            <p className="capitalize text-foreground font-medium mb-1">{activeTab}</p>
+            <p>Coming soon.</p>
+          </div>
+        )} */}
+        {activeTab === "calls" && <Calls calls={filteredCalls} />}
+      </Layout>
+      <CallOverlay />
+    </CallSessionProvider>
   );
 }

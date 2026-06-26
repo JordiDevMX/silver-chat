@@ -38,7 +38,7 @@ export function MessageBubble({ message, showSender = false }: MessageBubbleProp
           <span>{message.time}</span>
           {self &&
             (message.status === "read" ? (
-              <CheckLine className="h-3 w-3 text-white" />
+              <CheckLine className="h-3 w-3" />
             ) : message.status === "delivered" ? (
               <CheckCheck className="h-3 w-3" />
             ) : message.status === "pending" ? (
