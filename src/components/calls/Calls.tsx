@@ -1,11 +1,12 @@
-import { ArrowDownLeft, ArrowUpRight, Phone, Video, PhoneCall, Plus } from "lucide-react";
-import type { CallLog } from "@/data/mockCalls";
+import { PhoneCall, Plus } from "lucide-react";
+import type { Call } from "@/types/call";
+import { CALL_DIRECTION_ICONS, CALL_STATUS_COLORS, CALL_TYPE_ICONS } from "@/constants/callIcons";
 
-function CallRow({ call }: { call: CallLog }) {
-  const isMissed = call.direction === "missed";
-  const isIncoming = call.direction === "incoming" || call.direction === "missed";
-  const ArrowIcon = isIncoming ? ArrowDownLeft : ArrowUpRight;
-  const TrailingIcon = call.type === "video" ? Video : Phone;
+function CallRow({ call }: { call: Call }) {
+  const TypeIcon = CALL_TYPE_ICONS[call.type];
+  const statusColor = CALL_STATUS_COLORS[call.status];
+
+  const directionIcon = CALL_DIRECTION_ICONS[call.direction](statusColor);
 
   return (
     <div
@@ -13,19 +14,13 @@ function CallRow({ call }: { call: CallLog }) {
       tabIndex={0}
       className="group flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div
-        className="relative h-12 w-12 rounded-full grid place-items-center text-sm font-semibold text-primary-foreground ring-1 ring-inset ring-white/30 shadow-silver shrink-0"
-        style={{ backgroundImage: call.avatarGradient ?? "var(--gradient-neon)" }}
-      >
+      <div className="relative h-12 w-12 rounded-full grid place-items-center bg-gradient-neon text-sm font-semibold text-primary-foreground ring-1 ring-inset ring-white/30 shadow-silver shrink-0">
         <span className="drop-shadow-sm">{call.avatar}</span>
       </div>
 
       <div className="flex-1 min-w-0">
         <p
-          className={[
-            "text-sm font-semibold truncate",
-            isMissed ? "text-destructive" : "text-foreground",
-          ].join(" ")}
+          className={`text-sm font-semibold truncate ${call.status === "missed" ? "text-destructive" : "text-foreground"}`}
         >
           {call.name}
         </p>
@@ -33,13 +28,9 @@ function CallRow({ call }: { call: CallLog }) {
           <p className="text-xs text-muted-foreground truncate mb-0.5">{call.subtitle}</p>
         ) : null}
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <ArrowIcon
-            className={["h-3.5 w-3.5 shrink-0", isMissed ? "text-destructive" : "text-neon"].join(
-              " ",
-            )}
-            strokeWidth={2.4}
-          />
+          {directionIcon}
           <span className="truncate">{call.time}</span>
+          {call.duration ? <span>• {call.duration}</span> : null}
         </div>
       </div>
 
@@ -49,7 +40,7 @@ function CallRow({ call }: { call: CallLog }) {
         onClick={(e) => e.stopPropagation()}
         className="h-9 w-9 grid place-items-center rounded-full text-neon hover:bg-accent hover:text-neon-glow active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
-        <TrailingIcon className="h-5 w-5" strokeWidth={2.2} />
+        <TypeIcon className="h-5 w-5" strokeWidth={2.2} />
       </button>
     </div>
   );
@@ -70,7 +61,7 @@ export function CallsFAB() {
   );
 }
 
-export function Calls({ calls }: { calls: CallLog[] }) {
+export function Calls({ calls }: { calls: Call[] }) {
   if (calls.length === 0) {
     return (
       <div className="px-6 py-16 text-center text-sm text-muted-foreground">

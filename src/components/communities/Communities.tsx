@@ -1,5 +1,6 @@
 import { Users, Plus, Megaphone, BellOff, ChevronRight } from "lucide-react";
-import { communities, type Community, type SubChannel } from "@/data/mockCommunities";
+import { communities } from "@/data/mockCommunities";
+import type { Community, SubChannel } from "@/types/community";
 
 interface CommunitiesProps {
   onOpen: () => void;
