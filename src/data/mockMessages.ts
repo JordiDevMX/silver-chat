@@ -217,47 +217,152 @@ export const mockMessages: Record<string, Msg[]> = {
     },
   ],
 
-  // ── Rich media attachment scenarios ─────────────────────────────────────
-  // The canonical Msg interface is text-only (see src/types/chat.ts), so each
-  // attachment is encoded as a single emoji-prefixed text payload. This keeps
-  // the active MessageBubble / ChatListItem renderers untouched while letting
-  // us visualize the four media states end-to-end.
-  "16": [
-    // Scenario E — PDF document (received)
+  // ── Scenario audit threads (one rich payload per chat) ──────────────────
+  // Each scenario owns a dedicated thread so it can be audited in isolation.
+  // Rendering routes through `attachment` / `callLog` keys on the Msg type
+  // (see src/types/chat.ts) handled by MessageBubble + AttachmentPreview +
+  // CallLogPreview.
+
+  // A — Missed incoming call
+  "17": [
+    {
+      id: "log_a",
+      text: "Missed voice call",
+      time: "9:24 AM",
+      date: daysAgo(0, 9, 24),
+      fromSelf: false,
+      status: "delivered",
+      callLog: {
+        type: "voice",
+        direction: "incoming",
+        status: "missed",
+      },
+    },
+  ],
+
+  // B — Unanswered outgoing call
+  "18": [
+    {
+      id: "log_b",
+      text: "No answer",
+      time: "8:31 AM",
+      date: daysAgo(0, 8, 31),
+      fromSelf: true,
+      status: "delivered",
+      callLog: {
+        type: "voice",
+        direction: "outgoing",
+        status: "missed",
+      },
+    },
+  ],
+
+  // C — Answered incoming call
+  "19": [
+    {
+      id: "log_c",
+      text: "Voice call · 14:22 mins",
+      time: "9:02 AM",
+      date: daysAgo(0, 9, 2),
+      fromSelf: false,
+      status: "delivered",
+      callLog: {
+        type: "voice",
+        direction: "incoming",
+        status: "answered",
+        duration: "14:22 mins",
+      },
+    },
+  ],
+
+  // D — Answered outgoing call
+  "20": [
+    {
+      id: "log_d",
+      text: "Video call · 22:07 mins",
+      time: "11:48 AM",
+      date: daysAgo(1, 11, 48),
+      fromSelf: true,
+      status: "read",
+      callLog: {
+        type: "video",
+        direction: "outgoing",
+        status: "answered",
+        duration: "22:07 mins",
+      },
+    },
+  ],
+
+  // E — PDF document (received)
+  "21": [
     {
       id: "att_pdf",
-      text: "📄 Q3_Financial_Report.pdf",
+      text: "Q3_Financial_Report.pdf",
       time: "10:42",
       date: daysAgo(0, 10, 42),
       fromSelf: false,
       status: "delivered",
+      attachment: {
+        kind: "pdf",
+        name: "Q3_Financial_Report.pdf",
+        size: "2.4 MB",
+      },
     },
-    // Scenario F — Image attachment (received)
+  ],
+
+  // F — Image attachment (received)
+  "22": [
     {
       id: "att_img",
-      text: "🖼️ setup_hacker_den.png",
+      text: "setup_hacker_den.png",
       time: "10:55",
       date: daysAgo(0, 10, 55),
       fromSelf: false,
       status: "delivered",
+      attachment: {
+        kind: "image",
+        name: "setup_hacker_den.png",
+        size: "1.8 MB",
+        width: 1920,
+        height: 1080,
+        hue: "linear-gradient(135deg, oklch(0.6 0.18 280), oklch(0.4 0.12 200))",
+      },
     },
-    // Scenario G — Video attachment (sent)
+  ],
+
+  // G — Video attachment (sent)
+  "23": [
     {
       id: "att_vid",
-      text: "🎥 cinematic_demo.mp4",
+      text: "cinematic_demo.mp4",
       time: "11:02",
       date: daysAgo(0, 11, 2),
       fromSelf: true,
       status: "read",
+      attachment: {
+        kind: "video",
+        name: "cinematic_demo.mp4",
+        size: "14.6 MB",
+        duration: "0:42",
+        hue: "linear-gradient(135deg, oklch(0.45 0.12 240), oklch(0.3 0.08 280))",
+      },
     },
-    // Scenario H — Sticker (sent)
+  ],
+
+  // H — Sticker (sent)
+  "24": [
     {
       id: "att_stk",
-      text: "👻 [Sticker]",
+      text: "Phantom sticker",
       time: "11:18",
       date: daysAgo(0, 11, 18),
       fromSelf: true,
       status: "delivered",
+      attachment: {
+        kind: "sticker",
+        name: "sticker", // The name by default of any sticker will always be "sticker"
+        emoji: "👻",
+      },
     },
   ],
 };

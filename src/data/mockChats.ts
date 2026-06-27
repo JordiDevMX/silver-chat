@@ -248,11 +248,151 @@ export const rawChats: Chat[] = [
     status: "delivered",
     fromSelf: false,
   },
+
+  // ── Scenario audit threads (one scenario per chat) ─────────────────────
+  // Each scenario below owns a unique thread so the layout can be audited
+  // in isolation. lastMessage is the chat-list preview; the rich payload
+  // (attachment / callLog) lives in src/data/mockMessages.ts.
+
+  // A — Missed incoming call
   {
-    id: "16",
-    name: "Cyber Vault",
-    avatar: "CV",
+    id: "17",
+    name: "Nova Vega",
+    avatar: "NV",
+    lastMessage: "Missed voice call",
+    time: "9:24 AM",
+    unread: 1,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: false,
+  },
+
+  // B — Unanswered outgoing call
+  {
+    id: "18",
+    name: "Rin Akiyama",
+    avatar: "RA",
+    lastMessage: "No answer",
+    time: "8:31 AM",
+    unread: 0,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: true,
+  },
+
+  // C — Answered incoming call (voice, long)
+  {
+    id: "19",
+    name: "Lyra Chen",
+    avatar: "LC",
+    lastMessage: "Voice call · 14:22 mins",
+    time: "9:02 AM",
+    unread: 0,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: false,
+  },
+
+  // D — Answered outgoing call (video)
+  {
+    id: "20",
+    name: "Atlas Crew",
+    avatar: "AC",
+    lastMessage: "Video call · 22:07 mins",
+    time: "Mon",
+    unread: 0,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: true,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "read",
+    fromSelf: true,
+  },
+
+  // E — PDF document (received)
+  {
+    id: "21",
+    name: "DocuPort",
+    avatar: "DP",
     lastMessage: "📄 Q3_Financial_Report.pdf",
+    time: "10:42",
+    unread: 0,
+    isOnline: false,
+    isMuted: false,
+    isGroup: false,
+    isVerified: true,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: false,
+  },
+
+  // F — Image attachment (received)
+  {
+    id: "22",
+    name: "PixelStream",
+    avatar: "PS",
+    lastMessage: "🖼️ setup_hacker_den.png",
+    time: "10:55",
+    unread: 0,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: false,
+  },
+
+  // G — Video attachment (sent)
+  {
+    id: "23",
+    name: "CineLink",
+    avatar: "CL",
+    lastMessage: "🎥 cinematic_demo.mp4",
+    time: "11:02",
+    unread: 0,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "read",
+    fromSelf: true,
+  },
+
+  // H — Sticker (sent)
+  {
+    id: "24",
+    name: "Sticker Lab",
+    avatar: "SL",
+    lastMessage: "👻 [Sticker]",
     time: "11:18",
     unread: 0,
     isOnline: true,
@@ -263,7 +403,7 @@ export const rawChats: Chat[] = [
     isArchived: false,
     isFavorite: false,
     status: "delivered",
-    fromSelf: false,
+    fromSelf: true,
   },
 ];
 
