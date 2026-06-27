@@ -1,4 +1,5 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
@@ -7,12 +8,12 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { ThemeProvider } from "@/hooks/useTheme";
 import appCss from "../styles.css?url";
 
-const noFlashScript = `(function(){try{var m=localStorage.getItem('theme');if(m!=='light'&&m!=='dark'&&m!=='auto')m='auto';var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=m==='auto'?(d?'dark':'light'):m;if(m!=='auto'){document.documentElement.setAttribute('data-theme',m);}document.documentElement.style.colorScheme=r;}catch(e){}})();`;
+const noFlashScript = `(function(){try{var m=localStorage.getItem('theme');if(m!=='light'&&m!=='dark'&&m!=='auto')m='auto';var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=m==='auto'?(d?'dark':'light'):m;if(m!=='auto'){document.documentElement.setAttribute('data-theme',m);}document.documentElement.style.colorScheme=r;var a=localStorage.getItem('accent');var ids=['blue','purple','red','orange','yellow','green'];if(ids.indexOf(a)<0)a='blue';document.documentElement.classList.add('theme-'+a);}catch(e){}})();`;
 
 function NotFoundComponent() {
   return (

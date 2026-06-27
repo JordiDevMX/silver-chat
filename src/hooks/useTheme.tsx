@@ -1,16 +1,24 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
 
 export type ThemeMode = "light" | "dark" | "auto";
 export type ResolvedTheme = "light" | "dark";
+
+export const ACCENT_IDS = ["blue", "purple", "red", "orange", "yellow", "green"] as const;
+export type Accent = (typeof ACCENT_IDS)[number];
+const DEFAULT_ACCENT: Accent = "blue";
 
 interface ThemeContextValue {
   mode: ThemeMode;
   resolved: ResolvedTheme;
   setMode: (mode: ThemeMode) => void;
   cycle: () => void;
+  accent: Accent;
+  setAccent: (accent: Accent) => void;
 }
 
-const STORAGE_KEY = "theme";
+const MODE_STORAGE_KEY = "theme";
+const ACCENT_STORAGE_KEY = "accent";
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
@@ -18,13 +26,27 @@ function isThemeMode(value: unknown): value is ThemeMode {
   return value === "light" || value === "dark" || value === "auto";
 }
 
+function isAccent(value: unknown): value is Accent {
+  return typeof value === "string" && (ACCENT_IDS as readonly string[]).includes(value);
+}
+
 function readStoredMode(): ThemeMode {
   if (typeof window === "undefined") return "auto";
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const stored = window.localStorage.getItem(MODE_STORAGE_KEY);
     return isThemeMode(stored) ? stored : "auto";
   } catch {
     return "auto";
+  }
+}
+
+function readStoredAccent(): Accent {
+  if (typeof window === "undefined") return DEFAULT_ACCENT;
+  try {
+    const stored = window.localStorage.getItem(ACCENT_STORAGE_KEY);
+    return isAccent(stored) ? stored : DEFAULT_ACCENT;
+  } catch {
+    return DEFAULT_ACCENT;
   }
 }
 
@@ -47,17 +69,31 @@ function applyTheme(mode: ThemeMode) {
   root.style.colorScheme = resolved;
 }
 
+function applyAccent(accent: Accent) {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+  for (const id of ACCENT_IDS) {
+    root.classList.remove(`theme-${id}`);
+  }
+  root.classList.add(`theme-${accent}`);
+}
+
 const CYCLE_ORDER: ThemeMode[] = ["light", "dark", "auto"];
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [mode, setModeState] = useState<ThemeMode>("auto");
   const [resolved, setResolved] = useState<ResolvedTheme>("light");
+  const [accent, setAccentState] = useState<Accent>(DEFAULT_ACCENT);
 
   useEffect(() => {
-    const initial = readStoredMode();
-    setModeState(initial);
-    setResolved(resolveMode(initial));
-    applyTheme(initial);
+    const initialMode = readStoredMode();
+    setModeState(initialMode);
+    setResolved(resolveMode(initialMode));
+    applyTheme(initialMode);
+
+    const initialAccent = readStoredAccent();
+    setAccentState(initialAccent);
+    applyAccent(initialAccent);
   }, []);
 
   useEffect(() => {
@@ -77,7 +113,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setResolved(resolveMode(next));
     applyTheme(next);
     try {
-      window.localStorage.setItem(STORAGE_KEY, next);
+      window.localStorage.setItem(MODE_STORAGE_KEY, next);
+    } catch {
+      // ignore quota / privacy mode errors
+    }
+  }, []);
+
+  const setAccent = useCallback((next: Accent) => {
+    setAccentState(next);
+    applyAccent(next);
+    try {
+      window.localStorage.setItem(ACCENT_STORAGE_KEY, next);
     } catch {
       // ignore quota / privacy mode errors
     }
@@ -88,8 +134,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [mode, setMode]);
 
   const value = useMemo<ThemeContextValue>(
-    () => ({ mode, resolved, setMode, cycle }),
-    [mode, resolved, setMode, cycle],
+    () => ({ mode, resolved, setMode, cycle, accent, setAccent }),
+    [mode, resolved, setMode, cycle, accent, setAccent],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

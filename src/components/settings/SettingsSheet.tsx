@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   Bell,
+  Check,
   Database,
   Smartphone,
   Globe,
@@ -33,6 +34,8 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { SettingsRow } from "@/components/settings/SettingsRow";
+import { useTheme } from "@/hooks/useTheme";
+import type { Accent } from "@/hooks/useTheme";
 import { cn } from "@/lib/utils";
 
 interface SettingsSheetProps {
@@ -45,6 +48,76 @@ type StatusPrivacy = "Everyone" | "My contacts" | "Selected contacts" | "Nobody"
 type Language = "English" | "Español" | "Français" | "Deutsch" | "日本語";
 
 const LANGUAGES: Language[] = ["English", "Español"];
+
+interface AccentOption {
+  id: Accent;
+  label: string;
+  /** Primary OKLCH for the pill gradient (light-mode reference; CSS handles dark variants) */
+  from: string;
+  /** Endpoint OKLCH for the pill gradient */
+  to: string;
+}
+
+const ACCENT_OPTIONS: AccentOption[] = [
+  { id: "blue", label: "Neon Blue", from: "oklch(0.62 0.22 255)", to: "oklch(0.7 0.2 210)" },
+  { id: "purple", label: "Cyber Purple", from: "oklch(0.58 0.24 300)", to: "oklch(0.7 0.22 330)" },
+  { id: "red", label: "Crimson Red", from: "oklch(0.62 0.24 25)", to: "oklch(0.7 0.22 350)" },
+  { id: "orange", label: "Plasma Orange", from: "oklch(0.7 0.2 50)", to: "oklch(0.72 0.2 80)" },
+  { id: "yellow", label: "Neon Yellow", from: "oklch(0.82 0.2 95)", to: "oklch(0.82 0.2 130)" },
+  {
+    id: "green",
+    label: "Radioactive Green",
+    from: "oklch(0.72 0.22 145)",
+    to: "oklch(0.7 0.22 175)",
+  },
+];
+
+function AccentColorPicker() {
+  const { accent, setAccent } = useTheme();
+  return (
+    <div role="radiogroup" aria-label="App Accent Color" className="px-3.5 py-3 bg-black/5">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2.5">
+        App Accent Color
+      </p>
+      <div className="flex items-center justify-between gap-1">
+        {ACCENT_OPTIONS.map((option) => {
+          const selected = accent === option.id;
+          return (
+            <button
+              key={option.id}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              aria-label={option.label}
+              onClick={() => setAccent(option.id)}
+              className={cn(
+                "group relative h-9 w-9 rounded-full transition-all duration-200 cursor-pointer",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card",
+                "active:scale-95",
+                selected
+                  ? "scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-card"
+                  : "hover:scale-110 hover:-translate-y-0.5",
+              )}
+              style={{
+                backgroundImage: `linear-gradient(135deg, ${option.from}, ${option.to})`,
+                boxShadow: selected
+                  ? `0 0 14px 0 ${option.from}, inset 0 0 0 1px oklch(1 0 0 / 0.4)`
+                  : `inset 0 0 0 1px oklch(1 0 0 / 0.25)`,
+              }}
+            >
+              {selected ? (
+                <Check
+                  className="h-4 w-4 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
+                  strokeWidth={3}
+                />
+              ) : null}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function SectionHeading({ children }: { children: string }) {
   return (
@@ -202,13 +275,7 @@ function ToggleRow({
       label={label}
       subtitle={subtitle}
       danger={danger}
-      right={
-        <Switch
-          checked={checked}
-          onCheckedChange={onChange}
-          aria-label={`Toggle ${label}`}
-        />
-      }
+      right={<Switch checked={checked} onCheckedChange={onChange} aria-label={`Toggle ${label}`} />}
     />
   );
 }
@@ -297,6 +364,7 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
                 options={LANGUAGES}
                 onChange={setLanguage}
               />
+              <AccentColorPicker />
               <SettingsRow
                 Icon={Info}
                 label="About"
