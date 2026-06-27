@@ -1,5 +1,5 @@
-import { Phone, Video, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { Phone, Video, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import type { CallDirection, CallType, CallStatus } from "@/types/call";
 
 export const CALL_DIRECTION_ICONS: Record<CallDirection, (statusClass: string) => React.ReactNode> =
@@ -15,6 +15,8 @@ export const CALL_STATUS_COLORS: Record<CallStatus, string> = {
   answered: "text-primary drop-shadow-[0_0_8px_rgba(168,85,247,0.45)]",
 };
 
+// Both keys are exhaustively typed against CallType, so the lookup in
+// CallLogPreview / CallRow can never resolve to undefined.
 export const CALL_TYPE_ICONS: Record<CallType, LucideIcon> = {
   voice: Phone,
   video: Video,
