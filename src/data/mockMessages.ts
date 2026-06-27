@@ -216,6 +216,50 @@ export const mockMessages: Record<string, Msg[]> = {
       status: "draft",
     },
   ],
+
+  // ── Rich media attachment scenarios ─────────────────────────────────────
+  // The canonical Msg interface is text-only (see src/types/chat.ts), so each
+  // attachment is encoded as a single emoji-prefixed text payload. This keeps
+  // the active MessageBubble / ChatListItem renderers untouched while letting
+  // us visualize the four media states end-to-end.
+  "16": [
+    // Scenario E — PDF document (received)
+    {
+      id: "att_pdf",
+      text: "📄 Q3_Financial_Report.pdf",
+      time: "10:42",
+      date: daysAgo(0, 10, 42),
+      fromSelf: false,
+      status: "delivered",
+    },
+    // Scenario F — Image attachment (received)
+    {
+      id: "att_img",
+      text: "🖼️ setup_hacker_den.png",
+      time: "10:55",
+      date: daysAgo(0, 10, 55),
+      fromSelf: false,
+      status: "delivered",
+    },
+    // Scenario G — Video attachment (sent)
+    {
+      id: "att_vid",
+      text: "🎥 cinematic_demo.mp4",
+      time: "11:02",
+      date: daysAgo(0, 11, 2),
+      fromSelf: true,
+      status: "read",
+    },
+    // Scenario H — Sticker (sent)
+    {
+      id: "att_stk",
+      text: "👻 [Sticker]",
+      time: "11:18",
+      date: daysAgo(0, 11, 18),
+      fromSelf: true,
+      status: "delivered",
+    },
+  ],
 };
 
 export function getMessages(chatId: string): Msg[] {

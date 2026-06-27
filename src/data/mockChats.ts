@@ -248,6 +248,23 @@ export const rawChats: Chat[] = [
     status: "delivered",
     fromSelf: false,
   },
+  {
+    id: "16",
+    name: "Cyber Vault",
+    avatar: "CV",
+    lastMessage: "📄 Q3_Financial_Report.pdf",
+    time: "11:18",
+    unread: 0,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: true,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: false,
+  },
 ];
 
 // Removes duplicated chats based on ID, keeping only the first occurrence
