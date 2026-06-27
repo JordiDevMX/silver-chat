@@ -37,7 +37,7 @@ export function StoryCard({ story }: StoryCardProps) {
       className={`relative shrink-0 w-28 h-44 rounded-2xl overflow-hidden text-left shadow-silver group transition-all hover:brightness-110 active:scale-95 cursor-pointer `}
       style={{
         background: story.isMuted
-          ? "linear-gradient(135deg, oklch(0.3 0.22 250), oklch(0.4 0.18 245))"
+          ? "linear-gradient(135deg, oklch(0.3 0.24 300), oklch(0.4 0.2 330))"
           : story.preview,
       }}
     >

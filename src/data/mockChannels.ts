@@ -31,7 +31,7 @@ export const followedChannels: Channel[] = [
     id: "c4",
     name: "Lovable",
     verified: true,
-    avatarGradient: "linear-gradient(135deg, oklch(0.7 0.22 250), oklch(0.55 0.22 280))",
+    avatarGradient: "linear-gradient(135deg, oklch(0.7 0.24 300), oklch(0.55 0.22 330))",
     lastMessage: "New: server functions are live for every project",
     time: "Mon",
     unread: 8,

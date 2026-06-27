@@ -74,7 +74,7 @@ function UserCard() {
         <div
           className="h-12 w-12 rounded-full grid place-items-center text-sm font-semibold text-primary-foreground ring-1 ring-inset ring-white/30 shadow-silver"
           style={{
-            backgroundImage: "linear-gradient(135deg, oklch(0.7 0.22 250), oklch(0.78 0.18 245))",
+            backgroundImage: "linear-gradient(135deg, oklch(0.7 0.24 300), oklch(0.78 0.2 330))",
           }}
         >
           JO

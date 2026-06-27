@@ -4,8 +4,8 @@ import type { Story } from "@/types/story";
 export const myStory: Story | null = {
   id: "me-1",
   author: "My Story",
-  avatarGradient: "linear-gradient(135deg, oklch(0.7 0.22 250), oklch(0.78 0.18 245))",
-  preview: "linear-gradient(135deg, oklch(0.62 0.22 255), oklch(0.45 0.2 290))",
+  avatarGradient: "linear-gradient(135deg, oklch(0.7 0.24 300), oklch(0.78 0.18 305))",
+  preview: "linear-gradient(135deg, oklch(0.58 0.24 300), oklch(0.45 0.22 330))",
   caption: "Late-night code sprint ✨",
   time: "32 min ago",
   viewed: false,

@@ -12,7 +12,7 @@ export const CALL_STATUS_COLORS: Record<CallStatus, string> = {
   missed: "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]",
   rejected: "text-red-400/80",
   ongoing: "text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.4)]",
-  answered: "text-primary drop-shadow-[0_0_8px_rgba(0,149,255,0.4)]",
+  answered: "text-primary drop-shadow-[0_0_8px_rgba(168,85,247,0.45)]",
 };
 
 export const CALL_TYPE_ICONS: Record<CallType, LucideIcon> = {

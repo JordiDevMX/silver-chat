@@ -4,7 +4,7 @@ export const communities: Community[] = [
   {
     id: "co1",
     name: "Asambleas Populares AMG",
-    avatarGradient: "linear-gradient(135deg, oklch(0.7 0.18 250), oklch(0.5 0.2 280))",
+    avatarGradient: "linear-gradient(135deg, oklch(0.7 0.24 300), oklch(0.5 0.22 330))",
     hiddenCount: 6,
     channels: [
       {
@@ -36,7 +36,7 @@ export const communities: Community[] = [
   {
     id: "co2",
     name: "Silver Mesh Builders",
-    avatarGradient: "linear-gradient(135deg, oklch(0.72 0.02 250), oklch(0.45 0.04 260))",
+    avatarGradient: "linear-gradient(135deg, oklch(0.72 0.02 285), oklch(0.45 0.05 295))",
     hiddenCount: 3,
     channels: [
       {

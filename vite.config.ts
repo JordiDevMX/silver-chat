@@ -28,7 +28,7 @@ const config = defineConfig({
         start_url: "/",
         display: "standalone",
         background_color: "#f5f7fa",
-        theme_color: "#2E7BFF",
+        theme_color: "#A855F7",
         icons: [
           {
             src: "favicon.ico",
