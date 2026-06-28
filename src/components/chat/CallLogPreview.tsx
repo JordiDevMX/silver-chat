@@ -29,39 +29,34 @@ export function CallLogPreview({ callLog, fromSelf, time }: CallLogPreviewProps)
   const { resolved } = useTheme();
   const isDark = resolved === "dark";
 
-  // For self bubbles, force a high-contrast color so the TypeIcon doesn't
-  // blend into the accent-colored bubble (chameleon effect). The semantic
-  // status color (red/green/neon) is reserved for incoming logs that sit
-  // on the neutral grey --bubble-other background.
-  //
-  // --primary-foreground inverts between light (near-white) and dark
-  // (near-black), so we branch on `isDark` to always land on the token
-  // that is high-contrast against the current bubble background.
-  const iconColor = fromSelf
-    ? isDark
-      ? "text-foreground"
-      : "text-primary-foreground"
-    : statusColor;
-
-  // Self-bubble styling mirrors MessageBubble so text + call-log bubbles
-  // stay visually consistent. In dark mode we drop the solid neon fill for
-  // a glassmorphic accent that still picks up the theme's --neon glow.
+  // Unified glass design — mirrors MessageBubble.tsx so text + call-log
+  // bubbles feel like siblings. Self uses accent glass + neon glow; sender
+  // uses silver glass + soft depth. Translucent fills mean theme-adaptive
+  // text-foreground is always the highest-contrast text/icon color.
   const selfBubbleClass = isDark
     ? "bg-primary/20 text-foreground border-primary/40 backdrop-blur-md shadow-glow rounded-br-md"
-    : "bg-bubble-self text-primary-foreground border-transparent shadow-glow rounded-br-md";
+    : "bg-primary/15 text-foreground border-primary/30 backdrop-blur-md shadow-glow rounded-br-md";
+
+  const otherBubbleClass = isDark
+    ? "bg-white/5 text-foreground border-white/10 backdrop-blur-md shadow-silver rounded-bl-md"
+    : "bg-silver-light/50 text-foreground border-silver/40 backdrop-blur-md shadow-silver rounded-bl-md";
+
+  // TypeIcon color: self → text-foreground (theme-adaptive, always high-
+  // contrast on glass). Sender → semantic status color (red/green/neon)
+  // that reads cleanly on the neutral silver background and signals the
+  // call outcome.
+  const iconColor = fromSelf ? "text-foreground" : statusColor;
 
   const metaText = fromSelf
     ? isDark
       ? "text-foreground/60"
-      : "text-primary-foreground/70"
+      : "text-foreground/55"
     : "text-muted-foreground";
 
   return (
     <div
-      className={`flex items-center gap-3 max-w-[78%] rounded-2xl px-3.5 py-2 border text-sm shadow-silver ${
-        fromSelf
-          ? selfBubbleClass
-          : "bg-bubble-other text-foreground border-border/60 rounded-bl-md"
+      className={`flex items-center gap-3 max-w-[78%] rounded-2xl px-3.5 py-2 border text-sm ${
+        fromSelf ? selfBubbleClass : otherBubbleClass
       }`}
       role="group"
       aria-label={`${label}${callLog.duration ? `, ${callLog.duration}` : ""}`}

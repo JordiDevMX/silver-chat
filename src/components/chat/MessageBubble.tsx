@@ -22,16 +22,29 @@ export function MessageBubble({ message, showSender = false }: MessageBubbleProp
   const { resolved } = useTheme();
   const isDark = resolved === "dark";
 
-  // Self-bubble styling: light mode keeps the vivid solid-neon "messenger"
-  // look; dark mode switches to a glassmorphic accent — semi-transparent
-  // primary fill + matching border + backdrop blur + the existing neon
-  // shadow-glow halo. Tokens cascade correctly across all 6 themes because
-  // --primary / --neon / --shadow-glow are already theme-aware.
+  // ── Unified silver-glass design language ──────────────────────────────
+  // Every bubble state uses translucent fill + matching border + backdrop
+  // blur, so they read as a single family of objects regardless of sender.
+  //
+  // Self  → "Accent Glass"  (translucent primary + neon-glow halo)
+  //   Light: 15% primary fill, 30% border — a subtle neon tint on the page
+  //   Dark:  20% primary fill, 40% border — a richer neon wash on the page
+  //   Both use shadow-glow so the accent halo tracks --neon across all 6
+  //   themes (Blue/Purple/Red/Orange/Yellow/Green) without hardcoded color.
+  //
+  // Other → "Silver Glass"   (neutral frosted card + soft depth shadow)
+  //   Light: silver-light/50 fill + silver/40 border — frosted white card
+  //   Dark:  white/5 fill + white/10 border — whisper of frost on dark page
+  //   Both use shadow-silver for soft depth instead of competing with glow.
   const selfBubbleClass = isDark
     ? "bg-primary/20 text-foreground border-primary/40 backdrop-blur-md shadow-glow rounded-br-md"
-    : "bg-bubble-self text-primary-foreground border-transparent shadow-glow rounded-br-md";
+    : "bg-primary/15 text-foreground border-primary/30 backdrop-blur-md shadow-glow rounded-br-md";
 
-  const selfTimeClass = isDark ? "text-foreground/60" : "text-primary-foreground/80";
+  const otherBubbleClass = isDark
+    ? "bg-white/5 text-foreground border-white/10 backdrop-blur-md shadow-silver rounded-bl-md"
+    : "bg-silver-light/50 text-foreground border-silver/40 backdrop-blur-md shadow-silver rounded-bl-md";
+
+  const selfTimeClass = isDark ? "text-foreground/60" : "text-foreground/55";
 
   return (
     <div className={`flex flex-col ${self ? "items-end" : "items-start"}`}>
@@ -56,10 +69,8 @@ export function MessageBubble({ message, showSender = false }: MessageBubbleProp
         />
       ) : (
         <div
-          className={`max-w-[78%] rounded-2xl px-3.5 py-2 text-sm shadow-silver border ${
-            self
-              ? selfBubbleClass
-              : "bg-bubble-other text-foreground border-border/60 rounded-bl-md"
+          className={`max-w-[78%] rounded-2xl px-3.5 py-2 text-sm border ${
+            self ? selfBubbleClass : otherBubbleClass
           }`}
         >
           <p className="whitespace-pre-wrap break-words leading-snug">{message.text}</p>
