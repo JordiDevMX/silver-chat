@@ -1,0 +1,10 @@
+# Vite + pnpm build config
+[build]
+  command = "pnpm run build"
+  publish = "dist"
+
+# SPA redirections lock
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
