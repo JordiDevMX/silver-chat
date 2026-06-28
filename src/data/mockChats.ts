@@ -311,7 +311,7 @@ export const rawChats: Chat[] = [
     fromSelf: false,
   },
 
-  // D — Answered outgoing call (video)
+  // C — Answered incoming call (video, long)  [synced with call_c2]
   {
     id: "20",
     name: "Atlas Crew",
@@ -327,7 +327,7 @@ export const rawChats: Chat[] = [
     isArchived: false,
     isFavorite: false,
     status: "read",
-    fromSelf: true,
+    fromSelf: false,
   },
 
   // E — PDF document (received)
@@ -404,6 +404,179 @@ export const rawChats: Chat[] = [
     isFavorite: false,
     status: "delivered",
     fromSelf: true,
+  },
+
+  // ── 3 new video call scenarios (fresh handles) ─────────────────────────
+  // I — Missed incoming video  [synced with call_video_missed]
+  {
+    id: "25",
+    name: "Zara Vex",
+    avatar: "ZV",
+    lastMessage: "Missed video call",
+    time: "3:47 PM",
+    unread: 1,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: false,
+  },
+
+  // J — Answered incoming video  [synced with call_video_answered]
+  {
+    id: "26",
+    name: "Aria Cipher",
+    avatar: "Ai",
+    lastMessage: "Video call · 08:34 mins",
+    time: "11:08 AM",
+    unread: 0,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: true,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: false,
+  },
+
+  // K — Unanswered outgoing video (rejected)  [synced with call_video_unanswered]
+  {
+    id: "27",
+    name: "Nyx Protocol",
+    avatar: "NP",
+    lastMessage: "Call rejected",
+    time: "4:22 PM",
+    unread: 0,
+    isOnline: false,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: true,
+  },
+
+  // ── 6 orphaned scenarios synced from mockCalls.ts ──────────────────────
+  // Orphan A — Missed incoming voice  [renamed from "Orion Labs" → no collision with chat 2]
+  {
+    id: "28",
+    name: "Orion Stratos",
+    avatar: "OS",
+    lastMessage: "Missed voice call",
+    time: "11:24 AM",
+    unread: 0,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: false,
+  },
+
+  // Orphan D — Answered outgoing video  [renamed from "Nova Vega" → no collision with chat 17]
+  {
+    id: "29",
+    name: "Vega Solis",
+    avatar: "VS",
+    lastMessage: "Video call · 05:08 mins",
+    time: "10:14 AM",
+    unread: 0,
+    isOnline: true,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "read",
+    fromSelf: true,
+  },
+
+  // Orphan A2 — Missed incoming voice (unknown caller)
+  {
+    id: "30",
+    name: "+1 (415) 555-0142",
+    avatar: "?",
+    lastMessage: "Missed voice call",
+    time: "Yesterday, 4:31 PM",
+    unread: 0,
+    isOnline: false,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: true,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: false,
+  },
+
+  // Orphan D2 — Answered outgoing voice  [renamed from "Kairo Sato" → no collision with chat 5]
+  {
+    id: "31",
+    name: "Kairo Nexus",
+    avatar: "KN",
+    lastMessage: "Voice call · 08:13 mins",
+    time: "Yesterday, 2:17 PM",
+    unread: 0,
+    isOnline: false,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "read",
+    fromSelf: true,
+  },
+
+  // Orphan B2 — Unanswered outgoing voice  [renamed from "Vault 0x9" → no collision with chat 8]
+  {
+    id: "32",
+    name: "Vault Helix",
+    avatar: "VH",
+    lastMessage: "No answer",
+    time: "Sunday, 9:40 AM",
+    unread: 0,
+    isOnline: false,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: true,
+  },
+
+  // Orphan A3 — Missed incoming video  [renamed from "Echo Network" → no collision with chat 6]
+  {
+    id: "33",
+    name: "Echo Cascade",
+    avatar: "EC",
+    lastMessage: "Missed video call",
+    time: "Sunday, 1:05 PM",
+    unread: 0,
+    isOnline: false,
+    isMuted: false,
+    isGroup: false,
+    isVerified: false,
+    isBlocked: false,
+    isArchived: false,
+    isFavorite: false,
+    status: "delivered",
+    fromSelf: false,
   },
 ];
 

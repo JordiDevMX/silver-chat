@@ -72,7 +72,7 @@ export function CallLogPreview({ callLog, fromSelf, time }: CallLogPreviewProps)
       {callLog.duration ? (
         <span className={`text-xs shrink-0 ${metaText}`}>• {callLog.duration}</span>
       ) : null}
-      <span className="text-xs font-extralight">{time ? time : "error"}</span>
+      <span className={`text-[10px] shrink-0 ml-auto ${metaText}`}>{time}</span>
     </div>
   );
 }

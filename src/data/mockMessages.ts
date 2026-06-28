@@ -240,7 +240,7 @@ export const mockMessages: Record<string, Msg[]> = {
     },
   ],
 
-  // B — Unanswered outgoing call
+  // B — Unanswered outgoing call  [status synced with call_b1 = "rejected"]
   "18": [
     {
       id: "log_b",
@@ -252,7 +252,7 @@ export const mockMessages: Record<string, Msg[]> = {
       callLog: {
         type: "voice",
         direction: "outgoing",
-        status: "missed",
+        status: "rejected",
       },
     },
   ],
@@ -275,18 +275,18 @@ export const mockMessages: Record<string, Msg[]> = {
     },
   ],
 
-  // D — Answered outgoing call
+  // C-video — Answered incoming video  [synced with call_c2 = "incoming"]
   "20": [
     {
-      id: "log_d",
+      id: "log_c2",
       text: "Video call · 22:07 mins",
       time: "11:48 AM",
       date: daysAgo(1, 11, 48),
-      fromSelf: true,
-      status: "read",
+      fromSelf: false,
+      status: "delivered",
       callLog: {
         type: "video",
-        direction: "outgoing",
+        direction: "incoming",
         status: "answered",
         duration: "22:07 mins",
       },
@@ -362,6 +362,163 @@ export const mockMessages: Record<string, Msg[]> = {
         kind: "sticker",
         name: "sticker", // The name by default of any sticker will always be "sticker"
         emoji: "👻",
+      },
+    },
+  ],
+
+  // I — Missed incoming video  [synced with call_video_missed]
+  "25": [
+    {
+      id: "log_25",
+      text: "Missed video call",
+      time: "3:47 PM",
+      date: daysAgo(0, 15, 47),
+      fromSelf: false,
+      status: "delivered",
+      callLog: {
+        type: "video",
+        direction: "incoming",
+        status: "missed",
+      },
+    },
+  ],
+
+  // J — Answered incoming video  [synced with call_video_answered]
+  "26": [
+    {
+      id: "log_26",
+      text: "Video call · 08:34 mins",
+      time: "11:08 AM",
+      date: daysAgo(0, 11, 8),
+      fromSelf: false,
+      status: "delivered",
+      callLog: {
+        type: "video",
+        direction: "incoming",
+        status: "answered",
+        duration: "08:34 mins",
+      },
+    },
+  ],
+
+  // K — Unanswered outgoing video (rejected)  [synced with call_video_unanswered]
+  "27": [
+    {
+      id: "log_27",
+      text: "Call rejected",
+      time: "4:22 PM",
+      date: daysAgo(0, 16, 22),
+      fromSelf: true,
+      status: "delivered",
+      callLog: {
+        type: "video",
+        direction: "outgoing",
+        status: "rejected",
+      },
+    },
+  ],
+
+  // ── 6 orphaned scenarios synced from mockCalls.ts ──────────────────────
+  // Orphan A — Missed incoming voice  [renamed Orion Labs → Orion Stratos]
+  "28": [
+    {
+      id: "log_28",
+      text: "Missed voice call",
+      time: "11:24 AM",
+      date: daysAgo(0, 11, 24),
+      fromSelf: false,
+      status: "delivered",
+      callLog: {
+        type: "voice",
+        direction: "incoming",
+        status: "missed",
+      },
+    },
+  ],
+
+  // Orphan D — Answered outgoing video  [renamed Nova Vega → Vega Solis]
+  "29": [
+    {
+      id: "log_29",
+      text: "Video call · 05:08 mins",
+      time: "10:14 AM",
+      date: daysAgo(0, 10, 14),
+      fromSelf: true,
+      status: "read",
+      callLog: {
+        type: "video",
+        direction: "outgoing",
+        status: "answered",
+        duration: "05:08 mins",
+      },
+    },
+  ],
+
+  // Orphan A2 — Missed incoming voice (unknown caller)
+  "30": [
+    {
+      id: "log_30",
+      text: "Missed voice call",
+      time: "4:31 PM",
+      date: daysAgo(1, 16, 31),
+      fromSelf: false,
+      status: "delivered",
+      callLog: {
+        type: "voice",
+        direction: "incoming",
+        status: "missed",
+      },
+    },
+  ],
+
+  // Orphan D2 — Answered outgoing voice  [renamed Kairo Sato → Kairo Nexus]
+  "31": [
+    {
+      id: "log_31",
+      text: "Voice call · 08:13 mins",
+      time: "2:17 PM",
+      date: daysAgo(1, 14, 17),
+      fromSelf: true,
+      status: "read",
+      callLog: {
+        type: "voice",
+        direction: "outgoing",
+        status: "answered",
+        duration: "08:13 mins",
+      },
+    },
+  ],
+
+  // Orphan B2 — Unanswered outgoing voice  [renamed Vault 0x9 → Vault Helix]
+  "32": [
+    {
+      id: "log_32",
+      text: "No answer",
+      time: "9:40 AM",
+      date: daysAgo(2, 9, 40),
+      fromSelf: true,
+      status: "delivered",
+      callLog: {
+        type: "voice",
+        direction: "outgoing",
+        status: "missed",
+      },
+    },
+  ],
+
+  // Orphan A3 — Missed incoming video  [renamed Echo Network → Echo Cascade]
+  "33": [
+    {
+      id: "log_33",
+      text: "Missed video call",
+      time: "1:05 PM",
+      date: daysAgo(2, 13, 5),
+      fromSelf: false,
+      status: "delivered",
+      callLog: {
+        type: "video",
+        direction: "incoming",
+        status: "missed",
       },
     },
   ],

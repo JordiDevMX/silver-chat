@@ -12,6 +12,12 @@ import type { Call } from "@/types/call";
  *   - "rejected" → text-red-400/80 + muted-red gradient avatar
  *   - "answered" → text-primary + neon gradient avatar
  *   - duration is only shown when present on the entry
+ *
+ * Every entry below is linked to a chat thread in src/data/mockChats.ts
+ * (ids 17–33) and to an active conversation in src/data/mockMessages.ts.
+ * Five legacy entries (Orion Labs, Nova Vega, Kairo Sato, Vault 0x9, Echo
+ * Network) were renamed to fresh handles so the sidebar has zero name
+ * collisions with the pre-existing text chats (ids 2/5/6/8/9).
  */
 export const mockCalls: Call[] = [
   // ── Scenario C — Answered Incoming (voice, long) ───────────────────────
@@ -30,9 +36,9 @@ export const mockCalls: Call[] = [
   // ── Scenario A — Missed Incoming (voice) ───────────────────────────────
   {
     id: "call_a1",
-    name: "Orion Labs",
-    avatar: "OL",
-    email: "contact@orionlabs.io",
+    name: "Orion Stratos",
+    avatar: "OS",
+    email: "orbit@orion-stratos.io",
     type: "voice",
     direction: "incoming",
     status: "missed",
@@ -54,9 +60,9 @@ export const mockCalls: Call[] = [
   // ── Scenario D — Answered Outgoing (video, short) ──────────────────────
   {
     id: "call_d1",
-    name: "Nova Vega",
-    avatar: "NV",
-    email: "nova.vega@example.com",
+    name: "Vega Solis",
+    avatar: "VS",
+    email: "vega@stellar.mesh",
     type: "video",
     direction: "outgoing",
     status: "answered",
@@ -89,9 +95,9 @@ export const mockCalls: Call[] = [
   },
   {
     id: "call_d2",
-    name: "Kairo Sato",
-    avatar: "KS",
-    email: "kairo.sato@example.com",
+    name: "Kairo Nexus",
+    avatar: "KN",
+    email: "kairo@nexus.relay",
     type: "voice",
     direction: "outgoing",
     status: "answered",
@@ -100,9 +106,9 @@ export const mockCalls: Call[] = [
   },
   {
     id: "call_b2",
-    name: "Vault 0x9",
-    avatar: "V9",
-    email: "vault0x9@proton.me",
+    name: "Vault Helix",
+    avatar: "VH",
+    email: "vault@helix.dark",
     type: "voice",
     direction: "outgoing",
     status: "missed",
@@ -110,12 +116,45 @@ export const mockCalls: Call[] = [
   },
   {
     id: "call_a3",
-    name: "Echo Network",
-    avatar: "EN",
-    email: "hello@echonetwork.app",
+    name: "Echo Cascade",
+    avatar: "EC",
+    email: "echo@cascade.sig",
     type: "video",
     direction: "incoming",
     status: "missed",
     time: "Sunday, 1:05 PM",
+  },
+
+  // ── 3 brand-new video call scenarios (fresh handles) ──────────────────
+  {
+    id: "call_video_missed",
+    name: "Zara Vex",
+    avatar: "ZV",
+    email: "zara.vex@quantum.net",
+    type: "video",
+    direction: "incoming",
+    status: "missed",
+    time: "Today, 3:47 PM",
+  },
+  {
+    id: "call_video_answered",
+    name: "Aria Cipher",
+    avatar: "Ai",
+    email: "aria@neonmail.io",
+    type: "video",
+    direction: "incoming",
+    status: "answered",
+    time: "Today, 11:08 AM",
+    duration: "08:34 mins",
+  },
+  {
+    id: "call_video_unanswered",
+    name: "Nyx Protocol",
+    avatar: "NP",
+    email: "nyx@protocol.dht",
+    type: "video",
+    direction: "outgoing",
+    status: "rejected",
+    time: "Today, 4:22 PM",
   },
 ];
