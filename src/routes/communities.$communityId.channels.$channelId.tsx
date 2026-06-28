@@ -1,12 +1,14 @@
 import { Fragment, useEffect, useMemo, useRef } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, MoreVertical, Users, Megaphone, Pin } from "lucide-react";
+import { ArrowLeft, Users, Megaphone, Pin } from "lucide-react";
 import { communities } from "@/data/mockCommunities";
 import { getMessages } from "@/data/mockMessages";
-import type { Msg } from "@/types/chat";
+import type { Chat, Msg } from "@/types/chat";
 import type { Community, SubChannel } from "@/types/community";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { ChatComposer } from "@/components/chat/ChatComposer";
+import { ChatHeaderMenu } from "@/components/chat/ChatHeaderMenu";
+import { MemberHoverCard, findMember } from "@/components/chat/MemberHoverCard";
 import { useChatMessages, messagesQueryKey } from "@/hooks/useChatMessages";
 import { formatMessageDate, isSameDay } from "@/lib/format";
 
@@ -99,6 +101,20 @@ function ChannelView() {
 
   const isAnn = channel.type === "announcements";
 
+  // Synthesize a Chat so ChatHeaderMenu can be reused unchanged for the
+  // community channel header. The drill-down channel doesn't live in
+  // mockChats, but the menu only needs a `name` and a `participants` hint.
+  const channelAsChat: Chat = {
+    id: channel.id,
+    name: channel.name,
+    avatar: isAnn ? "AN" : (channel.name.slice(0, 2) || "CH").toUpperCase(),
+    lastMessage: channel.lastMessage,
+    time: channel.time,
+    unread: 0,
+    isGroup: channel.type === "group",
+    isMuted: channel.muted,
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center">
       <div className="relative w-full max-w-md min-h-screen flex flex-col bg-background shadow-silver">
@@ -133,13 +149,9 @@ function ChannelView() {
                 <span className="truncate">{community.name}</span>
               </p>
             </div>
-            <button
-              type="button"
-              aria-label="More"
-              className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent transition-colors"
-            >
-              <MoreVertical className="h-4 w-4" />
-            </button>
+
+            {/* ⋯ → dropdown-menu with delete confirmation dialog */}
+            <ChatHeaderMenu chat={channelAsChat} />
           </div>
         </header>
 
@@ -164,7 +176,25 @@ function ChannelView() {
                 <Fragment key={group.key}>
                   <DateSeparator label={group.label} />
                   {group.messages.map((message) => (
-                    <MessageBubble key={message.id} message={message} />
+                    <div key={message.id} className="space-y-0.5">
+                      {message.senderName && !message.fromSelf ? (
+                        <MemberHoverCard
+                          member={
+                            findMember([], message.senderName) ?? {
+                              id: message.senderName,
+                              name: message.senderName,
+                              avatar: message.senderName.slice(0, 2).toUpperCase(),
+                              role: "member",
+                            }
+                          }
+                        >
+                          <span className="block px-1 text-[11px] font-semibold tracking-tight text-neon cursor-default">
+                            {message.senderName}
+                          </span>
+                        </MemberHoverCard>
+                      ) : null}
+                      <MessageBubble message={message} showSender={false} />
+                    </div>
                   ))}
                 </Fragment>
               ))}
