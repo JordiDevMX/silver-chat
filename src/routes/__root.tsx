@@ -11,6 +11,7 @@ import {
 import type { ReactNode } from "react";
 
 import { ThemeProvider } from "@/hooks/useTheme";
+import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 const noFlashScript = `(function(){try{var m=localStorage.getItem('theme');if(m!=='light'&&m!=='dark'&&m!=='auto')m='auto';var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=m==='auto'?(d?'dark':'light'):m;if(m!=='auto'){document.documentElement.setAttribute('data-theme',m);}document.documentElement.style.colorScheme=r;var a=localStorage.getItem('accent');var ids=['blue','purple','red','orange','yellow','green'];if(ids.indexOf(a)<0)a='blue';document.documentElement.classList.add('theme-'+a);}catch(e){}})();`;
@@ -122,6 +123,8 @@ function RootComponent() {
       <ThemeProvider>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
+        {/* Global toast portal — renders into <body> via sonner's portal. */}
+        <Toaster />
       </ThemeProvider>
     </QueryClientProvider>
   );

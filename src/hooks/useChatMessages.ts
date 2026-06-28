@@ -1,5 +1,6 @@
 import { useOptimistic, useTransition } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { getMessages } from "@/data/mockMessages";
 import { formatMessageTime } from "@/lib/format";
 import type { Msg } from "@/types/chat";
@@ -52,6 +53,11 @@ export function useChatMessages(chatId: string): UseChatMessagesResult {
     mutationFn: sendMessageFn,
     onSuccess: (saved) => {
       queryClient.setQueryData<Msg[]>(messagesQueryKey(chatId), (old) => [...(old ?? []), saved]);
+    },
+    onError: () => {
+      toast.error("Failed to send", {
+        description: "Your message wasn't delivered. Check your internet connection & try again.",
+      });
     },
   });
 

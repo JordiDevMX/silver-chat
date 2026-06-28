@@ -1,11 +1,14 @@
 import { Fragment, useEffect, useMemo, useRef } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, Phone, Video, MoreVertical } from "lucide-react";
+import { ArrowLeft, Phone, Video } from "lucide-react";
 import { mockChats } from "@/data/mockChats";
 import { getMessages } from "@/data/mockMessages";
 import type { Chat, Msg } from "@/types/chat";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { ChatComposer } from "@/components/chat/ChatComposer";
+import { ChatHeaderMenu } from "@/components/chat/ChatHeaderMenu";
+import { UserInfoPopover } from "@/components/chat/UserInfoPopover";
+import { MemberHoverCard, findMember } from "@/components/chat/MemberHoverCard";
 import { useChatMessages, messagesQueryKey } from "@/hooks/useChatMessages";
 import { formatMessageDate, isSameDay } from "@/lib/format";
 
@@ -95,20 +98,26 @@ function ChatView() {
             >
               <ArrowLeft className="h-5 w-5" />
             </Link>
-            <div className="relative shrink-0">
-              <div className="h-10 w-10 rounded-full bg-gradient-silver border border-border grid place-items-center text-xs font-semibold text-foreground/80 shadow-silver">
-                {chat.avatar}
+
+            {/* Avatar → popover with full user info */}
+            <UserInfoPopover chat={chat}>
+              <div className="relative shrink-0 cursor-pointer">
+                <div className="h-10 w-10 rounded-full bg-gradient-silver border border-border grid place-items-center text-xs font-semibold text-foreground/80 shadow-silver">
+                  {chat.avatar}
+                </div>
+                {chat.isOnline && (
+                  <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-neon ring-2 ring-background shadow-glow" />
+                )}
               </div>
-              {chat.isOnline && (
-                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-neon ring-2 ring-background shadow-glow" />
-              )}
-            </div>
+            </UserInfoPopover>
+
             <div className="flex-1 min-w-0 ml-1">
               <h2 className="text-sm font-semibold truncate">{chat.name}</h2>
               <p className="text-[11px] text-muted-foreground truncate">
                 {chat.isOnline ? <span className="text-neon">online</span> : "last seen recently"}
               </p>
             </div>
+
             <button
               type="button"
               aria-label="Video call"
@@ -123,13 +132,9 @@ function ChatView() {
             >
               <Phone className="h-4 w-4" />
             </button>
-            <button
-              type="button"
-              aria-label="More"
-              className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent transition-colors"
-            >
-              <MoreVertical className="h-4 w-4" />
-            </button>
+
+            {/* ⋯ → dropdown-menu with delete confirmation dialog */}
+            <ChatHeaderMenu chat={chat} />
           </div>
         </header>
 
@@ -163,11 +168,25 @@ function ChatView() {
                         previous.fromSelf ||
                         previous.senderName !== message.senderName);
                     return (
-                      <MessageBubble
-                        key={message.id}
-                        message={message}
-                        showSender={showSender}
-                      />
+                      <div key={message.id} className="space-y-0.5">
+                        {showSender ? (
+                          <MemberHoverCard
+                            member={
+                              findMember(chat.participants, message.senderName) ?? {
+                                id: message.senderName ?? "unknown",
+                                name: message.senderName ?? "Unknown",
+                                avatar: (message.senderName ?? "?").slice(0, 2).toUpperCase(),
+                                role: "member",
+                              }
+                            }
+                          >
+                            <span className="block px-1 text-[11px] font-semibold tracking-tight text-neon cursor-default">
+                              {message.senderName}
+                            </span>
+                          </MemberHoverCard>
+                        ) : null}
+                        <MessageBubble message={message} showSender={false} />
+                      </div>
                     );
                   })}
                 </Fragment>
