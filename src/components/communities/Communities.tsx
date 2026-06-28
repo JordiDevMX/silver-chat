@@ -1,9 +1,13 @@
+import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Users, Plus, Megaphone, BellOff, ChevronRight } from "lucide-react";
 import { communities } from "@/data/mockCommunities";
 import type { Community, SubChannel } from "@/types/community";
+import { NewCommunityDialog } from "./NewCommunityDialog";
+import type { NewCommunityFormValues } from "./NewCommunityDialog";
 
 interface CommunitiesProps {
-  onOpen: () => void;
+  onOpen?: () => void;
   search?: string;
 }
 
@@ -25,13 +29,13 @@ function NewCommunityRow({ onClick }: { onClick: () => void }) {
   );
 }
 
-function ChannelRow({ channel, onClick }: { channel: SubChannel; onClick: () => void }) {
+function ChannelRow({ channel, communityId }: { channel: SubChannel; communityId: string }) {
   const isAnn = channel.type === "announcements";
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="w-full flex items-center gap-3 pl-6 pr-4 py-2.5 hover:bg-accent/60 active:bg-accent transition-colors duration-150 cursor-pointer text-left"
+    <Link
+      to="/communities/$communityId/channels/$channelId"
+      params={{ communityId, channelId: channel.id }}
+      className="w-full flex items-center gap-3 pl-6 pr-4 py-2.5 hover:bg-accent/60 active:bg-accent transition-colors duration-150 cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       {isAnn ? (
         <div className="size-10 shrink-0 rounded-xl bg-gradient-silver border border-border grid place-items-center">
@@ -51,67 +55,70 @@ function ChannelRow({ channel, onClick }: { channel: SubChannel; onClick: () => 
         <span className="text-[11px] text-muted-foreground">{channel.time}</span>
         {channel.muted && <BellOff className="size-3.5 text-muted-foreground" />}
       </div>
-    </button>
+    </Link>
   );
 }
 
-function CommunityBlock({ community, onOpen }: { community: Community; onOpen: () => void }) {
+function CommunityBlock({ community }: { community: Community }) {
   return (
     <div className="border-b border-border/60 last:border-0">
-      <button
-        type="button"
-        onClick={onOpen}
-        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors duration-150 cursor-pointer text-left"
-      >
+      <div className="w-full flex items-center gap-3 px-4 py-3">
         <div
           className="size-12 shrink-0 rounded-2xl border border-border shadow-silver"
           style={{ background: community.avatarGradient }}
         />
         <span className="font-semibold text-foreground truncate">{community.name}</span>
-      </button>
+      </div>
 
       <div className="flex flex-col pb-2">
         {community.channels.map((ch) => (
-          <ChannelRow key={ch.id} channel={ch} onClick={onOpen} />
+          <ChannelRow key={ch.id} channel={ch} communityId={community.id} />
         ))}
-        <button
-          type="button"
-          onClick={onOpen}
-          className="w-full flex items-center justify-between pl-6 pr-4 py-2.5 text-sm hover:bg-accent/60 active:bg-accent transition-colors duration-150 cursor-pointer text-left"
-        >
-          <span className="text-muted-foreground">View all</span>
-          <ChevronRight className="size-4 text-muted-foreground" />
-        </button>
+        <div className="w-full flex items-center justify-between pl-6 pr-4 py-2.5 text-sm text-muted-foreground">
+          <span>View all</span>
+          <ChevronRight className="size-4" />
+        </div>
       </div>
     </div>
   );
 }
 
-export function Communities({ onOpen, search = "" }: CommunitiesProps) {
+export function Communities({ onOpen: _onOpen, search = "" }: CommunitiesProps) {
   const query = search.trim().toLowerCase();
   const filtered = query
     ? communities.filter((c) => c.name.toLowerCase().includes(query))
     : communities;
 
   const isSearching = query.length > 0;
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  function handleCreate(values: NewCommunityFormValues) {
+    // Frontend-only mock: no real backend. Log the validated payload so
+    // the wiring is observable in dev, and surface a non-blocking note
+    // that persistence is intentionally deferred.
+    if (typeof console !== "undefined") {
+      console.info("[NewCommunityDialog] create:", values);
+    }
+  }
 
   return (
     <div className="pb-24">
       {!isSearching && (
-          <h1 className="px-4 pt-4 pb-2 text-2xl font-semibold tracking-tight text-foreground">
-            Communities
-          </h1>
-        ) && <NewCommunityRow onClick={onOpen} />}
+        <h1 className="px-4 pt-4 pb-2 text-2xl font-semibold tracking-tight text-foreground">
+          Communities
+        </h1>
+      )}
+      {!isSearching && <NewCommunityRow onClick={() => setDialogOpen(true)} />}
 
       <div className="mt-2">
         {filtered.length > 0 ? (
-          filtered.map((c) => <CommunityBlock key={c.id} community={c} onOpen={onOpen} />)
+          filtered.map((c) => <CommunityBlock key={c.id} community={c} />)
         ) : (
           <div className="px-6 py-12 text-center">
             <p className="text-sm text-muted-foreground mb-3">No communities found</p>
             <button
               type="button"
-              onClick={onOpen}
+              onClick={() => setDialogOpen(true)}
               className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--neon)] hover:underline transition-colors cursor-pointer"
             >
               <Plus className="size-4" />
@@ -120,6 +127,8 @@ export function Communities({ onOpen, search = "" }: CommunitiesProps) {
           </div>
         )}
       </div>
+
+      <NewCommunityDialog open={dialogOpen} onOpenChange={setDialogOpen} onCreate={handleCreate} />
     </div>
   );
 }

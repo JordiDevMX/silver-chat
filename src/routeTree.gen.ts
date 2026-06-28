@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatIdRouteImport } from './routes/chat.$id'
+import { Route as CommunitiesCommunityIdChannelsChannelIdRouteImport } from './routes/communities.$communityId.channels.$channelId'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -28,35 +29,58 @@ const ChatIdRoute = ChatIdRouteImport.update({
   path: '/chat/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunitiesCommunityIdChannelsChannelIdRoute =
+  CommunitiesCommunityIdChannelsChannelIdRouteImport.update({
+    id: '/communities/$communityId/channels/$channelId',
+    path: '/communities/$communityId/channels/$channelId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/chat/$id': typeof ChatIdRoute
+  '/communities/$communityId/channels/$channelId': typeof CommunitiesCommunityIdChannelsChannelIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/chat/$id': typeof ChatIdRoute
+  '/communities/$communityId/channels/$channelId': typeof CommunitiesCommunityIdChannelsChannelIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/chat/$id': typeof ChatIdRoute
+  '/communities/$communityId/channels/$channelId': typeof CommunitiesCommunityIdChannelsChannelIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/chat/$id'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/chat/$id'
+    | '/communities/$communityId/channels/$channelId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/chat/$id'
-  id: '__root__' | '/' | '/about' | '/chat/$id'
+  to:
+    | '/'
+    | '/about'
+    | '/chat/$id'
+    | '/communities/$communityId/channels/$channelId'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/chat/$id'
+    | '/communities/$communityId/channels/$channelId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ChatIdRoute: typeof ChatIdRoute
+  CommunitiesCommunityIdChannelsChannelIdRoute: typeof CommunitiesCommunityIdChannelsChannelIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +106,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/communities/$communityId/channels/$channelId': {
+      id: '/communities/$communityId/channels/$channelId'
+      path: '/communities/$communityId/channels/$channelId'
+      fullPath: '/communities/$communityId/channels/$channelId'
+      preLoaderRoute: typeof CommunitiesCommunityIdChannelsChannelIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +120,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ChatIdRoute: ChatIdRoute,
+  CommunitiesCommunityIdChannelsChannelIdRoute:
+    CommunitiesCommunityIdChannelsChannelIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

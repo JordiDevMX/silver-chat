@@ -522,6 +522,125 @@ export const mockMessages: Record<string, Msg[]> = {
       },
     },
   ],
+
+  // ── Community channel threads ─────────────────────────────────────────
+  // Keyed by SubChannel.id so the drill-down route can reuse getMessages().
+  // The `date` fields use daysAgo() so the chat view's date separators
+  // (groupByDate in the route) render naturally.
+
+  // co1-a — Asambleas Populares AMG · Announcements
+  "co1-a": [
+    {
+      id: "co1-a-1",
+      senderName: "Mariana (admin)",
+      text: "Reminder: general assembly this Friday at 19:00. Please confirm attendance in the coordination channel.",
+      time: "10:22",
+      date: daysAgo(0, 10, 22),
+      fromSelf: false,
+      status: "delivered",
+      isOnline: true,
+    },
+    {
+      id: "co1-a-2",
+      senderName: "Tomás (mod)",
+      text: "Agenda is finalized — minutes from last session are pinned in the general coordination channel.",
+      time: "10:34",
+      date: daysAgo(0, 10, 34),
+      fromSelf: false,
+      status: "delivered",
+      isOnline: true,
+    },
+  ],
+
+  // co1-g1 — Asambleas Populares AMG · Coordinación general
+  "co1-g1": [
+    {
+      id: "co1-g1-1",
+      senderName: "Mariana",
+      text: "Agenda updated for the next session — I moved the logistics block to the top.",
+      time: "09:48",
+      date: daysAgo(0, 9, 48),
+      fromSelf: false,
+      status: "delivered",
+      isOnline: true,
+    },
+    {
+      id: "co1-g1-2",
+      senderName: "You",
+      text: "Perfect, I'll send the final list of attendees tomorrow morning.",
+      time: "09:52",
+      date: daysAgo(0, 9, 52),
+      fromSelf: true,
+      status: "read",
+    },
+    {
+      id: "co1-g1-3",
+      senderName: "Sofía",
+      text: "Can we add a 10-minute slot for the press summary at the end?",
+      time: "10:05",
+      date: daysAgo(0, 10, 5),
+      fromSelf: false,
+      status: "delivered",
+      isOnline: false,
+    },
+  ],
+
+  // co2-a — Silver Mesh Builders · Announcements
+  "co2-a": [
+    {
+      id: "co2-a-1",
+      senderName: "Nyx (admin)",
+      text: "v2.1 deployed across all silver nodes ⚡ — glass tokens now cascade through every theme.",
+      time: "08:05",
+      date: daysAgo(0, 8, 5),
+      fromSelf: false,
+      status: "delivered",
+      isOnline: true,
+    },
+    {
+      id: "co2-a-2",
+      senderName: "Nyx (admin)",
+      text: "Heads up: maintenance window tonight 23:00–23:30 UTC. Read-only during the swap.",
+      time: "08:11",
+      date: daysAgo(0, 8, 11),
+      fromSelf: false,
+      status: "delivered",
+      isOnline: true,
+    },
+  ],
+
+  // co2-g1 — Silver Mesh Builders · Design crit
+  "co2-g1": [
+    {
+      id: "co2-g1-1",
+      senderName: "Echo",
+      text: "Pushed new glass tokens, take a look — `bg-primary/20` + `backdrop-blur-md` is the combo.",
+      time: "09:14",
+      date: daysAgo(1, 9, 14),
+      fromSelf: false,
+      status: "delivered",
+      isOnline: true,
+    },
+    {
+      id: "co2-g1-2",
+      senderName: "You",
+      text: "The neon glow on the self bubble is gorgeous. Can we push the opacity to 25 in dark mode?",
+      time: "09:22",
+      date: daysAgo(1, 9, 22),
+      fromSelf: true,
+      status: "read",
+    },
+    {
+      id: "co2-g1-3",
+      senderName: "Vega",
+      text: "Agreed, 20 reads a little thin. Bumping to 25 in the next pass.",
+      time: "09:30",
+      date: daysAgo(1, 9, 30),
+      fromSelf: false,
+      status: "delivered",
+      isOnline: false,
+    },
+  ],
 };
 
 export function getMessages(chatId: string): Msg[] {
