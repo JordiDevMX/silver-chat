@@ -72,11 +72,14 @@ export function ChatHeaderMenu({ chat, onLeave }: ChatHeaderMenuProps) {
           <DropdownMenuItem
             onSelect={(e) => {
               e.preventDefault();
-              setMuted((m) => {
-                const next = !m;
-                toast.success(next ? "Notifications muted" : "Notifications unmuted");
-                return next;
-              });
+              // Compute the next value from the current closure, then
+              // call setMuted + toast as separate statements. Putting
+              // the toast inside the setMuted updater fires it twice
+              // because React 19 Strict Mode invokes functional
+              // updaters twice in dev to surface impure functions.
+              const next = !muted;
+              setMuted(next);
+              toast.success(next ? "Notifications muted" : "Notifications unmuted");
             }}
           >
             {muted ? (
