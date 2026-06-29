@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
-import { Header } from "./Header";
-import { Footer } from "./Footer";
 import type { TabKey } from "@/types/chat";
+import {
+  ResponsiveShell,
+} from "@/components/layout/ResponsiveShell";
 
 interface LayoutProps {
   children: ReactNode;
@@ -15,30 +16,38 @@ interface LayoutProps {
   onOpenSettings?: () => void;
 }
 
-export function Layout({
-  children,
-  activeTab,
-  onTabChange,
-  badges,
-  search,
-  onSearchChange,
-  searchPlaceholder,
-  FAB,
-  onOpenSettings,
-}: LayoutProps) {
+/**
+ * Public façade preserved from the original `Layout` API so existing routes
+ * keep working unchanged. The implementation now delegates to the new
+ * `ResponsiveShell` — a single source of truth for breakpoint behaviour,
+ * which is driven by the `useIsMobile` hook.
+ */
+export function Layout(props: LayoutProps) {
+  const {
+    children,
+    activeTab,
+    onTabChange,
+    badges,
+    search,
+    onSearchChange,
+    searchPlaceholder,
+    FAB,
+    onOpenSettings,
+  } = props;
+
   return (
-    <div className="min-h-screen bg-background text-foreground flex justify-center">
-      <div className="relative flex h-screen w-full max-w-md flex-col overflow-hidden bg-background mx-auto shadow-silver">
-        <Header
-          search={search}
-          onSearchChange={onSearchChange}
-          placeholder={searchPlaceholder}
-          onOpenSettings={onOpenSettings}
-        />
-        <main className="flex-1 overflow-y-auto pb-24">{children}</main>
-        {FAB}
-        <Footer active={activeTab} onChange={onTabChange} badges={badges} />
-      </div>
-    </div>
+    <ResponsiveShell
+      header={{
+        search,
+        onSearchChange,
+        placeholder: searchPlaceholder,
+        onOpenSettings,
+      }}
+      mobileTabs={{ active: activeTab, onChange: onTabChange, badges }}
+      desktopRail={{ active: activeTab, onChange: onTabChange, badges, onOpenSettings }}
+      FAB={FAB}
+    >
+      {children}
+    </ResponsiveShell>
   );
 }
