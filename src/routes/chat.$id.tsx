@@ -63,8 +63,8 @@ function ChatView() {
           </div>
           <div className="flex-1 overflow-y-auto p-4 text-sm text-muted-foreground">
             <p>
-              Right rail is reserved for pinned messages, shared media, and member lists. Use
-              ⋯ menu to open full context.
+              Right rail is reserved for pinned messages, shared media, and member lists. Use ⋯ menu
+              to open full context -- Coming Soon --
             </p>
           </div>
         </div>
