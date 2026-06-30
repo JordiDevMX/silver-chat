@@ -1,10 +1,15 @@
 # Vite + pnpm build config
+# - `publish = "dist/client"` because TanStack Start's SPA build emits the
+#   static assets into dist/client (the SSR bundle in dist/server is unused
+#   for static hosting).
+# - SPA fallback points to `_shell.html`, the file that TanStack Start's
+#   prerender step generates for the SPA shell (not `index.html`).
 [build]
   command = "pnpm run build"
-  publish = "dist"
+  publish = "dist/client"
 
-# SPA redirections lock
+# SPA fallback: any unknown path should serve the prerendered shell.
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/_shell.html"
   status = 200

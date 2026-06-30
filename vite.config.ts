@@ -12,7 +12,20 @@ const config = defineConfig({
   plugins: [
     devtools(),
     tailwindcss(),
-    tanstackStart(),
+    // SPA mode: produces a static index.html and prerenders the route tree
+    // into dist/client/, which Netlify can serve directly. The SSR server
+    // bundle is still built (for local dev / future use) but `publish` in
+    // netlify.toml points at the static output.
+    tanstackStart({
+      spa: {
+        enabled: true,
+        prerender: {
+          enabled: true,
+          crawlLinks: true,
+          retryCount: 3,
+        },
+      },
+    }),
     viteReact(),
     VitePWA({
       registerType: "autoUpdate",
@@ -54,3 +67,4 @@ const config = defineConfig({
 });
 
 export default config;
+

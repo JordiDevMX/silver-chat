@@ -151,12 +151,12 @@ export function ConversationPane({ chat }: ConversationPaneProps) {
                 <DateSeparator label={group.label} />
                 {group.messages.map((message, index) => {
                   const hasPrevious = index > 0;
-                  const previous = hasPrevious ? group.messages[index - 1] : undefined;
+                  const previous = hasPrevious ? group.messages[index - 1] : null;
                   const showSender =
                     isGroup &&
                     !message.fromSelf &&
                     message.senderName !== undefined &&
-                    (!hasPrevious ||
+                    (previous === null ||
                       previous.fromSelf ||
                       previous.senderName !== message.senderName);
                   return (
