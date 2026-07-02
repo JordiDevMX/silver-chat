@@ -27,7 +27,7 @@ export const mockMessages: Record<string, Msg[]> = {
     },
     {
       id: "m3",
-      text: "Nomas no vayas a trollear kbron",
+      text: "Nomas no vayas a trollear",
       time: "09:42",
       date: daysAgo(0, 9, 42),
       fromSelf: false,
@@ -35,7 +35,7 @@ export const mockMessages: Record<string, Msg[]> = {
     },
     {
       id: "m4",
-      text: "Pides mucho we alv 😡",
+      text: "Pides mucho we 😡",
       time: "09:43",
       date: daysAgo(0, 9, 43),
       fromSelf: true,
@@ -103,7 +103,7 @@ export const mockMessages: Record<string, Msg[]> = {
     },
     {
       id: "m5",
-      text: "What's your fucking problem?",
+      text: "What's your freaking problem?",
       time: "03:20",
       date: daysAgo(0, 3, 20),
       fromSelf: false,
@@ -154,7 +154,7 @@ export const mockMessages: Record<string, Msg[]> = {
     {
       id: "msg_d5",
       senderName: "+52 33 1234 5678",
-      text: "No mames, ¿quién se murió en el dragón? Teníamos smite listo, era free.",
+      text: "No ma..., ¿quién se murió en el dragón? Teníamos smite listo, era free.",
       time: "08:45 PM",
       date: daysAgo(0, 20, 45),
       fromSelf: false,
@@ -164,7 +164,7 @@ export const mockMessages: Record<string, Msg[]> = {
     {
       id: "msg_d6",
       senderName: "Jordi",
-      text: "vayanse alv todos",
+      text: "callense!",
       time: "08:46 PM",
       date: daysAgo(0, 20, 46),
       fromSelf: true,
@@ -174,7 +174,7 @@ export const mockMessages: Record<string, Msg[]> = {
     {
       id: "msg_d7",
       senderName: "Blast",
-      text: "manco de mierda",
+      text: "mas malo que el cigarro",
       time: "08:46 PM",
       date: daysAgo(0, 20, 46),
       fromSelf: false,
