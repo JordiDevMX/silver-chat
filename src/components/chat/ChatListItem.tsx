@@ -1,7 +1,16 @@
 import type { Chat } from "@/types/chat";
 import { Link } from "@tanstack/react-router";
-import { MessageSquarePlus } from "lucide-react";
-import { Pin, BellOff, BadgeCheck, Ban, Archive, Star, UsersRound } from "lucide-react";
+import {
+  MessageSquarePlus,
+  Pin,
+  BellOff,
+  BadgeCheck,
+  Ban,
+  Archive,
+  Star,
+  UsersRound,
+} from "lucide-react";
+
 import { MESSAGE_STATUS_ICONS, renderMessagePreview } from "@/constants/chatIcons";
 
 export function ChatFAB() {
@@ -9,7 +18,7 @@ export function ChatFAB() {
     <button
       type="button"
       aria-label="Start new chat"
-      className="absolute bottom-24 right-6 z-50 h-14 w-14 rounded-2xl bg-gradient-neon text-primary-foreground grid place-items-center shadow-glow hover:scale-105 active:scale-95 transition-transform ring-1 ring-inset ring-white/20"
+      className="absolute bottom-12 right-6 z-50 h-14 w-14 rounded-2xl bg-gradient-neon text-primary-foreground grid place-items-center shadow-glow hover:scale-105 active:scale-95 transition-transform ring-1 ring-inset ring-white/20"
     >
       <MessageSquarePlus className="h-6 w-6" />
     </button>
