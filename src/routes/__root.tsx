@@ -11,6 +11,10 @@ import {
 import type { ReactNode } from "react";
 
 import { ThemeProvider } from "@/hooks/useTheme";
+// Side-effect import: registers the `beforeinstallprompt` window listener
+// at the earliest possible point in the bundle, before any route renders,
+// so the event can't be lost to a React-mount race.
+import "@/hooks/pwaInstallStore";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
