@@ -9,6 +9,13 @@ import tailwindcss from "@tailwindcss/vite";
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
+  optimizeDeps: {
+    // Vite's pre-bundler can drop the named export of this CJS subpath
+    // (`use-sync-external-store/shim/with-selector`), which
+    // @tanstack/react-store imports. Forcing pre-bundling preserves the
+    // `useSyncExternalStoreWithSelector` binding in dev.
+    include: ["use-sync-external-store/shim/with-selector"],
+  },
   plugins: [
     devtools(),
     tailwindcss(),
