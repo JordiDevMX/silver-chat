@@ -31,6 +31,12 @@
   "theme_color": "#0096ff",
   "background_color": "#e3e4e4",
   "display": "standalone",
+  "protocol_handlers": [
+    {
+      "protocol": "web+silverchat",
+      "url": "/?deeplink=%s"
+    }
+  ],
   "screenshots": [
     {
       "src": "/screenshots/728x410.png",
