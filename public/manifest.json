@@ -2,6 +2,7 @@
   "name": "SilverChat - decentralized glassmorphism messenger",
   "short_name": "SilverChat",
   "start_url": "/",
+  "id": "/",
   "icons": [
     {
       "src": "/favicon.svg",
@@ -31,6 +32,10 @@
   "theme_color": "#0096ff",
   "background_color": "#e3e4e4",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
   "protocol_handlers": [
     {
       "protocol": "web+silverchat",
