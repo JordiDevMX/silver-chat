@@ -1,5 +1,6 @@
 import { Search, Settings } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { InstallPwaButton } from "@/components/layout/InstallPwaButton";
 import { cn } from "@/lib/utils";
 
 export interface AppHeaderSearchProps {
@@ -70,6 +71,7 @@ export function AppHeader({ search, onSearchChange, placeholder, onOpenSettings,
         </div>
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
+          <InstallPwaButton />
           <button
             type="button"
             aria-label="Settings"

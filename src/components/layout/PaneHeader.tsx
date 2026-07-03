@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { InstallPwaButton } from "@/components/layout/InstallPwaButton";
 import { cn } from "@/lib/utils";
 
 interface PaneHeaderProps {
@@ -23,6 +24,7 @@ export function PaneHeader({ search, onSearchChange, placeholder, trailing }: Pa
         <div className="ml-auto flex items-center gap-1">
           {trailing}
           <ThemeToggle />
+          <InstallPwaButton />
         </div>
       </div>
       <div className="px-3 pb-3">
