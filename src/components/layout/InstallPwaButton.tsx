@@ -58,12 +58,17 @@ export function InstallPwaButton() {
         title="Install SilverChat"
         onClick={() => setOpen(true)}
         className={cn(
-          "h-9 w-9 grid place-items-center rounded-full bg-card/70 border border-border",
-          "hover:bg-accent hover:text-accent-foreground transition-colors",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "h-9 px-4 inline-flex items-center justify-center rounded-full",
+          "bg-card/70 border border-neon/60",
+          "text-foreground text-sm font-semibold tracking-tight",
+          "shadow-glow",
+          "hover:bg-gradient-neon hover:text-primary-foreground hover:border-neon",
+          "hover:shadow-[0_0_24px_-2px_var(--neon)] hover:scale-[1.04] active:scale-[0.97]",
+          "transition-all duration-200 ease-out cursor-pointer",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card",
         )}
       >
-        <Download className="h-4 w-4" strokeWidth={2.2} />
+        Install
       </button>
 
       <AlertDialogContent
@@ -91,10 +96,7 @@ export function InstallPwaButton() {
           <ul className="mt-4 space-y-2">
             {BENEFITS.map((line) => (
               <li key={line} className="flex items-start gap-2.5 text-xs text-foreground/80">
-                <CheckCircle2
-                  className="mt-0.5 h-3.5 w-3.5 shrink-0 text-neon"
-                  strokeWidth={2.4}
-                />
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-neon" strokeWidth={2.4} />
                 <span>{line}</span>
               </li>
             ))}
