@@ -22,7 +22,7 @@ interface ResponsiveShellProps {
   /** Desktop left rail — visible ≥ lg, hidden on smaller screens. */
   desktopRail: DesktopNavRailProps;
 
-  /** Optional floating action button (mobile only). */
+  /** Optional floating action button. Visible on every breakpoint. */
   FAB?: ReactNode;
 
   /** Additional className for the inner viewport wrapper. */
@@ -99,8 +99,8 @@ export function ResponsiveShell({
           >
             {children}
           </main>
-          {FAB && isMobile ? (
-            <div className="pointer-events-none absolute inset-x-0 bottom-20 z-30 flex justify-end px-5">
+          {FAB ? (
+            <div className="pointer-events-none absolute inset-x-0 bottom-20 lg:bottom-6 z-30 flex justify-end px-5">
               <div className="pointer-events-auto">{FAB}</div>
             </div>
           ) : null}

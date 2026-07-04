@@ -8,6 +8,7 @@ import {
 } from "@/constants/callIcons";
 import { useCallSession } from "@/hooks/useCallSession";
 import { mockCalls } from "@/data/mockCalls";
+import { FloatingActionButton } from "@/components/layout/FloatingActionButton";
 
 interface CallRowProps {
   call: Call;
@@ -81,17 +82,13 @@ export function CallsFAB() {
   }
 
   return (
-    <button
-      type="button"
-      aria-label="Start new call"
+    <FloatingActionButton
+      icon={PhoneCall}
+      badgeIcon={Plus}
+      label="Start new call"
       onClick={openNewCall}
-      className="absolute bottom-12 right-5 z-40 h-14 w-14 rounded-2xl bg-gradient-neon text-primary-foreground grid place-items-center shadow-glow hover:scale-105 active:scale-95 active:brightness-90 transition-all ring-1 ring-inset ring-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    >
-      <span className="relative">
-        <PhoneCall className="h-6 w-6" />
-        <Plus className="absolute -top-1.5 -right-2 h-3.5 w-3.5" strokeWidth={3} />
-      </span>
-    </button>
+      className="absolute bottom-12 right-5 z-40"
+    />
   );
 }
 
