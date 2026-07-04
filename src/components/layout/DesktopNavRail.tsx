@@ -29,12 +29,7 @@ const RAIL_ITEMS: RailItem[] = [
  * mental model is identical across viewports. The active item is highlighted
  * with the neon gradient pill, exactly like the mobile bar's active state.
  */
-export function DesktopNavRail({
-  active,
-  onChange,
-  badges = {},
-  onOpenSettings,
-}: DesktopNavRailProps) {
+export function DesktopNavRail({ active, onChange, badges = {} }: DesktopNavRailProps) {
   return (
     <aside
       className={cn(

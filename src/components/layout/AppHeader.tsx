@@ -71,7 +71,6 @@ export function AppHeader({ search, onSearchChange, placeholder, onOpenSettings,
         </div>
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
-          <InstallPwaButton />
           <button
             type="button"
             aria-label="Settings"
@@ -84,6 +83,7 @@ export function AppHeader({ search, onSearchChange, placeholder, onOpenSettings,
           >
             <Settings className="h-4 w-4" />
           </button>
+          <InstallPwaButton />
         </div>
       </div>
       <div className="px-4 pb-3">

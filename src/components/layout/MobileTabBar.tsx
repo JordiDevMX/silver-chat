@@ -16,13 +16,14 @@ const TABS: { key: TabKey; label: string; Icon: typeof MessageCircle }[] = [
 ];
 
 /**
- * Bottom tab bar, mounted only on mobile (when `useIsMobile()` is true).
- * The same icon set is mirrored vertically in the `DesktopNavRail` for lg+.
+ * Bottom tab bar, mounted on mobile AND tablet (anything below Tailwind's
+ * `lg` breakpoint, gated by `useIsDesktop()`). The same icon set is
+ * mirrored vertically in the `DesktopNavRail` for `lg` and above.
  */
 export function MobileTabBar({ active, onChange, badges = {} }: MobileTabBarProps) {
   return (
     <nav
-      className="sticky bottom-0 z-30 border-t border-border/60 bg-gradient-silver backdrop-blur-xl shadow-silver"
+      className="lg:hidden sticky bottom-0 z-30 border-t border-border/60 bg-gradient-silver backdrop-blur-xl shadow-silver"
       aria-label="Primary"
     >
       <ul className="grid grid-cols-4 px-2 pt-1.5 pb-2">

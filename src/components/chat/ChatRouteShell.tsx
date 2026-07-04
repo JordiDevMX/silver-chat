@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsDesktop } from "@/hooks/use-mobile";
 import { ResponsiveSplit } from "@/components/layout/ResponsiveShell";
 import { MobileTabBar } from "@/components/layout/MobileTabBar";
 import { DesktopNavRail } from "@/components/layout/DesktopNavRail";
@@ -30,11 +30,15 @@ interface ChatRouteShellProps {
 /**
  * Responsive shell for the `/chat/$id` route.
  *
- *  - Mobile (< md): the conversation fills the screen. The mobile tab bar
- *    is mounted at the bottom. Tapping any tab routes back to `/`.
- *  - Tablet+ (md – xl): two columns — chat list + active conversation.
- *    The desktop left rail is rendered.
- *  - Desktop (>= xl): three columns — chat list + conversation + aside.
+ * Breakpoints:
+ *  - <  lg (<1024px)  : Single full-viewport column. Bottom tab bar mounted
+ *                       (covers mobile + tablet). Tapping any tab routes
+ *                       back to `/`.
+ *  - >= lg (>=1024px) : Two-column layout (vertical nav rail + main content
+ *                       area) edge-to-edge, no rounded surface, no shadow,
+ *                       no inset margins.
+ *  - >= xl (>=1280px) : Optional right aside (members, context) joins the
+ *                       split — `ResponsiveSplit` reveals it.
  */
 export function ChatRouteShell({
   activeChat,
@@ -48,7 +52,7 @@ export function ChatRouteShell({
   conversation,
   aside,
 }: ChatRouteShellProps) {
-  const isMobile = useIsMobile();
+  const isDesktop = useIsDesktop();
   const [mobileOpen] = useState(false);
 
   return (
@@ -56,13 +60,13 @@ export function ChatRouteShell({
       <div
         className={[
           "relative flex h-full w-full flex-col bg-background",
-          // Tablet: centered phone-like surface.
-          "md:rounded-3xl md:my-3 md:max-w-[min(100vw-1.5rem,28rem)] md:border md:border-border/60 md:shadow-silver",
-          // Desktop: full-bleed inside a soft container with rounded corners.
-          "lg:rounded-3xl lg:max-w-none lg:mx-3 lg:my-3 lg:flex-row",
+          // >= md: edge-to-edge two-column layout — no rounded surface, no
+          // shadow, no inset margins, no max-width clamp. The conversation
+          // pane stretches to fill the available width.
+          "md:flex-row",
         ].join(" ")}
       >
-        {!isMobile ? (
+        {isDesktop ? (
           <DesktopNavRail
             active={activeTab}
             onChange={onTabChange}
@@ -74,16 +78,17 @@ export function ChatRouteShell({
         <div
           className={[
             "relative flex min-w-0 flex-1 flex-col overflow-hidden",
-            "lg:rounded-l-3xl",
           ].join(" ")}
         >
           <ResponsiveSplit
+            className="flex-1 min-h-0"
             sidebar={
               <div className="flex h-full min-h-0 w-full flex-col">
                 <PaneHeader
                   search={search}
                   onSearchChange={onSearchChange}
                   placeholder="Search conversations…"
+                  onOpenSettings={onOpenSettings}
                 />
                 <div className="flex-1 min-h-0 overflow-y-auto">
                   <ChatListPane chats={chats} activeId={activeChat?.id} />
@@ -93,14 +98,15 @@ export function ChatRouteShell({
             main={conversation}
             aside={aside}
           />
-        </div>
 
-        {/* Mobile bottom tab bar — only when no chat is open OR the user is
-            navigating back to the list. We render it always on mobile so the
-            user can jump tabs at any time. */}
-        {isMobile ? (
-          <MobileTabBar active={activeTab} onChange={onTabChange} badges={badges} />
-        ) : null}
+          {/* Mobile/tablet bottom tab bar — mounted as a child of the main
+              column so it always sits at the bottom of the content stack,
+              regardless of whether the outer wrapper is `flex-col` (mobile)
+              or `flex-row` (tablet). */}
+          {!isDesktop ? (
+            <MobileTabBar active={activeTab} onChange={onTabChange} badges={badges} />
+          ) : null}
+        </div>
 
         {/* Reserved for future mobile slide-over of the chat list. */}
         <span data-mobile-list-open={mobileOpen} className="hidden" aria-hidden />

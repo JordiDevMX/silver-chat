@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, Settings } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { InstallPwaButton } from "@/components/layout/InstallPwaButton";
 import { cn } from "@/lib/utils";
@@ -9,6 +9,8 @@ interface PaneHeaderProps {
   placeholder?: string;
   /** Optional trailing actions (e.g. sort/view toggles). */
   trailing?: React.ReactNode;
+  /** Opens the settings sheet. */
+  onOpenSettings?: () => void;
 }
 
 /**
@@ -16,7 +18,13 @@ interface PaneHeaderProps {
  * Mirrors the visual language of `AppHeader` but is denser and lives
  * inside the column rather than at the top of the page.
  */
-export function PaneHeader({ search, onSearchChange, placeholder, trailing }: PaneHeaderProps) {
+export function PaneHeader({
+  search,
+  onSearchChange,
+  placeholder,
+  trailing,
+  onOpenSettings,
+}: PaneHeaderProps) {
   return (
     <div className="sticky top-0 z-20 border-b border-border/60 bg-gradient-silver/95 backdrop-blur-xl shadow-silver">
       <div className="flex items-center gap-2 px-3 pt-3 pb-2">
@@ -24,6 +32,18 @@ export function PaneHeader({ search, onSearchChange, placeholder, trailing }: Pa
         <div className="ml-auto flex items-center gap-1">
           {trailing}
           <ThemeToggle />
+          <button
+            type="button"
+            aria-label="Settings"
+            onClick={onOpenSettings}
+            className={cn(
+              "h-9 w-9 grid place-items-center rounded-full bg-card/70 border border-border",
+              "hover:bg-accent hover:text-accent-foreground transition-colors",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            )}
+          >
+            <Settings className="h-4 w-4" />
+          </button>
           <InstallPwaButton />
         </div>
       </div>
