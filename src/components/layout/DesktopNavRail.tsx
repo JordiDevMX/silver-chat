@@ -29,7 +29,12 @@ const RAIL_ITEMS: RailItem[] = [
  * mental model is identical across viewports. The active item is highlighted
  * with the neon gradient pill, exactly like the mobile bar's active state.
  */
-export function DesktopNavRail({ active, onChange, badges = {}, onOpenSettings }: DesktopNavRailProps) {
+export function DesktopNavRail({
+  active,
+  onChange,
+  badges = {},
+  onOpenSettings,
+}: DesktopNavRailProps) {
   return (
     <aside
       className={cn(
@@ -98,56 +103,18 @@ export function DesktopNavRail({ active, onChange, badges = {}, onOpenSettings }
       </ul>
 
       <div className="mt-auto flex flex-col items-center gap-1.5 w-full px-2">
-        {onOpenSettings ? (
-          <button
-            type="button"
-            onClick={onOpenSettings}
-            aria-label="Settings"
-            title="Settings"
-            className={cn(
-              "group relative w-full h-12 grid place-items-center rounded-xl",
-              "text-muted-foreground hover:bg-accent/60 hover:text-foreground transition-colors",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            )}
-          >
-            <Settings className="h-5 w-5" />
-            <span
-              className={cn(
-                "pointer-events-none absolute left-full ml-3 px-2 py-1 rounded-md",
-                "bg-popover text-popover-foreground text-xs font-medium",
-                "border border-border/60 shadow-silver",
-                "opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0",
-                "transition-all whitespace-nowrap z-50",
-              )}
-            >
-              Settings
-            </span>
-          </button>
-        ) : null}
-
-        <button
-          type="button"
-          aria-label="Sign out"
-          title="Sign out"
+        <LogOut className="h-5 w-5" />
+        <span
           className={cn(
-            "group relative w-full h-12 grid place-items-center rounded-xl",
-            "text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            "pointer-events-none absolute left-full ml-3 px-2 py-1 rounded-md",
+            "bg-popover text-popover-foreground text-xs font-medium",
+            "border border-border/60 shadow-silver",
+            "opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0",
+            "transition-all whitespace-nowrap z-50",
           )}
         >
-          <LogOut className="h-5 w-5" />
-          <span
-            className={cn(
-              "pointer-events-none absolute left-full ml-3 px-2 py-1 rounded-md",
-              "bg-popover text-popover-foreground text-xs font-medium",
-              "border border-border/60 shadow-silver",
-              "opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0",
-              "transition-all whitespace-nowrap z-50",
-            )}
-          >
-            Sign out
-          </span>
-        </button>
+          Sign out
+        </span>
       </div>
     </aside>
   );
