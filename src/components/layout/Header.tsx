@@ -1,5 +1,6 @@
-import { Search, Settings } from "lucide-react";
+import { Search } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { SettingsButton } from "@/components/layout/SettingsButton";
 
 interface HeaderProps {
   search: string;
@@ -10,7 +11,10 @@ interface HeaderProps {
 
 export function Header({ search, onSearchChange, placeholder, onOpenSettings }: HeaderProps) {
   return (
-    <header suppressHydrationWarning className="sticky top-0 z-30 bg-gradient-silver border-b border-border/60 backdrop-blur-xl shadow-silver">
+    <header
+      suppressHydrationWarning
+      className="sticky top-0 z-30 bg-gradient-silver border-b border-border/60 backdrop-blur-xl shadow-silver"
+    >
       <div className="flex items-center gap-3 px-4 pt-4 pb-2">
         <div className="flex items-center gap-2">
           <div className="relative h-8 w-8 rounded-xl bg-gradient-neon shadow-glow grid place-items-center">
@@ -23,14 +27,7 @@ export function Header({ search, onSearchChange, placeholder, onOpenSettings }: 
         </div>
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
-          <button
-            type="button"
-            aria-label="Settings"
-            onClick={onOpenSettings}
-            className="h-9 w-9 grid place-items-center rounded-full bg-card/70 border border-border hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Settings className="h-4 w-4" />
-          </button>
+          <SettingsButton onClick={onOpenSettings} />
         </div>
       </div>
       <div className="px-4 pb-3">

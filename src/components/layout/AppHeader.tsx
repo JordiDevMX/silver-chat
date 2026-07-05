@@ -1,6 +1,7 @@
-import { Search, Settings } from "lucide-react";
+import { Search } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { InstallPwaButton } from "@/components/layout/InstallPwaButton";
+import { SettingsButton } from "@/components/layout/SettingsButton";
 import { cn } from "@/lib/utils";
 
 export interface AppHeaderSearchProps {
@@ -30,7 +31,14 @@ interface AppHeaderProps extends AppHeaderSearchProps {
  * The header is always sticky to the top of its scrolling container; the
  * ResponsiveShell passes that container as the parent of the main slot.
  */
-export function AppHeader({ search, onSearchChange, placeholder, onOpenSettings, title, back }: AppHeaderProps) {
+export function AppHeader({
+  search,
+  onSearchChange,
+  placeholder,
+  onOpenSettings,
+  title,
+  back,
+}: AppHeaderProps) {
   if (back || title) {
     return (
       <header
@@ -71,18 +79,7 @@ export function AppHeader({ search, onSearchChange, placeholder, onOpenSettings,
         </div>
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
-          <button
-            type="button"
-            aria-label="Settings"
-            onClick={onOpenSettings}
-            className={cn(
-              "h-9 w-9 grid place-items-center rounded-full bg-card/70 border border-border",
-              "hover:bg-accent hover:text-accent-foreground transition-colors",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            )}
-          >
-            <Settings className="h-4 w-4" />
-          </button>
+          <SettingsButton onClick={onOpenSettings} />
           <InstallPwaButton />
         </div>
       </div>
