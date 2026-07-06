@@ -107,7 +107,6 @@ function ChannelView() {
   const channelAsChat: Chat = {
     id: channel.id,
     name: channel.name,
-    avatar: isAnn ? "AN" : (channel.name.slice(0, 2) || "CH").toUpperCase(),
     lastMessage: channel.lastMessage,
     time: channel.time,
     unread: 0,
@@ -183,7 +182,6 @@ function ChannelView() {
                             findMember([], message.senderName) ?? {
                               id: message.senderName,
                               name: message.senderName,
-                              avatar: message.senderName.slice(0, 2).toUpperCase(),
                               role: "member",
                             }
                           }

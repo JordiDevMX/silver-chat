@@ -5,6 +5,7 @@ import { Dialog, DialogOverlay, DialogPortal } from "@/components/ui/dialog";
 import { CALL_STATUS_GRADIENTS } from "@/constants/callIcons";
 import { useCallSession, formatCallDuration } from "@/hooks/useCallSession";
 import type { CallPhase } from "@/hooks/useCallSession";
+import { Avatar } from "@/components/chat/Avatar";
 import { cn } from "@/lib/utils";
 
 function statusText(phase: CallPhase, isVideo: boolean): string {
@@ -87,15 +88,19 @@ export function CallOverlay() {
               <div
                 aria-hidden="true"
                 className={cn(
-                  "relative h-28 w-28 rounded-full grid place-items-center text-3xl font-semibold text-primary-foreground ring-1 ring-inset ring-white/30 shadow-silver",
+                  "relative h-28 w-28 rounded-full",
                   phase === "connecting" && "animate-pulse",
                 )}
-                style={{ backgroundImage: CALL_STATUS_GRADIENTS.ongoing }}
               >
-                <span className="drop-shadow-sm">{call.avatar}</span>
+                <Avatar
+                  user={{ name: call.name, avatarUrl: call.avatarUrl }}
+                  size="xl"
+                  gradient={CALL_STATUS_GRADIENTS.ongoing}
+                  innerClassName="h-28 w-28 text-3xl ring-1 ring-inset ring-white/30"
+                />
                 <span
                   className={cn(
-                    "absolute inset-0 rounded-full ring-2 ring-neon/60",
+                    "absolute inset-0 rounded-full ring-2 ring-neon/60 pointer-events-none",
                     phase === "ongoing" ? "animate-ping" : "hidden",
                   )}
                 />

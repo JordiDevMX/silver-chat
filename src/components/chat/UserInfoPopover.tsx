@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { BadgeCheck, ShieldCheck, Lock } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { Avatar } from "@/components/chat/Avatar";
+import { getChatUser } from "@/lib/avatar";
 import type { Chat } from "@/types/chat";
 
 interface UserInfoPopoverProps {
@@ -37,9 +39,11 @@ export function UserInfoPopover({ chat, children }: UserInfoPopoverProps) {
         />
         <div className="px-4 pb-4 -mt-8">
           <div className="flex items-end gap-3">
-            <div className="h-16 w-16 rounded-full bg-gradient-silver border-2 border-popover shadow-silver grid place-items-center text-base font-semibold text-foreground/80 shrink-0">
-              {chat.avatar}
-            </div>
+            <Avatar
+              user={getChatUser(chat)}
+              size="xl"
+              innerClassName="h-16 w-16 border-2 border-popover"
+            />
             <div className="flex-1 min-w-0 pb-4">
               <h3 className="text-sm font-semibold text-foreground truncate flex items-center gap-1.5">
                 <span className="truncate">{chat.name}</span>
@@ -51,7 +55,7 @@ export function UserInfoPopover({ chat, children }: UserInfoPopoverProps) {
                 {chat.isOnline ? (
                   <span className="text-neon font-medium">online now</span>
                 ) : (
-                  "last seen recently"
+                  "Disconnected"
                 )}
               </p>
             </div>

@@ -7,6 +7,8 @@ import { ChatComposer } from "@/components/chat/ChatComposer";
 import { ChatHeaderMenu } from "@/components/chat/ChatHeaderMenu";
 import { UserInfoPopover } from "@/components/chat/UserInfoPopover";
 import { MemberHoverCard, findMember } from "@/components/chat/MemberHoverCard";
+import { Avatar } from "@/components/chat/Avatar";
+import { getChatUser } from "@/lib/avatar";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { formatMessageDate, isSameDay } from "@/lib/format";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -91,9 +93,7 @@ export function ConversationPane({ chat }: ConversationPaneProps) {
 
           <UserInfoPopover chat={chat}>
             <div className="relative shrink-0 cursor-pointer">
-              <div className="h-10 w-10 rounded-full bg-gradient-silver border border-border grid place-items-center text-xs font-semibold text-foreground/80 shadow-silver">
-                {chat.avatar}
-              </div>
+              <Avatar user={getChatUser(chat)} size="md" innerClassName="h-10 w-10" />
               {chat.isOnline ? (
                 <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-neon ring-2 ring-background shadow-glow" />
               ) : null}
@@ -103,7 +103,7 @@ export function ConversationPane({ chat }: ConversationPaneProps) {
           <div className="flex-1 min-w-0 ml-1">
             <h2 className="text-sm font-semibold truncate">{chat.name}</h2>
             <p className="text-[11px] text-muted-foreground truncate">
-              {chat.isOnline ? <span className="text-neon">online</span> : "last seen recently"}
+              {chat.isOnline ? <span className="text-neon">online</span> : "Disconnected"}
             </p>
           </div>
 
@@ -167,7 +167,6 @@ export function ConversationPane({ chat }: ConversationPaneProps) {
                             findMember(chat.participants, message.senderName) ?? {
                               id: message.senderName ?? "unknown",
                               name: message.senderName ?? "Unknown",
-                              avatar: (message.senderName ?? "?").slice(0, 2).toUpperCase(),
                               role: "member",
                             }
                           }
@@ -205,8 +204,8 @@ export function ConversationEmptyState() {
         </div>
         <h2 className="text-xl font-semibold tracking-tight">Pick a conversation</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Select a chat on the left to start messaging. End-to-end encryption keeps every conversation
-          private.
+          Select a chat on the left to start messaging. End-to-end encryption keeps every
+          conversation private.
         </p>
         <ul className="mt-5 grid grid-cols-1 gap-2 text-left text-xs text-muted-foreground">
           <li className="flex items-center gap-2">

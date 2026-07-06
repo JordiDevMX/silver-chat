@@ -13,6 +13,8 @@ import {
 
 import { MESSAGE_STATUS_ICONS, renderMessagePreview } from "@/constants/chatIcons";
 import { FloatingActionButton } from "@/components/layout/FloatingActionButton";
+import { Avatar } from "@/components/chat/Avatar";
+import { getChatUser } from "@/lib/avatar";
 
 export function ChatFAB() {
   return (
@@ -35,14 +37,13 @@ export function ChatListItem({ chat }: ChatListItemProps) {
       params={{ id: chat.id }}
       className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors text-left"
     >
-      <div className="relative shrink-0">
-        <div className="h-12 w-12 rounded-full bg-gradient-silver border border-border grid place-items-center text-sm font-semibold text-foreground/80 shadow-silver">
-          {chat.avatar}
-        </div>
-        {chat.isOnline && (
-          <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-neon ring-2 ring-background shadow-glow" />
-        )}
-      </div>
+      <Avatar
+        user={getChatUser(chat)}
+        size="lg"
+        showStatus
+        statusOnline={chat.isOnline === true}
+        innerClassName="h-12 w-12"
+      />
 
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2">

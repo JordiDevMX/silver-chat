@@ -1,4 +1,5 @@
 import type { Call } from "@/types/call";
+import sungJinwooAvatar from "@/assets/images/avatars/mocks/sung-jinwoo.webp?url";
 
 /**
  * Telecom history scenarios (canonical Call type):
@@ -24,7 +25,8 @@ export const mockCalls: Call[] = [
   {
     id: "call_c1",
     name: "Lyra Chen",
-    avatar: "LC",
+    // Real profile image — surfaces the image variant in the calls list.
+    avatarUrl: sungJinwooAvatar,
     email: "lyra.chen@example.com",
     type: "voice",
     direction: "incoming",
@@ -37,7 +39,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_a1",
     name: "Orion Stratos",
-    avatar: "OS",
     email: "orbit@orion-stratos.io",
     type: "voice",
     direction: "incoming",
@@ -49,7 +50,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_b1",
     name: "Rin Akiyama",
-    avatar: "RA",
     email: "rin.akiyama@example.com",
     type: "voice",
     direction: "outgoing",
@@ -61,7 +61,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_d1",
     name: "Vega Solis",
-    avatar: "VS",
     email: "vega@stellar.mesh",
     type: "video",
     direction: "outgoing",
@@ -74,7 +73,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_c2",
     name: "Atlas Crew",
-    avatar: "AC",
     email: "crew@atlas.co",
     type: "video",
     direction: "incoming",
@@ -85,7 +83,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_a2",
     name: "+1 (415) 555-0142",
-    avatar: "?",
     subtitle: "Unknown — possible spam",
     isUnknown: true,
     type: "voice",
@@ -96,7 +93,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_d2",
     name: "Kairo Nexus",
-    avatar: "KN",
     email: "kairo@nexus.relay",
     type: "voice",
     direction: "outgoing",
@@ -107,7 +103,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_b2",
     name: "Vault Helix",
-    avatar: "VH",
     email: "vault@helix.dark",
     type: "voice",
     direction: "outgoing",
@@ -117,7 +112,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_a3",
     name: "Echo Cascade",
-    avatar: "EC",
     email: "echo@cascade.sig",
     type: "video",
     direction: "incoming",
@@ -129,7 +123,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_video_missed",
     name: "Zara Vex",
-    avatar: "ZV",
     email: "zara.vex@quantum.net",
     type: "video",
     direction: "incoming",
@@ -139,7 +132,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_video_answered",
     name: "Aria Cipher",
-    avatar: "Ai",
     email: "aria@neonmail.io",
     type: "video",
     direction: "incoming",
@@ -150,7 +142,6 @@ export const mockCalls: Call[] = [
   {
     id: "call_video_unanswered",
     name: "Nyx Protocol",
-    avatar: "NP",
     email: "nyx@protocol.dht",
     type: "video",
     direction: "outgoing",
