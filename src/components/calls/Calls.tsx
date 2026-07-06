@@ -8,6 +8,7 @@ import {
 } from "@/constants/callIcons";
 import { useCallSession } from "@/hooks/useCallSession";
 import { mockCalls } from "@/data/mockCalls";
+import { Avatar } from "@/components/chat/Avatar";
 import { FloatingActionButton } from "@/components/layout/FloatingActionButton";
 
 interface CallRowProps {
@@ -39,11 +40,13 @@ function CallRow({ call }: CallRowProps) {
       aria-label={`${call.type === "video" ? "Video" : "Voice"} call ${call.name}`}
       className="group flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <div
-        className="relative h-12 w-12 rounded-full grid place-items-center text-sm font-semibold text-primary-foreground ring-1 ring-inset ring-white/30 shadow-silver shrink-0"
-        style={{ backgroundImage: CALL_STATUS_GRADIENTS[call.status] }}
-      >
-        <span className="drop-shadow-sm">{call.avatar}</span>
+      <div className="relative shrink-0">
+        <Avatar
+          user={{ name: call.name, avatarUrl: call.avatarUrl }}
+          size="lg"
+          gradient={CALL_STATUS_GRADIENTS[call.status]}
+          innerClassName="h-12 w-12 ring-1 ring-inset ring-white/30"
+        />
       </div>
 
       <div className="flex-1 min-w-0">

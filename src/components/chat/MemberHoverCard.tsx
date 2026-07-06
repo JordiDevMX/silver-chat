@@ -5,15 +5,16 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import type { GroupUser } from "@/types/chat";
+import { Avatar } from "@/components/chat/Avatar";
+import type { User } from "@/types/chat";
 
 interface MemberHoverCardProps {
-  member: GroupUser;
+  member: User;
   /** The trigger element — typically the sender-name span above a bubble. */
   children: ReactNode;
 }
 
-function roleBadge(role: GroupUser["role"]) {
+function roleBadge(role: User["role"]) {
   switch (role) {
     case "admin":
       return { icon: Crown, label: "Admin", tint: "text-amber-400" };
@@ -38,9 +39,7 @@ export function MemberHoverCard({ member, children }: MemberHoverCardProps) {
       <HoverCardTrigger asChild>{children}</HoverCardTrigger>
       <HoverCardContent side="top" align="start" className="w-72">
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-gradient-silver border border-border grid place-items-center text-sm font-semibold text-foreground/80 shadow-silver shrink-0">
-            {member.avatar}
-          </div>
+          <Avatar user={member} size="lg" innerClassName="h-12 w-12" />
           <div className="flex-1 min-w-0">
             <h4 className="text-sm font-semibold text-foreground truncate flex items-center gap-1.5">
               <span className="truncate">{member.name}</span>
@@ -64,11 +63,11 @@ export function MemberHoverCard({ member, children }: MemberHoverCardProps) {
   );
 }
 
-/** Returns the GroupUser with the given name from a participants list, or null. */
+/** Returns the User with the given name from a participants list, or null. */
 export function findMember(
-  participants: GroupUser[] | undefined,
+  participants: User[] | undefined,
   name: string | undefined,
-): GroupUser | null {
+): User | null {
   if (!participants || !name) return null;
   return participants.find((p) => p.name === name) ?? null;
 }

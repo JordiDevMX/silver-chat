@@ -1,11 +1,17 @@
 import type { Chat } from "@/types/chat";
+import sungJinwooAvatar from "@/assets/images/avatars/mocks/sung-jinwoo.webp?url";
 
-// Represents the chat list
+// Represents the chat list.
+// Most users fall back to the derived-initials avatar; a handful are
+// wired to a real mock image (`sungJinwooAvatar`) or a deliberately
+// broken path to exercise the onError fallback in `<Avatar />`.
 export const rawChats: Chat[] = [
   {
     id: "1",
     name: "Blast Puto",
-    avatar: "BP",
+    // Real profile image (mock asset). Renders via <Avatar /> with
+    // the image variant; onError would fall back to initials.
+    avatarUrl: sungJinwooAvatar,
     lastMessage: "Pides mucho we 😡",
     time: "09:42",
     unread: 0,
@@ -23,7 +29,6 @@ export const rawChats: Chat[] = [
   {
     id: "2",
     name: "Orion Labs",
-    avatar: "OL",
     lastMessage: "Deploy successful on the silver mesh.",
     time: "09:15",
     unread: 0,
@@ -40,7 +45,9 @@ export const rawChats: Chat[] = [
   {
     id: "3",
     name: "Lyra Chen",
-    avatar: "LC",
+    // Deliberately broken path — exercises the onError fallback in
+    // <Avatar />, which flips to the derived initials.
+    avatarUrl: "/avatars/missing/lyra-chen.png",
     lastMessage: "What's your freaking problem?",
     time: "03:20",
     unread: 5,
@@ -56,7 +63,6 @@ export const rawChats: Chat[] = [
   {
     id: "4",
     name: "Atlas Crew",
-    avatar: "AC",
     lastMessage: "Mira: holographic mockups uploaded",
     time: "Yesterday",
     unread: 0,
@@ -73,7 +79,6 @@ export const rawChats: Chat[] = [
   {
     id: "5",
     name: "Kairo Sato",
-    avatar: "KS",
     lastMessage: "thanks, that worked ⚡",
     time: "Yesterday",
     unread: 0,
@@ -89,7 +94,6 @@ export const rawChats: Chat[] = [
   {
     id: "6",
     name: "Echo Network",
-    avatar: "EN",
     lastMessage: "New signal detected in sector 7.",
     time: "Mon",
     unread: 1,
@@ -106,7 +110,6 @@ export const rawChats: Chat[] = [
   {
     id: "7",
     name: "Rin Akiyama",
-    avatar: "RA",
     lastMessage: "haha ok see you then",
     time: "Sun",
     unread: 0,
@@ -122,7 +125,6 @@ export const rawChats: Chat[] = [
   {
     id: "8",
     name: "Vault 0x9",
-    avatar: "V9",
     lastMessage: "Key rotation complete.",
     time: "Sun",
     unread: 0,
@@ -138,7 +140,6 @@ export const rawChats: Chat[] = [
   {
     id: "9",
     name: "Nova Vega",
-    avatar: "NV",
     lastMessage: "Sent you the encrypted file",
     time: "09:42",
     unread: 2,
@@ -149,7 +150,6 @@ export const rawChats: Chat[] = [
   {
     id: "10",
     name: "Ex-girlfriend",
-    avatar: "TX",
     lastMessage: "I just put a lawsuit on you, check your email",
     time: "yesterday",
     unread: 2,
@@ -161,7 +161,6 @@ export const rawChats: Chat[] = [
   {
     id: "11",
     name: "Ex-boss",
-    avatar: "EB",
     lastMessage:
       "You should've advised us about it 2 weeks in advance, not now that the project is delayed and we are losing money",
     time: "17/04/2025",
@@ -172,7 +171,6 @@ export const rawChats: Chat[] = [
   {
     id: "12",
     name: "Tacos el Güero",
-    avatar: "TG",
     lastMessage: "en_camino.mp4",
     time: "27/09/2026",
     unread: 1,
@@ -183,7 +181,6 @@ export const rawChats: Chat[] = [
   {
     id: "13",
     name: "MysticKarax",
-    avatar: "MK",
     lastMessage: "lolis.pdf",
     time: "27/09/2026",
     unread: 0,
@@ -194,7 +191,6 @@ export const rawChats: Chat[] = [
   {
     id: "group_1",
     name: "Discord Group",
-    avatar: "DG",
     lastMessage: "mas malo que el cigarro",
     time: "08:46 PM",
     unread: 0,
@@ -203,18 +199,17 @@ export const rawChats: Chat[] = [
     isGroup: true,
     lastMessageSender: "Blast",
     participants: [
-      { id: "u_jordi", name: "Jordi", avatar: "J", role: "member" },
-      { id: "u_blast", name: "Blast", avatar: "B", role: "admin" },
-      { id: "u_gustambo", name: "Gustambo", avatar: "G", role: "member" },
-      { id: "u_wilbert", name: "Wilbert", avatar: "W", role: "member" },
-      { id: "u_roy", name: "Roy", avatar: "R", role: "member" },
-      { id: "u_random", name: "+52 33 1234 5678", avatar: "#", role: "member" },
+      { id: "u_jordi", name: "Jordi", role: "member" },
+      { id: "u_blast", name: "Blast", role: "admin", avatarUrl: sungJinwooAvatar },
+      { id: "u_gustambo", name: "Gustambo", role: "member" },
+      { id: "u_wilbert", name: "Wilbert", role: "member" },
+      { id: "u_roy", name: "Roy", role: "member" },
+      { id: "u_random", name: "+52 33 1234 5678", role: "member" },
     ],
   },
   {
     id: "14",
     name: "Tio Salo",
-    avatar: "TS",
     lastMessage: "It's hard... you know, I-",
     time: "09:42",
     unread: 0,
@@ -224,7 +219,6 @@ export const rawChats: Chat[] = [
   {
     id: "group_2",
     name: "Base Gatitos Felices 🐈🐈",
-    avatar: "BGF",
     lastMessage: "Ahi andan siendo felices",
     time: "08:46 PM",
     unread: 0,
@@ -233,15 +227,14 @@ export const rawChats: Chat[] = [
     isGroup: true,
     lastMessageSender: "Jordi",
     participants: [
-      { id: "u_jordi", name: "Jordi", avatar: "J", role: "member" },
-      { id: "u_gibi", name: "Gibi", avatar: "G", role: "member" },
-      { id: "u_angii", name: "Angii", avatar: "A", role: "admin" },
+      { id: "u_jordi", name: "Jordi", role: "member" },
+      { id: "u_gibi", name: "Gibi", role: "member" },
+      { id: "u_angii", name: "Angii", role: "admin" },
     ],
   },
   {
     id: "15",
     name: "Gustambo",
-    avatar: "GT",
     lastMessage: "voice call",
     time: "09:42",
     unread: 1,
@@ -258,7 +251,6 @@ export const rawChats: Chat[] = [
   {
     id: "17",
     name: "Nova Vega",
-    avatar: "NV",
     lastMessage: "Missed voice call",
     time: "9:24 AM",
     unread: 1,
@@ -277,7 +269,6 @@ export const rawChats: Chat[] = [
   {
     id: "18",
     name: "Rin Akiyama",
-    avatar: "RA",
     lastMessage: "No answer",
     time: "8:31 AM",
     unread: 0,
@@ -296,7 +287,6 @@ export const rawChats: Chat[] = [
   {
     id: "19",
     name: "Lyra Chen",
-    avatar: "LC",
     lastMessage: "Voice call · 14:22 mins",
     time: "9:02 AM",
     unread: 0,
@@ -315,7 +305,6 @@ export const rawChats: Chat[] = [
   {
     id: "20",
     name: "Atlas Crew",
-    avatar: "AC",
     lastMessage: "Video call · 22:07 mins",
     time: "Mon",
     unread: 0,
@@ -334,7 +323,6 @@ export const rawChats: Chat[] = [
   {
     id: "21",
     name: "DocuPort",
-    avatar: "DP",
     lastMessage: "📄 Q3_Financial_Report.pdf",
     time: "10:42",
     unread: 0,
@@ -353,7 +341,6 @@ export const rawChats: Chat[] = [
   {
     id: "22",
     name: "PixelStream",
-    avatar: "PS",
     lastMessage: "🖼️ setup_hacker_den.png",
     time: "10:55",
     unread: 0,
@@ -372,7 +359,6 @@ export const rawChats: Chat[] = [
   {
     id: "23",
     name: "CineLink",
-    avatar: "CL",
     lastMessage: "🎥 cinematic_demo.mp4",
     time: "11:02",
     unread: 0,
@@ -391,7 +377,6 @@ export const rawChats: Chat[] = [
   {
     id: "24",
     name: "Sticker Lab",
-    avatar: "SL",
     lastMessage: "👻 [Sticker]",
     time: "11:18",
     unread: 0,
@@ -411,7 +396,6 @@ export const rawChats: Chat[] = [
   {
     id: "25",
     name: "Zara Vex",
-    avatar: "ZV",
     lastMessage: "Missed video call",
     time: "3:47 PM",
     unread: 1,
@@ -430,7 +414,6 @@ export const rawChats: Chat[] = [
   {
     id: "26",
     name: "Aria Cipher",
-    avatar: "Ai",
     lastMessage: "Video call · 08:34 mins",
     time: "11:08 AM",
     unread: 0,
@@ -449,7 +432,6 @@ export const rawChats: Chat[] = [
   {
     id: "27",
     name: "Nyx Protocol",
-    avatar: "NP",
     lastMessage: "Call rejected",
     time: "4:22 PM",
     unread: 0,
@@ -469,7 +451,6 @@ export const rawChats: Chat[] = [
   {
     id: "28",
     name: "Orion Stratos",
-    avatar: "OS",
     lastMessage: "Missed voice call",
     time: "11:24 AM",
     unread: 0,
@@ -488,7 +469,6 @@ export const rawChats: Chat[] = [
   {
     id: "29",
     name: "Vega Solis",
-    avatar: "VS",
     lastMessage: "Video call · 05:08 mins",
     time: "10:14 AM",
     unread: 0,
@@ -507,7 +487,6 @@ export const rawChats: Chat[] = [
   {
     id: "30",
     name: "+1 (415) 555-0142",
-    avatar: "?",
     lastMessage: "Missed voice call",
     time: "Yesterday, 4:31 PM",
     unread: 0,
@@ -526,7 +505,6 @@ export const rawChats: Chat[] = [
   {
     id: "31",
     name: "Kairo Nexus",
-    avatar: "KN",
     lastMessage: "Voice call · 08:13 mins",
     time: "Yesterday, 2:17 PM",
     unread: 0,
@@ -545,7 +523,6 @@ export const rawChats: Chat[] = [
   {
     id: "32",
     name: "Vault Helix",
-    avatar: "VH",
     lastMessage: "No answer",
     time: "Sunday, 9:40 AM",
     unread: 0,
@@ -564,7 +541,6 @@ export const rawChats: Chat[] = [
   {
     id: "33",
     name: "Echo Cascade",
-    avatar: "EC",
     lastMessage: "Missed video call",
     time: "Sunday, 1:05 PM",
     unread: 0,

@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import type { Chat } from "@/types/chat";
 import { Pin, BellOff, BadgeCheck, Ban, Archive, Star, UsersRound } from "lucide-react";
 import { MESSAGE_STATUS_ICONS, renderMessagePreview } from "@/constants/chatIcons";
+import { Avatar } from "@/components/chat/Avatar";
+import { getChatUser } from "@/lib/avatar";
 import { cn } from "@/lib/utils";
 
 interface ChatListPaneProps {
@@ -48,14 +50,13 @@ function ChatRow({ chat, active }: ChatRowProps) {
         active ? "bg-accent/70" : "hover:bg-accent/60 active:bg-accent",
       )}
     >
-      <div className="relative shrink-0">
-        <div className="h-11 w-11 rounded-full bg-gradient-silver border border-border grid place-items-center text-xs font-semibold text-foreground/80 shadow-silver">
-          {chat.avatar}
-        </div>
-        {chat.isOnline ? (
-          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-neon ring-2 ring-card shadow-glow" />
-        ) : null}
-      </div>
+      <Avatar
+        user={getChatUser(chat)}
+        size="md"
+        showStatus
+        statusOnline={chat.isOnline === true}
+        innerClassName="h-11 w-11"
+      />
 
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2">

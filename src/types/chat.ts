@@ -10,17 +10,44 @@ export type MessageStatus =
   | "draft"
   | "deleted";
 
-export interface GroupUser {
+/**
+ * Canonical user / participant model.
+ *
+ * Replaces the older `GroupUser` type. A `User` represents any person in
+ * the system — direct-message counterpart, group participant, or call
+ * peer. The `role` field is optional because most surfaces don't care
+ * about group permissions; only the member roster surfaces expose it.
+ */
+export interface User {
   id: string;
   name: string;
-  avatar: string;
+  /** Optional profile picture. When absent, surfaces fall back to initials. */
+  avatarUrl?: string;
   role?: "admin" | "moderator" | "member";
 }
+
+/**
+ * Back-compat re-export so existing imports of `GroupUser` keep working
+ * during the migration. New code should use `User` directly.
+ *
+ * @deprecated Use `User` from `@/types/chat` instead.
+ */
+export type GroupUser = User;
 
 export interface Chat {
   id: string;
   name: string;
-  avatar: string;
+  /**
+   * Optional profile picture for the chat's "primary" entity — the
+   * counterparty for a direct message, or a group avatar for a group.
+   * When absent, the `<Avatar />` component derives initials from `name`.
+   */
+  avatarUrl?: string;
+  /**
+   * Background gradient applied behind the initials fallback. Call sites
+   * that use a status-driven gradient (e.g. `Calls.tsx`) pass a different
+   * gradient via the `<Avatar gradient />` prop, ignoring this field.
+   */
   avatarGradient?: string;
   lastMessage: string;
   time: string;
@@ -35,7 +62,7 @@ export interface Chat {
   isFavorite?: boolean;
   fromSelf?: boolean;
   isGroup?: boolean;
-  participants?: GroupUser[];
+  participants?: User[];
   lastMessageSender?: string;
 }
 
