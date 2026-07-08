@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { BadgeCheck, ShieldCheck, Lock } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
@@ -19,6 +20,7 @@ interface UserInfoPopoverProps {
  * outside-press / Escape.
  */
 export function UserInfoPopover({ chat, children }: UserInfoPopoverProps) {
+  const { t } = useTranslation();
   return (
     <Popover>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
@@ -53,9 +55,9 @@ export function UserInfoPopover({ chat, children }: UserInfoPopoverProps) {
               </h3>
               <p className="text-[11px] text-muted-foreground truncate">
                 {chat.isOnline ? (
-                  <span className="text-neon font-medium">online now</span>
+                  <span className="text-neon font-medium">{t("chat.onlineNow")}</span>
                 ) : (
-                  "Disconnected"
+                  t("chat.disconnected")
                 )}
               </p>
             </div>
@@ -65,23 +67,23 @@ export function UserInfoPopover({ chat, children }: UserInfoPopoverProps) {
 
           <dl className="space-y-2 text-xs">
             <div className="flex items-center justify-between gap-3">
-              <dt className="text-muted-foreground">Handle</dt>
+              <dt className="text-muted-foreground">{t("chat.handle")}</dt>
               <dd className="text-foreground/90 font-medium truncate">
                 @{chat.name.toLowerCase().replace(/\s+/g, "_")}
               </dd>
             </div>
             <div className="flex items-center justify-between gap-3">
-              <dt className="text-muted-foreground">Status</dt>
+              <dt className="text-muted-foreground">{t("chat.status")}</dt>
               <dd className="flex items-center gap-1.5 text-foreground/90 font-medium">
                 <ShieldCheck className="h-3 w-3 text-neon" />
-                Verified
+                {t("chat.verified")}
               </dd>
             </div>
             <div className="flex items-center justify-between gap-3">
-              <dt className="text-muted-foreground">Encryption</dt>
+              <dt className="text-muted-foreground">{t("chat.encryption")}</dt>
               <dd className="flex items-center gap-1.5 text-foreground/90 font-medium">
                 <Lock className="h-3 w-3 text-neon" />
-                End-to-end
+                {t("chat.endToEnd")}
               </dd>
             </div>
           </dl>

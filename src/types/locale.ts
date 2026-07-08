@@ -1,0 +1,1 @@
+export { appLocales, defaultNS, type AppLocale } from "@/i18n/resources";

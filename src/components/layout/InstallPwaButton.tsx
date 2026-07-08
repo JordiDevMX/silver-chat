@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CheckCircle2, Download } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -14,11 +15,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { usePwaInstall } from "@/hooks/usePwaInstall";
 import { cn } from "@/lib/utils";
 
-const BENEFITS = [
-  "One-tap launch from your home screen",
-  "Fullscreen glassmorphism — no browser chrome",
-  "Works offline once installed",
-] as const;
+const BENEFIT_KEYS = ["pwa.benefits.launch", "pwa.benefits.fullscreen", "pwa.benefits.offline"] as const;
 
 /**
  * PWA install affordance.
@@ -31,6 +28,7 @@ const BENEFITS = [
  * outcome through `sonner` toasts that match the app's existing UI system.
  */
 export function InstallPwaButton() {
+  const { t } = useTranslation();
   const { canInstall, promptInstall } = usePwaInstall();
   const [open, setOpen] = useState(false);
 
@@ -40,12 +38,12 @@ export function InstallPwaButton() {
     setOpen(false);
     const outcome = await promptInstall();
     if (outcome === "accepted") {
-      toast.success("SilverChat installed", {
-        description: "Open it from your home screen.",
+      toast.success(t("pwa.installedToast"), {
+        description: t("pwa.installedToastDesc"),
       });
     } else if (outcome === "error") {
-      toast.error("Couldn't start the installer", {
-        description: "Try again from your browser's install menu.",
+      toast.error(t("pwa.installErrorToast"), {
+        description: t("pwa.installErrorToastDesc"),
       });
     }
   };
@@ -54,8 +52,8 @@ export function InstallPwaButton() {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <button
         type="button"
-        aria-label="Install SilverChat"
-        title="Install SilverChat"
+        aria-label={t("pwa.installAria")}
+        title={t("pwa.installAria")}
         onClick={() => setOpen(true)}
         className={cn(
           "h-9 px-4 inline-flex items-center justify-center rounded-full",
@@ -68,7 +66,7 @@ export function InstallPwaButton() {
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card",
         )}
       >
-        Install
+        {t("pwa.install")}
       </button>
 
       <AlertDialogContent
@@ -86,18 +84,18 @@ export function InstallPwaButton() {
 
           <AlertDialogHeader className="space-y-1.5 text-center sm:text-center">
             <AlertDialogTitle className="text-base font-semibold tracking-tight">
-              Install SilverChat
+              {t("pwa.dialogTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-xs text-muted-foreground">
-              Add SilverChat to your home screen for an immersive, always-on experience.
+              {t("pwa.dialogDesc")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
           <ul className="mt-4 space-y-2">
-            {BENEFITS.map((line) => (
-              <li key={line} className="flex items-start gap-2.5 text-xs text-foreground/80">
+            {BENEFIT_KEYS.map((key) => (
+              <li key={key} className="flex items-start gap-2.5 text-xs text-foreground/80">
                 <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-neon" strokeWidth={2.4} />
-                <span>{line}</span>
+                <span>{t(key)}</span>
               </li>
             ))}
           </ul>
@@ -110,7 +108,7 @@ export function InstallPwaButton() {
               "flex-1 h-9 rounded-xl border-white/10 bg-white/5 hover:bg-white/10",
             )}
           >
-            Not now
+            {t("pwa.notNow")}
           </AlertDialogCancel>
           <Button
             type="button"
@@ -118,7 +116,7 @@ export function InstallPwaButton() {
             className="flex-1 h-9 rounded-xl shadow-glow"
           >
             <Download className="h-3.5 w-3.5" />
-            Install
+            {t("pwa.install")}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

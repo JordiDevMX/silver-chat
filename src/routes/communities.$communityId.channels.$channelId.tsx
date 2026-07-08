@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useMemo, useRef } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { ArrowLeft, Users, Megaphone, Pin } from "lucide-react";
 import { communities } from "@/data/mockCommunities";
 import { getMessages } from "@/data/mockMessages";
@@ -91,6 +92,7 @@ interface ChannelViewProps {
 function ChannelView() {
   const { community, channel }: ChannelViewProps = Route.useLoaderData();
   const { messages, isLoading, send, isSending } = useChatMessages(channel.id);
+  const { t } = useTranslation();
   const endRef = useRef<HTMLDivElement>(null);
 
   const groups = useMemo(() => groupByDate(messages), [messages]);
@@ -121,7 +123,7 @@ function ChannelView() {
           <div className="flex items-center gap-2 px-2 py-3">
             <Link
               to="/"
-              aria-label="Back"
+              aria-label={t("chat.back")}
               className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -155,20 +157,20 @@ function ChannelView() {
         </header>
 
         <main
-          aria-label={`Messages in ${channel.name}`}
+          aria-label={t("communities.messagesIn", { name: channel.name })}
           aria-live="polite"
           aria-relevant="additions"
           className="flex-1 overflow-y-auto px-3 py-4 space-y-2 bg-[radial-gradient(circle_at_top,hsl(var(--silver-light)/0.4),transparent_60%)]"
         >
           {isLoading ? (
             <div className="h-full grid place-items-center text-xs text-muted-foreground">
-              Loading channel…
+              {t("communities.loadingChannel")}
             </div>
           ) : (
             <>
               <div className="flex justify-center">
                 <span className="text-[10px] uppercase tracking-wider text-muted-foreground bg-card/70 border border-border rounded-full px-3 py-0.5">
-                  {isAnn ? "Announcements" : community.name}
+                  {isAnn ? t("communities.announcements") : community.name}
                 </span>
               </div>
               {groups.map((group) => (

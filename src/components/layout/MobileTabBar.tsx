@@ -1,5 +1,6 @@
-import { MessageCircle, CircleDot, Users, Phone } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { useTabItems } from "@/constants/tabs";
 import type { TabKey } from "@/types/chat";
 
 export interface MobileTabBarProps {
@@ -8,26 +9,21 @@ export interface MobileTabBarProps {
   badges?: Partial<Record<TabKey, number>>;
 }
 
-const TABS: { key: TabKey; label: string; Icon: typeof MessageCircle }[] = [
-  { key: "chats", label: "Chats", Icon: MessageCircle },
-  { key: "updates", label: "Updates", Icon: CircleDot },
-  { key: "communities", label: "Communities", Icon: Users },
-  { key: "calls", label: "Calls", Icon: Phone },
-];
-
 /**
  * Bottom tab bar, mounted on mobile AND tablet (anything below Tailwind's
  * `lg` breakpoint, gated by `useIsDesktop()`). The same icon set is
  * mirrored vertically in the `DesktopNavRail` for `lg` and above.
  */
 export function MobileTabBar({ active, onChange, badges = {} }: MobileTabBarProps) {
+  const { t } = useTranslation();
+  const tabs = useTabItems();
   return (
     <nav
       className="lg:hidden sticky bottom-0 z-30 border-t border-border/60 bg-gradient-silver backdrop-blur-xl shadow-silver"
-      aria-label="Primary"
+      aria-label={t("nav.primaryNav")}
     >
       <ul className="grid grid-cols-4 px-2 pt-1.5 pb-2">
-        {TABS.map(({ key, label, Icon }) => {
+        {tabs.map(({ key, label, Icon }) => {
           const isActive = active === key;
           const badge = badges[key] ?? 0;
           return (
@@ -52,7 +48,7 @@ export function MobileTabBar({ active, onChange, badges = {} }: MobileTabBarProp
                   <Icon className="h-5 w-5" strokeWidth={isActive ? 2.4 : 2} />
                   {badge > 0 ? (
                     <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none grid place-items-center ring-2 ring-background">
-                      {badge > 99 ? "99+" : badge}
+                      {badge > 99 ? t("nav.badgeOverflow") : badge}
                     </span>
                   ) : null}
                 </span>

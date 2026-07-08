@@ -1,5 +1,7 @@
-import { MessageCircle, CircleDot, Users, Phone, Settings, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { useTabItems } from "@/constants/tabs";
 import type { TabKey } from "@/types/chat";
 
 export interface DesktopNavRailProps {
@@ -9,19 +11,6 @@ export interface DesktopNavRailProps {
   onOpenSettings?: () => void;
 }
 
-interface RailItem {
-  key: TabKey;
-  label: string;
-  Icon: typeof MessageCircle;
-}
-
-const RAIL_ITEMS: RailItem[] = [
-  { key: "chats", label: "Chats", Icon: MessageCircle },
-  { key: "updates", label: "Updates", Icon: CircleDot },
-  { key: "communities", label: "Communities", Icon: Users },
-  { key: "calls", label: "Calls", Icon: Phone },
-];
-
 /**
  * Left vertical navigation rail — shown on lg+ breakpoints.
  *
@@ -30,6 +19,8 @@ const RAIL_ITEMS: RailItem[] = [
  * with the neon gradient pill, exactly like the mobile bar's active state.
  */
 export function DesktopNavRail({ active, onChange, badges = {} }: DesktopNavRailProps) {
+  const { t } = useTranslation();
+  const items = useTabItems();
   return (
     <aside
       className={cn(
@@ -38,7 +29,7 @@ export function DesktopNavRail({ active, onChange, badges = {} }: DesktopNavRail
         "border-r border-border/60 bg-gradient-silver",
         "shadow-silver",
       )}
-      aria-label="Primary navigation"
+      aria-label={t("nav.primaryNav")}
     >
       {/* Brand mark */}
       <div className="relative h-10 w-10 rounded-xl bg-gradient-neon shadow-glow grid place-items-center mb-2">
@@ -49,11 +40,11 @@ export function DesktopNavRail({ active, onChange, badges = {} }: DesktopNavRail
       <div className="h-px w-8 bg-border/60 my-1" />
 
       <ul className="flex flex-col items-center gap-1.5 w-full px-2">
-        {RAIL_ITEMS.map(({ key, label, Icon }) => {
+        {items.map(({ key, label, Icon }) => {
           const isActive = active === key;
           const badge = badges[key] ?? 0;
           return (
-            <li key={key} className="w-full">
+            <li key={key} className="w-full group">
               <button
                 type="button"
                 onClick={() => onChange(key)}
@@ -61,7 +52,7 @@ export function DesktopNavRail({ active, onChange, badges = {} }: DesktopNavRail
                 aria-label={label}
                 title={label}
                 className={cn(
-                  "group relative w-full h-12 grid place-items-center rounded-xl transition-colors",
+                  "relative w-full h-12 grid place-items-center rounded-xl transition-colors",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 )}
               >
@@ -76,7 +67,7 @@ export function DesktopNavRail({ active, onChange, badges = {} }: DesktopNavRail
                   <Icon className="h-5 w-5" strokeWidth={isActive ? 2.4 : 2} />
                   {badge > 0 ? (
                     <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none grid place-items-center ring-2 ring-card">
-                      {badge > 99 ? "99+" : badge}
+                      {badge > 99 ? t("nav.badgeOverflow") : badge}
                     </span>
                   ) : null}
                 </span>
@@ -97,7 +88,7 @@ export function DesktopNavRail({ active, onChange, badges = {} }: DesktopNavRail
         })}
       </ul>
 
-      <div className="mt-auto flex flex-col items-center gap-1.5 w-full px-2">
+      <div className="mt-auto flex flex-col items-center gap-1.5 w-full px-2 group relative">
         <LogOut className="h-5 w-5" />
         <span
           className={cn(
@@ -108,7 +99,7 @@ export function DesktopNavRail({ active, onChange, badges = {} }: DesktopNavRail
             "transition-all whitespace-nowrap z-50",
           )}
         >
-          Sign out
+          {t("nav.signOut")}
         </span>
       </div>
     </aside>

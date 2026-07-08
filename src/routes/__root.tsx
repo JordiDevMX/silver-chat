@@ -9,32 +9,38 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import { ThemeProvider } from "@/hooks/useTheme";
 // Side-effect import: registers the `beforeinstallprompt` window listener
 // at the earliest possible point in the bundle, before any route renders,
 // so the event can't be lost to a React-mount race.
 import "@/hooks/pwaInstallStore";
+// Side-effect import: initializes i18next + the language detector (reads
+// localStorage["lng"], falling back to the browser language) before any
+// route renders. `useTranslation()` then re-renders consumers on
+// `i18n.changeLanguage()` with no provider required.
+import "@/i18n";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 const noFlashScript = `(function(){try{var m=localStorage.getItem('theme');if(m!=='light'&&m!=='dark'&&m!=='auto')m='auto';var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=m==='auto'?(d?'dark':'light'):m;if(m!=='auto'){document.documentElement.setAttribute('data-theme',m);}document.documentElement.style.colorScheme=r;var a=localStorage.getItem('accent');var ids=['blue','purple','red','orange','yellow','green'];if(ids.indexOf(a)<0)a='blue';document.documentElement.classList.add('theme-'+a);}catch(e){}})();`;
 
 function NotFoundComponent() {
+  const { t } = useTranslation();
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
+        <h1 className="text-7xl font-bold text-foreground">{t("errors.notFoundCode")}</h1>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">{t("errors.notFoundTitle")}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{t("errors.notFoundDesc")}</p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            {t("errors.goHome")}
           </Link>
         </div>
       </div>
@@ -45,16 +51,15 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  const { t } = useTranslation();
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          {t("errors.errorTitle")}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{t("errors.errorDesc")}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -63,13 +68,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            {t("errors.tryAgain")}
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            {t("errors.goHome")}
           </a>
         </div>
       </div>
@@ -85,14 +90,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "apple-mobile-web-app-title", content: "SilverChat" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "SilverChat — Futuristic messaging" },
+      { name: "description", content: "A sleek, silver-and-neon messaging experience." },
+      { name: "author", content: "SilverChat" },
+      { property: "og:title", content: "SilverChat" },
+      { property: "og:description", content: "A sleek, silver-and-neon messaging experience." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -129,6 +133,15 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { i18n } = useTranslation();
+
+  // Keep `<html lang>` in sync with the active i18next language so screen
+  // readers and `toLocaleDateString` use the right locale, and persist the
+  // resolved locale (e.g. narrowing "es-ES" → "es") back into i18next.
+  useEffect(() => {
+    const el = document.documentElement;
+    if (el.lang !== i18n.language) el.lang = i18n.language;
+  }, [i18n.language]);
 
   return (
     <QueryClientProvider client={queryClient}>

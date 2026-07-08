@@ -1,5 +1,6 @@
 import type { Chat } from "@/types/chat";
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import {
   MessageSquarePlus,
   Pin,
@@ -17,10 +18,11 @@ import { Avatar } from "@/components/chat/Avatar";
 import { getChatUser } from "@/lib/avatar";
 
 export function ChatFAB() {
+  const { t } = useTranslation();
   return (
     <FloatingActionButton
       icon={MessageSquarePlus}
-      label="Start new chat"
+      label={t("chat.startNewChat")}
       className="absolute bottom-6 right-4 z-50"
     />
   );
@@ -31,6 +33,7 @@ interface ChatListItemProps {
 }
 
 export function ChatListItem({ chat }: ChatListItemProps) {
+  const { t } = useTranslation();
   return (
     <Link
       to="/chat/$id"
@@ -65,14 +68,10 @@ export function ChatListItem({ chat }: ChatListItemProps) {
             {chat.time}
           </span>
         </div>
-        {/*  */}
         <div className="flex items-center gap-2 mt-0.5">
           <p className="flex-1 truncate text-xs text-muted-foreground">
-            {/* 💡 Inyectamos el helper limpio que maneja todo el texto del renglón */}
-            {renderMessagePreview(chat)}
+            {renderMessagePreview(chat, t)}
           </p>
-
-          {/* Iconos de estado de envío (ignora automáticamente draft/deleted gracias al Partial) */}
 
           {chat.unread ? (
             <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-gradient-neon text-primary-foreground text-[10px] font-bold grid place-items-center shadow-glow">

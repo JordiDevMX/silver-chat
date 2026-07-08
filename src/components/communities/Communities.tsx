@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Users, Plus, Megaphone, BellOff, ChevronRight } from "lucide-react";
 import { communities } from "@/data/mockCommunities";
 import type { Community, SubChannel } from "@/types/community";
@@ -12,6 +13,7 @@ interface CommunitiesProps {
 }
 
 function NewCommunityRow({ onClick }: { onClick: () => void }) {
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -24,7 +26,7 @@ function NewCommunityRow({ onClick }: { onClick: () => void }) {
           <Plus className="size-3" strokeWidth={3} />
         </span>
       </div>
-      <span className="font-semibold text-foreground">New community</span>
+      <span className="font-semibold text-foreground">{t("communities.newCommunity")}</span>
     </button>
   );
 }
@@ -60,6 +62,7 @@ function ChannelRow({ channel, communityId }: { channel: SubChannel; communityId
 }
 
 function CommunityBlock({ community }: { community: Community }) {
+  const { t } = useTranslation();
   return (
     <div className="border-b border-border/60 last:border-0">
       <div className="w-full flex items-center gap-3 px-4 py-3">
@@ -75,7 +78,7 @@ function CommunityBlock({ community }: { community: Community }) {
           <ChannelRow key={ch.id} channel={ch} communityId={community.id} />
         ))}
         <div className="w-full flex items-center justify-between pl-6 pr-4 py-2.5 text-sm text-muted-foreground">
-          <span>View all</span>
+          <span>{t("communities.viewAll")}</span>
           <ChevronRight className="size-4" />
         </div>
       </div>
@@ -84,6 +87,7 @@ function CommunityBlock({ community }: { community: Community }) {
 }
 
 export function Communities({ onOpen: _onOpen, search = "" }: CommunitiesProps) {
+  const { t } = useTranslation();
   const query = search.trim().toLowerCase();
   const filtered = query
     ? communities.filter((c) => c.name.toLowerCase().includes(query))
@@ -105,7 +109,7 @@ export function Communities({ onOpen: _onOpen, search = "" }: CommunitiesProps) 
     <div className="pb-24">
       {!isSearching && (
         <h1 className="px-4 pt-4 pb-2 text-2xl font-semibold tracking-tight text-foreground">
-          Communities
+          {t("communities.heading")}
         </h1>
       )}
       {!isSearching && <NewCommunityRow onClick={() => setDialogOpen(true)} />}
@@ -115,14 +119,16 @@ export function Communities({ onOpen: _onOpen, search = "" }: CommunitiesProps) 
           filtered.map((c) => <CommunityBlock key={c.id} community={c} />)
         ) : (
           <div className="px-6 py-12 text-center">
-            <p className="text-sm text-muted-foreground mb-3">No communities found</p>
+            <p className="text-sm text-muted-foreground mb-3">
+              {t("communities.noCommunitiesFound")}
+            </p>
             <button
               type="button"
               onClick={() => setDialogOpen(true)}
               className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--neon)] hover:underline transition-colors cursor-pointer"
             >
               <Plus className="size-4" />
-              Create a new community
+              {t("communities.createNewCommunity")}
             </button>
           </div>
         )}

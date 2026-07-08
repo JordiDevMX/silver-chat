@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { InstallPwaButton } from "@/components/layout/InstallPwaButton";
 import { SettingsButton } from "@/components/layout/SettingsButton";
@@ -26,10 +27,11 @@ export function PaneHeader({
   trailing,
   onOpenSettings,
 }: PaneHeaderProps) {
+  const { t } = useTranslation();
   return (
     <div className="sticky top-0 z-20 border-b border-border/60 bg-gradient-silver/95 backdrop-blur-xl shadow-silver">
       <div className="flex items-center gap-2 px-3 pt-3 pb-2">
-        <h1 className="text-base font-semibold tracking-tight">Chats</h1>
+        <h1 className="text-base font-semibold tracking-tight">{t("chat.paneHeading")}</h1>
         <div className="ml-auto flex items-center gap-1">
           {trailing}
           <ThemeToggle />
@@ -49,7 +51,7 @@ export function PaneHeader({
             type="search"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder={placeholder ?? "Search conversations…"}
+            placeholder={placeholder ?? t("search.conversations")}
             className="flex-1 bg-transparent outline-hidden text-sm placeholder:text-muted-foreground"
           />
         </label>

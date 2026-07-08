@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Plus,
   Camera,
@@ -20,6 +21,7 @@ interface StoryCardProps {
 }
 
 export function StoryCard({ story }: StoryCardProps) {
+  const { t } = useTranslation();
   // 1. Ring Logic based on story state: blocked, mine, muted or viewed
   const ringClass = story.isMuted
     ? "ring-2 ring-muted-foreground/30"
@@ -32,7 +34,9 @@ export function StoryCard({ story }: StoryCardProps) {
       type="button"
       disabled={story.isMuted}
       aria-label={
-        story.isMuted ? `Story from muted user ${story.author}` : `View story from ${story.author}`
+        story.isMuted
+          ? t("updates.storyMutedAria", { author: story.author })
+          : t("updates.storyAria", { author: story.author })
       }
       className={`relative shrink-0 w-28 h-44 rounded-2xl overflow-hidden text-left shadow-silver group transition-all hover:brightness-110 active:scale-95 cursor-pointer `}
       style={{
@@ -79,13 +83,14 @@ export function StoryCard({ story }: StoryCardProps) {
         className={`absolute bottom-2 left-2 right-2 text-xs font-medium truncate z-20
         ${story.isMuted ? "text-muted-foreground line-through" : "text-white"}`}
       >
-        {story.fromSelf ? "My status" : story.author.split(" ")[0]}
+        {story.fromSelf ? t("updates.myStatus") : story.author.split(" ")[0]}
       </p>
     </button>
   );
 }
 
 function AddStoryCard() {
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -95,7 +100,7 @@ function AddStoryCard() {
         <div className="size-10 rounded-full bg-[var(--neon)] text-primary-foreground grid place-items-center shadow-glow">
           <Camera className="size-5" />
         </div>
-        <span className="text-xs font-medium">Add story</span>
+        <span className="text-xs font-medium">{t("updates.addStory")}</span>
       </div>
     </button>
   );
@@ -110,6 +115,7 @@ function MutedCard({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -120,8 +126,8 @@ function MutedCard({
         <div className="size-10 rounded-full bg-muted grid place-items-center">
           <EyeOff className="size-5" />
         </div>
-        <span className="text-xs font-medium text-foreground">Muted</span>
-        <span className="text-[10px]">{count} hidden</span>
+        <span className="text-xs font-medium text-foreground">{t("updates.muted")}</span>
+        <span className="text-[10px]">{t("updates.mutedCount", { count })}</span>
         <ChevronDown className={`size-3 transition-transform ${expanded ? "rotate-180" : ""}`} />
       </div>
     </button>
@@ -162,6 +168,7 @@ function ChannelRow({ channel }: { channel: Channel }) {
 }
 
 function DiscoverRow({ channel }: { channel: DiscoverChannel }) {
+  const { t } = useTranslation();
   return (
     <div className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors duration-150 text-left cursor-pointer">
       <div
@@ -180,7 +187,7 @@ function DiscoverRow({ channel }: { channel: DiscoverChannel }) {
         size="sm"
         className="shrink-0 rounded-full bg-[var(--neon)] hover:bg-[var(--neon)]/90 text-primary-foreground shadow-glow cursor-pointer"
       >
-        Follow
+        {t("updates.follow")}
       </Button>
     </div>
   );
@@ -191,6 +198,7 @@ interface UpdatesProps {
 }
 
 export function Updates({ search = "" }: UpdatesProps) {
+  const { t } = useTranslation();
   const [showMuted, setShowMuted] = useState(false);
   const query = search.trim().toLowerCase();
   const isSearching = query.length > 0;
@@ -214,7 +222,7 @@ export function Updates({ search = "" }: UpdatesProps) {
         {/* Stories results */}
         <section className="pt-4">
           <h2 className="px-6 mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Stories
+            {t("updates.stories")}
           </h2>
           {filteredStories.length > 0 ? (
             <div className="flex gap-3 overflow-x-auto px-4 pb-3 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
@@ -223,14 +231,16 @@ export function Updates({ search = "" }: UpdatesProps) {
               ))}
             </div>
           ) : (
-            <p className="px-6 py-6 text-center text-sm text-muted-foreground">No stories found</p>
+            <p className="px-6 py-6 text-center text-sm text-muted-foreground">
+              {t("updates.noStoriesFound")}
+            </p>
           )}
         </section>
 
         {/* Channels results — always rendered */}
         <section className="mt-4">
           <h2 className="px-6 mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Followed channels
+            {t("updates.followedChannels")}
           </h2>
           {filteredChannels.length > 0 ? (
             <div className="flex flex-col">
@@ -240,14 +250,14 @@ export function Updates({ search = "" }: UpdatesProps) {
             </div>
           ) : (
             <p className="px-6 py-6 text-center text-sm text-muted-foreground">
-              Can&apos;t find the channel you&apos;re looking for? Find more in the{" "}
+              {t("updates.cantFindPrefix")}
               <button
                 type="button"
                 className="text-[var(--neon)] hover:underline active:opacity-80 transition-colors cursor-pointer font-medium"
               >
-                channel directory
+                {t("updates.channelDirectory")}
               </button>
-              .
+              {t("updates.cantFindSuffix")}
             </p>
           )}
         </section>
@@ -260,7 +270,7 @@ export function Updates({ search = "" }: UpdatesProps) {
       {/* Stories — single horizontal scroll list */}
       <section className="pt-4">
         <h2 className="px-6 mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Status
+          {t("updates.status")}
         </h2>
         <div className="flex gap-3 overflow-x-auto px-4 pb-3 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
           <AddStoryCard />
@@ -280,7 +290,7 @@ export function Updates({ search = "" }: UpdatesProps) {
         {showMuted && muted.length > 0 && (
           <div className="mx-4 mt-1 rounded-2xl bg-muted/40 border border-border p-2">
             <p className="px-2 py-1 text-[11px] uppercase tracking-wider text-muted-foreground">
-              Muted updates
+              {t("updates.mutedUpdates")}
             </p>
             <div className="flex gap-3 overflow-x-auto px-1 pb-2 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
               {muted.map((s) => (
@@ -294,7 +304,7 @@ export function Updates({ search = "" }: UpdatesProps) {
       {/* Followed channels */}
       <section className="mt-6">
         <h2 className="px-6 mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Channels
+          {t("updates.channels")}
         </h2>
         <div className="flex flex-col">
           {followedChannels.map((c) => (
@@ -306,7 +316,7 @@ export function Updates({ search = "" }: UpdatesProps) {
       {/* Discover channels */}
       <section className="mt-6">
         <h2 className="px-6 mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Find channels to follow
+          {t("updates.findChannelsToFollow")}
         </h2>
         <div className="flex flex-col">
           {discoverChannels.map((c) => (
@@ -320,14 +330,14 @@ export function Updates({ search = "" }: UpdatesProps) {
             className="rounded-full border-border bg-card/60 backdrop-blur shadow-silver hover:bg-accent/60 active:bg-accent transition-colors"
           >
             <Compass className="size-4" />
-            Explore more
+            {t("updates.exploreMore")}
           </Button>
           <Button
             variant="outline"
             className="rounded-full border-[var(--neon)]/40 text-[var(--neon)] bg-card/60 backdrop-blur hover:bg-accent/60 active:bg-accent transition-colors"
           >
             <Megaphone className="size-4" />
-            Create channel
+            {t("updates.createChannel")}
           </Button>
         </div>
       </section>

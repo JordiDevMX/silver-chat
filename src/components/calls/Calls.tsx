@@ -1,4 +1,5 @@
 import { PhoneCall, Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { Call } from "@/types/call";
 import {
   CALL_DIRECTION_ICONS,
@@ -16,6 +17,7 @@ interface CallRowProps {
 }
 
 function CallRow({ call }: CallRowProps) {
+  const { t } = useTranslation();
   const { start } = useCallSession();
   const TypeIcon = CALL_TYPE_ICONS[call.type];
   const statusColor = CALL_STATUS_COLORS[call.status];
@@ -37,7 +39,11 @@ function CallRow({ call }: CallRowProps) {
           openCall();
         }
       }}
-      aria-label={`${call.type === "video" ? "Video" : "Voice"} call ${call.name}`}
+      aria-label={
+        call.type === "video"
+          ? t("calls.ariaVideoCall", { name: call.name })
+          : t("calls.ariaVoiceCall", { name: call.name })
+      }
       className="group flex items-center gap-3 px-4 py-3 hover:bg-accent/60 active:bg-accent transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <div className="relative shrink-0">
@@ -63,7 +69,11 @@ function CallRow({ call }: CallRowProps) {
 
       <button
         type="button"
-        aria-label={call.type === "video" ? `Video call ${call.name}` : `Call ${call.name}`}
+        aria-label={
+          call.type === "video"
+            ? t("calls.ariaVideoCall", { name: call.name })
+            : t("calls.ariaVoiceCall", { name: call.name })
+        }
         onClick={(e) => {
           e.stopPropagation();
           openCall();
@@ -77,6 +87,7 @@ function CallRow({ call }: CallRowProps) {
 }
 
 export function CallsFAB() {
+  const { t } = useTranslation();
   const { start } = useCallSession();
   const fallback = mockCalls[0];
 
@@ -88,7 +99,7 @@ export function CallsFAB() {
     <FloatingActionButton
       icon={PhoneCall}
       badgeIcon={Plus}
-      label="Start new call"
+      label={t("calls.startNewCall")}
       onClick={openNewCall}
       className="absolute bottom-12 right-5 z-40"
     />
@@ -96,11 +107,12 @@ export function CallsFAB() {
 }
 
 export function Calls({ calls }: { calls: Call[] }) {
+  const { t } = useTranslation();
   if (calls.length === 0) {
     return (
       <div className="px-6 py-16 text-center text-sm text-muted-foreground">
-        <p className="capitalize text-foreground font-medium mb-1">No calls found</p>
-        <p>Make sure either the email or name is well written</p>
+        <p className="capitalize text-foreground font-medium mb-1">{t("calls.noCallsFound")}</p>
+        <p>{t("calls.noCallsFoundDesc")}</p>
       </div>
     );
   }
@@ -108,13 +120,13 @@ export function Calls({ calls }: { calls: Call[] }) {
   return (
     <div className="pb-4">
       <div className="px-4 pt-3 pb-2">
-        <h2 className="text-2xl font-semibold tracking-tight">Calls</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">Recent voice and video activity</p>
+        <h2 className="text-2xl font-semibold tracking-tight">{t("calls.heading")}</h2>
+        <p className="text-xs text-muted-foreground mt-0.5">{t("calls.headingSub")}</p>
       </div>
 
       <div className="px-2">
         <p className="px-3 pt-2 pb-1 text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
-          Recent
+          {t("calls.recent")}
         </p>
         <ul className="rounded-2xl bg-card/60 border border-border/60 backdrop-blur-xl shadow-silver overflow-hidden divide-y divide-border/50">
           {calls.map((call) => (

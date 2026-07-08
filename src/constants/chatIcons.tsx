@@ -1,4 +1,5 @@
 import { Check, CheckCheck, CheckLine, Clock, AlertCircle } from "lucide-react";
+import type { TFunction } from "i18next";
 import type { MessageStatus, Chat } from "@/types/chat";
 
 // We use Record<MessageStatus, React.ReactNode> to map each message status to its corresponding icon component. The icons are imported from the lucide-react library and are styled with Tailwind CSS classes for consistent sizing and color.
@@ -11,10 +12,13 @@ export const MESSAGE_STATUS_ICONS: Partial<Record<MessageStatus, React.ReactNode
 };
 
 /**
- * Major Helper to render text on chatlist
- * Keeps the same priority: Group (You/Sender) -> Draft -> Deleted Msg/Normal
+ * Major Helper to render text on chatlist.
+ * Keeps the same priority: Group (You/Sender) -> Draft -> Deleted Msg/Normal.
+ *
+ * `t` is passed in so the prefix strings ("You:", "Draft:", "Message deleted")
+ * localize with the rest of the app without this module importing a hook.
  */
-export function renderMessagePreview(chat: Chat): React.ReactNode {
+export function renderMessagePreview(chat: Chat, t: TFunction): React.ReactNode {
   const isDeleted = chat.status === "deleted";
   const isDraft = chat.status === "draft";
 
@@ -23,16 +27,20 @@ export function renderMessagePreview(chat: Chat): React.ReactNode {
       {/* Group Prefix: Tells the diff between "you" & "sender" */}
       {chat.isGroup && (
         <span className="text-foreground/80 font-medium mr-1">
-          {chat.fromSelf ? "You:" : chat.lastMessageSender ? `${chat.lastMessageSender}:` : ""}
+          {chat.fromSelf
+            ? t("chat.you")
+            : chat.lastMessageSender
+              ? `${chat.lastMessageSender}:`
+              : ""}
         </span>
       )}
 
       {/* Draft Prefix */}
-      {isDraft && <span className="text-primary/80 font-medium mr-1">Draft:</span>}
+      {isDraft && <span className="text-primary/80 font-medium mr-1">{t("chat.draft")}</span>}
 
       {/* Main msg's body */}
       {isDeleted ? (
-        <span className="italic text-foreground/80 font-medium">Message deleted</span>
+        <span className="italic text-foreground/80 font-medium">{t("chat.messageDeleted")}</span>
       ) : (
         chat.lastMessage
       )}

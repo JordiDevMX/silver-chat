@@ -11,6 +11,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,6 +42,7 @@ interface ChatHeaderMenuProps {
  * parent route stays simple.
  */
 export function ChatHeaderMenu({ chat, onLeave }: ChatHeaderMenuProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [muted, setMuted] = useState(chat.isMuted === true);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -50,8 +52,8 @@ export function ChatHeaderMenu({ chat, onLeave }: ChatHeaderMenuProps) {
   function handleDelete() {
     // Frontend-only mock: surface a toast and route home. A real backend
     // would issue a DELETE + clear the local cache.
-    toast.success("Chat deleted", {
-      description: `Conversation with ${chat.name} was removed from your device.`,
+    toast.success(t("chat.deletedToast"), {
+      description: t("chat.deletedToastDesc", { name: chat.name }),
     });
     navigate({ to: "/" });
   }
@@ -60,7 +62,7 @@ export function ChatHeaderMenu({ chat, onLeave }: ChatHeaderMenuProps) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger
-          aria-label="Chat options"
+          aria-label={t("chat.chatOptions")}
           className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-accent"
         >
           <MoreVertical className="h-4 w-4" />
@@ -79,41 +81,45 @@ export function ChatHeaderMenu({ chat, onLeave }: ChatHeaderMenuProps) {
               // updaters twice in dev to surface impure functions.
               const next = !muted;
               setMuted(next);
-              toast.success(next ? "Notifications muted" : "Notifications unmuted");
+              toast.success(next ? t("chat.mutedToast") : t("chat.unmutedToast"));
             }}
           >
             {muted ? (
               <>
                 <Bell className="h-4 w-4" />
-                Unmute notifications
+                {t("chat.unmuteNotifications")}
               </>
             ) : (
               <>
                 <BellOff className="h-4 w-4" />
-                Mute notifications
+                {t("chat.muteNotifications")}
               </>
             )}
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            onSelect={() => toast.info("Search coming soon")}
+            onSelect={() => toast.info(t("chat.searchComingSoon"))}
           >
             <Search className="h-4 w-4" />
-            Search in chat
+            {t("chat.searchInChat")}
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            onSelect={() => toast.success("View info", { description: "Profile panel coming soon" })}
+            onSelect={() =>
+              toast.success(t("chat.viewInfo"), { description: t("chat.viewInfoToastDesc") })
+            }
           >
             <Info className="h-4 w-4" />
-            View info
+            {t("chat.viewInfo")}
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            onSelect={() => toast.success(chat.isPinned ? "Unpinned" : "Pinned to top")}
+            onSelect={() =>
+              toast.success(chat.isPinned ? t("chat.unpinnedToast") : t("chat.pinnedToast"))
+            }
           >
             <Pin className="h-4 w-4" />
-            {chat.isPinned ? "Unpin from top" : "Pin to top"}
+            {chat.isPinned ? t("chat.unpinFromTop") : t("chat.pinToTop")}
           </DropdownMenuItem>
 
           {isGroup && onLeave ? (
@@ -122,14 +128,14 @@ export function ChatHeaderMenu({ chat, onLeave }: ChatHeaderMenuProps) {
               <DropdownMenuItem
                 onSelect={(e) => {
                   e.preventDefault();
-                  toast.info("Use Delete to leave this group", {
-                    description: "Group exit flow ships in a future release.",
+                  toast.info(t("chat.leaveGroupToast"), {
+                    description: t("chat.leaveGroupToastDesc"),
                   });
                 }}
                 className="text-amber-500 focus:text-amber-500"
               >
                 <LogOut className="h-4 w-4" />
-                Leave group
+                {t("chat.leaveGroup")}
               </DropdownMenuItem>
             </>
           ) : null}
@@ -144,7 +150,7 @@ export function ChatHeaderMenu({ chat, onLeave }: ChatHeaderMenuProps) {
             className="text-destructive focus:text-destructive"
           >
             <Trash2 className="h-4 w-4" />
-            Delete chat
+            {t("chat.deleteChat")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

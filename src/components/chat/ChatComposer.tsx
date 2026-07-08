@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Plus, Send, Smile } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ChatComposerProps {
   onSend: (text: string) => void;
@@ -8,6 +9,7 @@ interface ChatComposerProps {
 }
 
 export function ChatComposer({ onSend, disabled = false }: ChatComposerProps) {
+  const { t } = useTranslation();
   const [text, setText] = useState("");
 
   function handleSubmit(e: FormEvent) {
@@ -25,7 +27,7 @@ export function ChatComposer({ onSend, disabled = false }: ChatComposerProps) {
     >
       <button
         type="button"
-        aria-label="Attach"
+        aria-label={t("composer.attach")}
         className="h-10 w-10 grid place-items-center rounded-full bg-card/70 border border-border hover:bg-accent transition-colors shrink-0 cursor-pointer"
       >
         <Plus className="h-4 w-4" />
@@ -43,14 +45,14 @@ export function ChatComposer({ onSend, disabled = false }: ChatComposerProps) {
             }
           }}
           rows={1}
-          placeholder="Message…"
+          placeholder={t("composer.placeholder")}
           className="flex-1 resize-none bg-transparent outline-hidden text-sm placeholder:text-muted-foreground max-h-32 py-1.5"
         />
       </label>
 
       <button
         type="submit"
-        aria-label="Send"
+        aria-label={t("composer.send")}
         disabled={!text.trim() || disabled}
         className="mb-0.5 h-10 w-10 grid place-items-center rounded-full bg-gradient-neon text-primary-foreground shadow-glow shrink-0 disabled:opacity-40 disabled:shadow-none transition-all disabled:cursor-not-allowed cursor-pointer"
       >

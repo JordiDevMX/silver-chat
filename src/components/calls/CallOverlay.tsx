@@ -1,5 +1,6 @@
 import { Mic, MicOff, PhoneOff, Video, VideoOff } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Dialog, DialogOverlay, DialogPortal } from "@/components/ui/dialog";
 import { CALL_STATUS_GRADIENTS } from "@/constants/callIcons";
@@ -8,14 +9,18 @@ import type { CallPhase } from "@/hooks/useCallSession";
 import { Avatar } from "@/components/chat/Avatar";
 import { cn } from "@/lib/utils";
 
-function statusText(phase: CallPhase, isVideo: boolean): string {
+function statusText(
+  phase: CallPhase,
+  isVideo: boolean,
+  t: ReturnType<typeof useTranslation>["t"],
+): string {
   switch (phase) {
     case "connecting":
-      return isVideo ? "Calling with video…" : "Calling…";
+      return isVideo ? t("calls.connectingVideo") : t("calls.connecting");
     case "ongoing":
-      return isVideo ? "Video call" : "Voice call";
+      return isVideo ? t("calls.ongoingVideo") : t("calls.ongoingVoice");
     case "ended":
-      return "Call ended";
+      return t("calls.ended");
     default:
       return "";
   }
@@ -52,6 +57,7 @@ function ControlButton({ label, active, onClick, Icon, variant }: ControlButtonP
 }
 
 export function CallOverlay() {
+  const { t } = useTranslation();
   const { call, phase, seconds, isMuted, isVideoEnabled, end, toggleMute, toggleVideo } =
     useCallSession();
 
@@ -116,11 +122,11 @@ export function CallOverlay() {
                   </DialogPrimitive.Description>
                 ) : (
                   <DialogPrimitive.Description className="sr-only">
-                    Active call with {call.name}
+                    {t("calls.activeCallWith", { name: call.name })}
                   </DialogPrimitive.Description>
                 )}
                 <p aria-live="polite" className="text-sm text-muted-foreground">
-                  {statusText(phase, isVideoCall)}
+                  {statusText(phase, isVideoCall, t)}
                 </p>
                 <p
                   aria-live="off"
@@ -142,9 +148,9 @@ export function CallOverlay() {
                 </div>
               ) : null}
 
-              <div className="flex items-center gap-4 pt-2" role="group" aria-label="Call controls">
+              <div className="flex items-center gap-4 pt-2" role="group" aria-label={t("calls.callControls")}>
                 <ControlButton
-                  label={isMuted ? "Unmute microphone" : "Mute microphone"}
+                  label={isMuted ? t("calls.unmuteMic") : t("calls.muteMic")}
                   active={!isMuted}
                   onClick={toggleMute}
                   Icon={isMuted ? MicOff : Mic}
@@ -152,7 +158,7 @@ export function CallOverlay() {
                 />
 
                 <ControlButton
-                  label={isVideoEnabled ? "Turn camera off" : "Turn camera on"}
+                  label={isVideoEnabled ? t("calls.turnCameraOff") : t("calls.turnCameraOn")}
                   active={isVideoEnabled}
                   onClick={toggleVideo}
                   Icon={isVideoEnabled ? Video : VideoOff}
@@ -160,7 +166,7 @@ export function CallOverlay() {
                 />
 
                 <ControlButton
-                  label="End call"
+                  label={t("calls.endCall")}
                   active={false}
                   onClick={end}
                   Icon={PhoneOff}

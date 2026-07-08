@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { Chat } from "@/types/chat";
 import { ChatListItem } from "./ChatListItem";
 
@@ -6,11 +7,12 @@ interface ChatListProps {
 }
 
 export function ChatList({ chats }: ChatListProps) {
+  const { t } = useTranslation();
   if (chats.length === 0) {
     return (
       <div className="px-6 py-16 text-center text-sm text-muted-foreground">
-        <p className="capitalize text-foreground font-medium mb-1">No chats found</p>
-        <p>Make sure either the text or name is well written</p>
+        <p className="capitalize text-foreground font-medium mb-1">{t("chat.noChatsFound")}</p>
+        <p>{t("chat.noChatsFoundDesc")}</p>
       </div>
     );
   }

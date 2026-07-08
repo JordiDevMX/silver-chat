@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { InstallPwaButton } from "@/components/layout/InstallPwaButton";
 import { SettingsButton } from "@/components/layout/SettingsButton";
@@ -39,6 +40,7 @@ export function AppHeader({
   title,
   back,
 }: AppHeaderProps) {
+  const { t } = useTranslation();
   if (back || title) {
     return (
       <header
@@ -95,7 +97,7 @@ export function AppHeader({
             type="search"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder={placeholder ?? "Search conversations…"}
+            placeholder={placeholder ?? t("search.conversations")}
             className="flex-1 bg-transparent outline-hidden text-sm placeholder:text-muted-foreground"
           />
         </label>

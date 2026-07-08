@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Phone, Video, MessagesSquare, Sparkles } from "lucide-react";
 import type { Chat, Msg } from "@/types/chat";
@@ -63,6 +64,7 @@ function DateSeparator({ label }: { label: string }) {
  * dedicated empty state with brand hero, instead of a blank pane.
  */
 export function ConversationPane({ chat }: ConversationPaneProps) {
+  const { t } = useTranslation();
   const isMobile = useIsMobile();
   const { messages, isLoading, send, isSending } = useChatMessages(chat.id);
   const endRef = useRef<HTMLDivElement>(null);
@@ -84,7 +86,7 @@ export function ConversationPane({ chat }: ConversationPaneProps) {
           {isMobile ? (
             <Link
               to="/"
-              aria-label="Back"
+              aria-label={t("chat.back")}
               className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -103,20 +105,20 @@ export function ConversationPane({ chat }: ConversationPaneProps) {
           <div className="flex-1 min-w-0 ml-1">
             <h2 className="text-sm font-semibold truncate">{chat.name}</h2>
             <p className="text-[11px] text-muted-foreground truncate">
-              {chat.isOnline ? <span className="text-neon">online</span> : "Disconnected"}
+              {chat.isOnline ? <span className="text-neon">{t("chat.online")}</span> : t("chat.disconnected")}
             </p>
           </div>
 
           <button
             type="button"
-            aria-label="Video call"
+            aria-label={t("chat.videoCall")}
             className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent transition-colors"
           >
             <Video className="h-4 w-4" />
           </button>
           <button
             type="button"
-            aria-label="Voice call"
+            aria-label={t("chat.voiceCall")}
             className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent transition-colors"
           >
             <Phone className="h-4 w-4" />
@@ -127,7 +129,7 @@ export function ConversationPane({ chat }: ConversationPaneProps) {
       </header>
 
       <main
-        aria-label={`Messages with ${chat.name}`}
+        aria-label={t("chat.messagesWith", { name: chat.name })}
         aria-live="polite"
         aria-relevant="additions"
         className={cn(
@@ -137,13 +139,13 @@ export function ConversationPane({ chat }: ConversationPaneProps) {
       >
         {isLoading ? (
           <div className="h-full grid place-items-center text-xs text-muted-foreground">
-            Loading conversation…
+            {t("chat.loadingConversation")}
           </div>
         ) : (
           <>
             <div className="flex justify-center">
               <span className="text-[10px] uppercase tracking-wider text-muted-foreground bg-card/70 border border-border rounded-full px-3 py-0.5">
-                End-to-end encrypted
+                {t("chat.e2eBadge")}
               </span>
             </div>
             {groups.map((group) => (
@@ -193,6 +195,7 @@ export function ConversationPane({ chat }: ConversationPaneProps) {
 }
 
 export function ConversationEmptyState() {
+  const { t } = useTranslation();
   return (
     <div className="hidden md:flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,hsl(var(--silver-light)/0.5),transparent_60%)]">
       <div className="max-w-md text-center px-8">
@@ -202,23 +205,20 @@ export function ConversationEmptyState() {
             <Sparkles className="h-3 w-3" />
           </span>
         </div>
-        <h2 className="text-xl font-semibold tracking-tight">Pick a conversation</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Select a chat on the left to start messaging. End-to-end encryption keeps every
-          conversation private.
-        </p>
+        <h2 className="text-xl font-semibold tracking-tight">{t("chat.emptyHeadline")}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{t("chat.emptyBody")}</p>
         <ul className="mt-5 grid grid-cols-1 gap-2 text-left text-xs text-muted-foreground">
           <li className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-neon shadow-glow" />
-            Encrypted threads with delivery &amp; read receipts
+            {t("chat.emptyBullet1")}
           </li>
           <li className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-neon shadow-glow" />
-            Rich attachments — images, videos, files and stickers
+            {t("chat.emptyBullet2")}
           </li>
           <li className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-neon shadow-glow" />
-            Voice &amp; video calls over the silver mesh
+            {t("chat.emptyBullet3")}
           </li>
         </ul>
       </div>

@@ -1,4 +1,5 @@
 import { AlertTriangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +31,7 @@ export function DeleteChatDialog({
   chatName,
   onConfirm,
 }: DeleteChatDialogProps) {
+  const { t } = useTranslation();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -39,11 +41,9 @@ export function DeleteChatDialog({
               <AlertTriangle className="h-5 w-5 text-destructive" />
             </div>
             <div className="min-w-0">
-              <DialogTitle>Delete chat?</DialogTitle>
+              <DialogTitle>{t("chat.deleteTitle")}</DialogTitle>
               <DialogDescription>
-                This will permanently delete the conversation with{" "}
-                <span className="font-medium text-foreground">{chatName}</span>{" "}
-                for you. The other person will still have their copy.
+                {t("chat.deleteDesc", { name: chatName })}
               </DialogDescription>
             </div>
           </div>
@@ -55,7 +55,7 @@ export function DeleteChatDialog({
             variant="outline"
             onClick={() => onOpenChange(false)}
           >
-            Cancel
+            {t("chat.cancel")}
           </Button>
           <Button
             type="button"
@@ -65,7 +65,7 @@ export function DeleteChatDialog({
               onOpenChange(false);
             }}
           >
-            Delete
+            {t("chat.delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

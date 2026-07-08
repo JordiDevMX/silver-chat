@@ -1,4 +1,5 @@
-import { MessageCircle, CircleDot, Users, Phone } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useTabItems } from "@/constants/tabs";
 import type { TabKey } from "@/types/chat";
 
 interface FooterProps {
@@ -7,18 +8,13 @@ interface FooterProps {
   badges?: Partial<Record<TabKey, number>>;
 }
 
-const TABS: { key: TabKey; label: string; Icon: typeof MessageCircle }[] = [
-  { key: "chats", label: "Chats", Icon: MessageCircle },
-  { key: "updates", label: "Updates", Icon: CircleDot },
-  { key: "communities", label: "Communities", Icon: Users },
-  { key: "calls", label: "Calls", Icon: Phone },
-];
-
 export function Footer({ active, onChange, badges = {} }: FooterProps) {
+  const { t } = useTranslation();
+  const tabs = useTabItems();
   return (
     <nav className="sticky bottom-0 z-30 bg-gradient-silver border-t border-border/60 backdrop-blur-xl">
       <ul className="grid grid-cols-4 px-2 pt-1.5 pb-2">
-        {TABS.map(({ key, label, Icon }) => {
+        {tabs.map(({ key, label, Icon }) => {
           const isActive = active === key;
           const badge = badges[key] ?? 0;
           return (
@@ -40,7 +36,7 @@ export function Footer({ active, onChange, badges = {} }: FooterProps) {
                   <Icon className="h-5 w-5" strokeWidth={isActive ? 2.4 : 2} />
                   {badge > 0 && (
                     <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none grid place-items-center ring-2 ring-background">
-                      {badge > 99 ? "99+" : badge}
+                      {badge > 99 ? t("nav.badgeOverflow") : badge}
                     </span>
                   )}
                 </span>

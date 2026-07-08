@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { mockChats } from "@/data/mockChats";
 import { getMessages } from "@/data/mockMessages";
 import { messagesQueryKey } from "@/hooks/useChatMessages";
@@ -38,6 +39,7 @@ interface ChatViewProps {
 function ChatView() {
   const { chat }: ChatViewProps = Route.useLoaderData();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
@@ -63,14 +65,11 @@ function ChatView() {
           <div className="flex h-full flex-col">
             <div className="border-b border-border/60 bg-gradient-silver/60 px-4 py-3">
               <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                Conversation details
+                {t("meta.conversationDetails")}
               </p>
             </div>
             <div className="flex-1 overflow-y-auto p-4 text-sm text-muted-foreground">
-              <p>
-                Right rail is reserved for pinned messages, shared media, and member lists. Use ⋯ menu
-                to open full context -- Coming Soon --
-              </p>
+              <p>{t("meta.comingSoonAside")}</p>
             </div>
           </div>
         }

@@ -1,4 +1,5 @@
 import type { CallLogMessage } from "@/types/chat";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "@/hooks/useTheme";
 import { CALL_DIRECTION_ICONS, CALL_STATUS_COLORS, CALL_TYPE_ICONS } from "@/constants/callIcons";
 
@@ -8,24 +9,25 @@ interface CallLogPreviewProps {
   time: string;
 }
 
-function statusLabel(callLog: CallLogMessage): string {
+function statusLabel(callLog: CallLogMessage, t: ReturnType<typeof useTranslation>["t"]): string {
   if (callLog.status === "missed") {
-    return callLog.direction === "incoming" ? "Missed voice call" : "No answer";
+    return callLog.direction === "incoming" ? t("chat.missedVoiceCall") : t("chat.noAnswer");
   }
   if (callLog.status === "rejected") {
-    return callLog.direction === "incoming" ? "Declined" : "Call rejected";
+    return callLog.direction === "incoming" ? t("chat.declined") : t("chat.callRejected");
   }
   if (callLog.status === "ongoing") {
-    return "Ongoing call";
+    return t("chat.ongoingCall");
   }
-  return callLog.type === "video" ? "Video call" : "Voice call";
+  return callLog.type === "video" ? t("chat.videoCall") : t("chat.voiceCall");
 }
 
 export function CallLogPreview({ callLog, fromSelf, time }: CallLogPreviewProps) {
+  const { t } = useTranslation();
   const TypeIcon = CALL_TYPE_ICONS[callLog.type];
   const statusColor = CALL_STATUS_COLORS[callLog.status];
   const directionIcon = CALL_DIRECTION_ICONS[callLog.direction](statusColor);
-  const label = statusLabel(callLog);
+  const label = statusLabel(callLog, t);
   const { resolved } = useTheme();
   const isDark = resolved === "dark";
 

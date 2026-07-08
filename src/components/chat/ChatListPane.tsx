@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import type { Chat } from "@/types/chat";
 import { Pin, BellOff, BadgeCheck, Ban, Archive, Star, UsersRound } from "lucide-react";
 import { MESSAGE_STATUS_ICONS, renderMessagePreview } from "@/constants/chatIcons";
@@ -13,11 +14,12 @@ interface ChatListPaneProps {
 }
 
 export function ChatListPane({ chats, activeId }: ChatListPaneProps) {
+  const { t } = useTranslation();
   if (chats.length === 0) {
     return (
       <div className="px-6 py-16 text-center text-sm text-muted-foreground">
-        <p className="capitalize text-foreground font-medium mb-1">No chats found</p>
-        <p>Make sure either the text or name is well written</p>
+        <p className="capitalize text-foreground font-medium mb-1">{t("chat.noChatsFound")}</p>
+        <p>{t("chat.noChatsFoundDesc")}</p>
       </div>
     );
   }
@@ -39,6 +41,7 @@ interface ChatRowProps {
 }
 
 function ChatRow({ chat, active }: ChatRowProps) {
+  const { t } = useTranslation();
   return (
     <Link
       to="/chat/$id"
@@ -83,7 +86,7 @@ function ChatRow({ chat, active }: ChatRowProps) {
         </div>
         <div className="mt-0.5 flex items-center gap-2">
           <p className="flex-1 truncate text-xs text-muted-foreground">
-            {renderMessagePreview(chat)}
+            {renderMessagePreview(chat, t)}
           </p>
           {chat.unread ? (
             <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-gradient-neon text-primary-foreground text-[10px] font-bold grid place-items-center shadow-glow">

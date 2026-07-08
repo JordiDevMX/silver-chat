@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { SettingsButton } from "@/components/layout/SettingsButton";
 
@@ -10,6 +11,7 @@ interface HeaderProps {
 }
 
 export function Header({ search, onSearchChange, placeholder, onOpenSettings }: HeaderProps) {
+  const { t } = useTranslation();
   return (
     <header
       suppressHydrationWarning
@@ -37,7 +39,7 @@ export function Header({ search, onSearchChange, placeholder, onOpenSettings }: 
             type="search"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder={placeholder ?? "Search conversations…"}
+            placeholder={placeholder ?? t("search.conversations")}
             className="flex-1 bg-transparent outline-hidden text-sm placeholder:text-muted-foreground"
           />
         </label>

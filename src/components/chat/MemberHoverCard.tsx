@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Crown, Shield, UserRound, Clock } from "lucide-react";
 import {
   HoverCard,
@@ -14,17 +15,14 @@ interface MemberHoverCardProps {
   children: ReactNode;
 }
 
-function roleBadge(role: User["role"]) {
-  switch (role) {
-    case "admin":
-      return { icon: Crown, label: "Admin", tint: "text-amber-400" };
-    case "moderator":
-      return { icon: Shield, label: "Moderator", tint: "text-sky-400" };
-    case "member":
-    default:
-      return { icon: UserRound, label: "Member", tint: "text-muted-foreground" };
-  }
-}
+const ROLE_BADGE: Record<
+  NonNullable<User["role"]>,
+  { icon: typeof Crown; tint: string; key: "chat.admin" | "chat.moderator" | "chat.member" }
+> = {
+  admin: { icon: Crown, tint: "text-amber-400", key: "chat.admin" },
+  moderator: { icon: Shield, tint: "text-sky-400", key: "chat.moderator" },
+  member: { icon: UserRound, tint: "text-muted-foreground", key: "chat.member" },
+};
 
 /**
  * Hover-to-preview card for a group member. Uses the hover-card primitive
@@ -32,7 +30,8 @@ function roleBadge(role: User["role"]) {
  * the canonical pattern for social-network member previews.
  */
 export function MemberHoverCard({ member, children }: MemberHoverCardProps) {
-  const badge = roleBadge(member.role);
+  const { t } = useTranslation();
+  const badge = ROLE_BADGE[member.role ?? "member"];
   const BadgeIcon = badge.icon;
   return (
     <HoverCard openDelay={300} closeDelay={150}>
@@ -46,7 +45,7 @@ export function MemberHoverCard({ member, children }: MemberHoverCardProps) {
             </h4>
             <p className={`text-[11px] flex items-center gap-1 ${badge.tint}`}>
               <BadgeIcon className="h-3 w-3" />
-              {badge.label}
+              {t(badge.key)}
             </p>
           </div>
         </div>
@@ -54,9 +53,9 @@ export function MemberHoverCard({ member, children }: MemberHoverCardProps) {
         <div className="mt-3 pt-3 border-t border-border/60 space-y-1.5 text-[11px] text-muted-foreground">
           <p className="flex items-center gap-1.5">
             <Clock className="h-3 w-3" />
-            Member since recently
+            {t("chat.memberSince")}
           </p>
-          <p>Tap the name to open a direct message.</p>
+          <p>{t("chat.memberHint")}</p>
         </div>
       </HoverCardContent>
     </HoverCard>

@@ -1,4 +1,5 @@
 import type { Attachment, MessageStatus } from "@/types/chat";
+import { useTranslation } from "react-i18next";
 import { FileText, Image as ImageIcon, Play, Download } from "lucide-react";
 
 interface AttachmentPreviewProps {
@@ -41,6 +42,7 @@ function TimeChip({
 }
 
 export function AttachmentPreview({ attachment, fromSelf, time, status }: AttachmentPreviewProps) {
+  const { t } = useTranslation();
   // Sticker: borderless, no bubble — large emoji with neon glow.
   if (attachment.kind === "sticker") {
     return (
@@ -80,7 +82,7 @@ export function AttachmentPreview({ attachment, fromSelf, time, status }: Attach
               fromSelf ? "text-primary-foreground/70" : "text-muted-foreground",
             ].join(" ")}
           >
-            {attachment.size ? `${attachment.size} · ` : ""}PDF Document
+            {attachment.size ? `${attachment.size} · ` : ""}{t("chat.pdfDocument")}
           </p>
         </div>
         <Download

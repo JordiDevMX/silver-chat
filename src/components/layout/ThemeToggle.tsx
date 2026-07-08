@@ -1,5 +1,6 @@
 import { Monitor, Moon, Sun } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "@/hooks/useTheme";
 import type { ThemeMode } from "@/hooks/useTheme";
 
@@ -9,10 +10,10 @@ const MODE_ICONS: Record<ThemeMode, LucideIcon> = {
   auto: Monitor,
 };
 
-const MODE_LABELS: Record<ThemeMode, string> = {
-  light: "Light theme",
-  dark: "Dark theme",
-  auto: "Auto (system) theme",
+const MODE_KEY: Record<ThemeMode, "theme.light" | "theme.dark" | "theme.auto"> = {
+  light: "theme.light",
+  dark: "theme.dark",
+  auto: "theme.auto",
 };
 
 const NEXT_MODE: Record<ThemeMode, ThemeMode> = {
@@ -23,8 +24,12 @@ const NEXT_MODE: Record<ThemeMode, ThemeMode> = {
 
 export function ThemeToggle() {
   const { mode, cycle } = useTheme();
+  const { t } = useTranslation();
   const Icon = MODE_ICONS[mode];
-  const label = `${MODE_LABELS[mode]} — click to switch to ${MODE_LABELS[NEXT_MODE[mode]]}`;
+  const label = t("theme.toggleHint", {
+    current: t(MODE_KEY[mode]),
+    next: t(MODE_KEY[NEXT_MODE[mode]]),
+  });
 
   return (
     <button

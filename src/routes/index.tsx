@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Layout } from "@/components/layout/Layout";
 import { ChatList } from "@/components/chat/ChatList";
 import { Updates } from "@/components/updates/Updates";
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabKey>("chats");
   const [communitiesOpen, setCommunitiesOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -49,26 +51,27 @@ function Index() {
     );
   }, [search]);
 
+  const searchPlaceholder =
+    activeTab === "calls"
+      ? t("search.calls")
+      : activeTab === "updates"
+        ? t("search.updates")
+        : activeTab === "communities"
+          ? t("search.communities")
+          : t("search.conversations");
+
   return (
     <CallSessionProvider>
       <Layout
         activeTab={activeTab}
-        onTabChange={(t) => {
-          setActiveTab(t);
+        onTabChange={(tab) => {
+          setActiveTab(tab);
           setCommunitiesOpen(false);
         }}
         badges={{ chats: totalUnread, calls: 2 }}
         search={search}
         onSearchChange={setSearch}
-        searchPlaceholder={
-          activeTab === "calls"
-            ? "Search calls by name or email..."
-            : activeTab === "updates"
-              ? "Search stories and channels..."
-              : activeTab === "communities"
-                ? "Search communities..."
-                : "Search conversations…"
-        }
+        searchPlaceholder={searchPlaceholder}
         FAB={activeTab === "calls" ? <CallsFAB /> : activeTab === "chats" ? <ChatFAB /> : null}
         onOpenSettings={() => setSettingsOpen(true)}
       >

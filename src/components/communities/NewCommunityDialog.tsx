@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Users } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -24,21 +25,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const newCommunitySchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Community name must be at least 2 characters")
-    .max(50, "Community name must be at most 50 characters"),
-  description: z
-    .string()
-    .trim()
-    .max(200, "Description must be at most 200 characters")
-    .optional()
-    .or(z.literal("")),
-});
-
-export type NewCommunityFormValues = z.infer<typeof newCommunitySchema>;
+export type NewCommunityFormValues = {
+  name: string;
+  description?: string;
+};
 
 interface NewCommunityDialogProps {
   open: boolean;
@@ -48,8 +38,31 @@ interface NewCommunityDialogProps {
 }
 
 export function NewCommunityDialog({ open, onOpenChange, onCreate }: NewCommunityDialogProps) {
+  const { t } = useTranslation();
+
+  // The schema's validation messages are translated, so the resolver must be
+  // rebuilt when the active language changes. `useMemo` keyed on `t` keeps
+  // the resolver in sync while preserving referential stability across
+  // renders within the same locale.
+  const resolver = useMemo(() => {
+    const schema = z.object({
+      name: z
+        .string()
+        .trim()
+        .min(2, t("communities.validation.nameMin"))
+        .max(50, t("communities.validation.nameMax")),
+      description: z
+        .string()
+        .trim()
+        .max(200, t("communities.validation.descMax"))
+        .optional()
+        .or(z.literal("")),
+    });
+    return zodResolver(schema);
+  }, [t]);
+
   const form = useForm<NewCommunityFormValues>({
-    resolver: zodResolver(newCommunitySchema),
+    resolver,
     defaultValues: {
       name: "",
       description: "",
@@ -77,10 +90,8 @@ export function NewCommunityDialog({ open, onOpenChange, onCreate }: NewCommunit
               <Users className="h-5 w-5 text-foreground/80" />
             </div>
             <div className="min-w-0">
-              <DialogTitle>New community</DialogTitle>
-              <DialogDescription>
-                Build a space for your team, class, or group.
-              </DialogDescription>
+              <DialogTitle>{t("communities.dialogTitle")}</DialogTitle>
+              <DialogDescription>{t("communities.dialogDesc")}</DialogDescription>
             </div>
           </div>
         </DialogHeader>
@@ -96,18 +107,16 @@ export function NewCommunityDialog({ open, onOpenChange, onCreate }: NewCommunit
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t("communities.name")}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="e.g. Neon Architects"
+                      placeholder={t("communities.namePlaceholder")}
                       autoComplete="off"
                       maxLength={50}
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Visible to everyone in the community.
-                  </FormDescription>
+                  <FormDescription>{t("communities.nameDesc")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -119,12 +128,14 @@ export function NewCommunityDialog({ open, onOpenChange, onCreate }: NewCommunit
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Description{" "}
-                    <span className="text-muted-foreground font-normal">(optional)</span>
+                    {t("communities.description")}{" "}
+                    <span className="text-muted-foreground font-normal">
+                      {t("communities.optional")}
+                    </span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="What's this community about?"
+                      placeholder={t("communities.descriptionPlaceholder")}
                       className="resize-none min-h-[80px]"
                       maxLength={200}
                       {...field}
@@ -141,14 +152,14 @@ export function NewCommunityDialog({ open, onOpenChange, onCreate }: NewCommunit
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                {t("communities.cancel")}
               </Button>
               <Button
                 type="submit"
                 disabled={form.formState.isSubmitting}
                 className="bg-gradient-neon text-primary-foreground shadow-glow hover:brightness-110"
               >
-                Create community
+                {t("communities.createCommunity")}
               </Button>
             </DialogFooter>
           </form>

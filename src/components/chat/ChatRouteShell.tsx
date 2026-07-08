@@ -87,7 +87,6 @@ export function ChatRouteShell({
                 <PaneHeader
                   search={search}
                   onSearchChange={onSearchChange}
-                  placeholder="Search conversations…"
                   onOpenSettings={onOpenSettings}
                 />
                 <div className="flex-1 min-h-0 overflow-y-auto">
