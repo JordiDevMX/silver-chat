@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useTabItems } from "@/constants/tabs";
 import { useNavBadges } from "@/hooks/useNotifications";
@@ -5,10 +6,9 @@ import type { TabKey } from "@/types/chat";
 
 interface FooterProps {
   active: TabKey;
-  onChange: (tab: TabKey) => void;
 }
 
-export function Footer({ active, onChange }: FooterProps) {
+export function Footer({ active }: FooterProps) {
   const { t } = useTranslation();
   const tabs = useTabItems();
   const badges = useNavBadges();
@@ -20,9 +20,9 @@ export function Footer({ active, onChange }: FooterProps) {
           const badge = badges[key];
           return (
             <li key={key}>
-              <button
-                type="button"
-                onClick={() => onChange(key)}
+              <Link
+                to="/"
+                search={{ tab: key }}
                 aria-current={isActive ? "page" : undefined}
                 className="group w-full flex flex-col items-center gap-1 py-1.5 rounded-xl transition-colors"
               >
@@ -49,7 +49,7 @@ export function Footer({ active, onChange }: FooterProps) {
                 >
                   {label}
                 </span>
-              </button>
+              </Link>
             </li>
           );
         })}

@@ -7,7 +7,6 @@ import {
 interface LayoutProps {
   children: ReactNode;
   activeTab: TabKey;
-  onTabChange: (tab: TabKey) => void;
   search: string;
   onSearchChange: (value: string) => void;
   searchPlaceholder?: string;
@@ -21,16 +20,17 @@ interface LayoutProps {
  * `ResponsiveShell` — a single source of truth for breakpoint behaviour,
  * which is driven by the `useIsMobile` hook.
  *
- * The previous `badges` prop has been removed: notification counters now
- * flow through the TanStack Router context (see `useNotifications`) and
- * are read directly by `MobileTabBar` / `DesktopNavRail`, so neither this
- * shell nor its callers need to thread them anymore.
+ * The `onTabChange` callback has been removed: tab switching is now driven
+ * by URL search params (`/?tab=<key>`). `MobileTabBar` and `DesktopNavRail`
+ * self-navigate via TanStack Router `<Link>`, so neither this shell nor its
+ * callers need to thread a change handler anymore. `activeTab` is still
+ * accepted (read from `Route.useSearch()` on the home route) for highlight
+ * state and content selection.
  */
 export function Layout(props: LayoutProps) {
   const {
     children,
     activeTab,
-    onTabChange,
     search,
     onSearchChange,
     searchPlaceholder,
@@ -46,8 +46,8 @@ export function Layout(props: LayoutProps) {
         placeholder: searchPlaceholder,
         onOpenSettings,
       }}
-      mobileTabs={{ active: activeTab, onChange: onTabChange }}
-      desktopRail={{ active: activeTab, onChange: onTabChange, onOpenSettings }}
+      mobileTabs={{ active: activeTab }}
+      desktopRail={{ active: activeTab, onOpenSettings }}
       FAB={FAB}
     >
       {children}

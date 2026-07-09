@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { useTabItems } from "@/constants/tabs";
@@ -6,7 +7,6 @@ import type { TabKey } from "@/types/chat";
 
 export interface MobileTabBarProps {
   active: TabKey;
-  onChange: (tab: TabKey) => void;
 }
 
 /**
@@ -14,12 +14,18 @@ export interface MobileTabBarProps {
  * `lg` breakpoint, gated by `useIsDesktop()`). The same icon set is
  * mirrored vertically in the `DesktopNavRail` for `lg` and above.
  *
+ * Navigation is driven by TanStack Router `<Link>` — each tab navigates to
+ * `/?tab=<key>`, making the bar fully route-agnostic: it works identically
+ * whether mounted on the home view or inside the `/chat/$id` route's own
+ * shell. Tapping a tab from inside a conversation correctly routes to the
+ * home page with the intended target section instead of blindly resetting
+ * to "chats".
+ *
  * Notification badges are pulled directly from the global router context
  * (via {@link useNavBadges}) so the bar shows the same counters regardless
- * of which route mounts it — home list view or `/chat/$id` — fixing the
- * earlier "badges vanish when navigating into a conversation" regression.
+ * of which route mounts it.
  */
-export function MobileTabBar({ active, onChange }: MobileTabBarProps) {
+export function MobileTabBar({ active }: MobileTabBarProps) {
   const { t } = useTranslation();
   const tabs = useTabItems();
   const badges = useNavBadges();
@@ -34,9 +40,9 @@ export function MobileTabBar({ active, onChange }: MobileTabBarProps) {
           const badge = badges[key];
           return (
             <li key={key}>
-              <button
-                type="button"
-                onClick={() => onChange(key)}
+              <Link
+                to="/"
+                search={{ tab: key }}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "group w-full flex flex-col items-center gap-1 py-1.5 rounded-xl transition-colors",
@@ -66,7 +72,7 @@ export function MobileTabBar({ active, onChange }: MobileTabBarProps) {
                 >
                   {label}
                 </span>
-              </button>
+              </Link>
             </li>
           );
         })}

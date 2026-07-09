@@ -123,6 +123,7 @@ function ChannelView() {
           <div className="flex items-center gap-2 px-2 py-3">
             <Link
               to="/"
+              search={{ tab: "communities" }}
               aria-label={t("chat.back")}
               className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent transition-colors"
             >
