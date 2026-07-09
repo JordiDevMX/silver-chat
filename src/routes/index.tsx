@@ -33,8 +33,6 @@ function Index() {
   const [search, setSearch] = useState("");
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const totalUnread = mockChats.reduce((sum, c) => sum + c.unread, 0);
-
   const filteredChats = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return mockChats;
@@ -68,7 +66,6 @@ function Index() {
           setActiveTab(tab);
           setCommunitiesOpen(false);
         }}
-        badges={{ chats: totalUnread, calls: 2 }}
         search={search}
         onSearchChange={setSearch}
         searchPlaceholder={searchPlaceholder}
