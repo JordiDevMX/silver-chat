@@ -16,9 +16,8 @@ interface ChatRouteShellProps {
   /** Search input value & handler. */
   search: string;
   onSearchChange: (value: string) => void;
-  /** Top-level tab bar state. */
+  /** Top-level tab bar state (for highlight only — nav is URL-driven). */
   activeTab: TabKey;
-  onTabChange: (tab: TabKey) => void;
   onOpenSettings?: () => void;
   /** The conversation pane (rendered in the right slot). */
   conversation: ReactNode;
@@ -52,7 +51,6 @@ export function ChatRouteShell({
   search,
   onSearchChange,
   activeTab,
-  onTabChange,
   onOpenSettings,
   conversation,
   aside,
@@ -74,7 +72,6 @@ export function ChatRouteShell({
         {isDesktop ? (
           <DesktopNavRail
             active={activeTab}
-            onChange={onTabChange}
             onOpenSettings={onOpenSettings}
           />
         ) : null}
@@ -108,7 +105,7 @@ export function ChatRouteShell({
               or `flex-row` (tablet). Badges self-source from the router
               context, so they render identically here and on the home view. */}
           {!isDesktop ? (
-            <MobileTabBar active={activeTab} onChange={onTabChange} />
+            <MobileTabBar active={activeTab} />
           ) : null}
         </div>
 

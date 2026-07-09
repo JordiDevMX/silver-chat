@@ -55,7 +55,7 @@ export function ChatHeaderMenu({ chat, onLeave }: ChatHeaderMenuProps) {
     toast.success(t("chat.deletedToast"), {
       description: t("chat.deletedToastDesc", { name: chat.name }),
     });
-    navigate({ to: "/" });
+    navigate({ to: "/", search: { tab: "chats" } });
   }
 
   return (

@@ -86,6 +86,7 @@ export function ConversationPane({ chat }: ConversationPaneProps) {
           {isMobile ? (
             <Link
               to="/"
+              search={{ tab: "chats" }}
               aria-label={t("chat.back")}
               className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent transition-colors"
             >

@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -7,7 +8,6 @@ import type { TabKey } from "@/types/chat";
 
 export interface DesktopNavRailProps {
   active: TabKey;
-  onChange: (tab: TabKey) => void;
   onOpenSettings?: () => void;
 }
 
@@ -18,11 +18,17 @@ export interface DesktopNavRailProps {
  * mental model is identical across viewports. The active item is highlighted
  * with the neon gradient pill, exactly like the mobile bar's active state.
  *
+ * Navigation is driven by TanStack Router `<Link>` — each item navigates to
+ * `/?tab=<key>`, making the rail fully route-agnostic: it works identically
+ * whether mounted on the home view or inside the `/chat/$id` route's own
+ * shell. Tapping a rail item from inside a conversation correctly routes to
+ * the home page with the intended target section.
+ *
  * Notification badges are pulled directly from the global router context
  * (via {@link useNavBadges}) so the rail shows the same counters regardless
- * of which route mounts it — same single-source-of-truth as the mobile bar.
+ * of which route mounts it.
  */
-export function DesktopNavRail({ active, onChange }: DesktopNavRailProps) {
+export function DesktopNavRail({ active }: DesktopNavRailProps) {
   const { t } = useTranslation();
   const items = useTabItems();
   const badges = useNavBadges();
@@ -50,9 +56,9 @@ export function DesktopNavRail({ active, onChange }: DesktopNavRailProps) {
           const badge = badges[key];
           return (
             <li key={key} className="w-full group">
-              <button
-                type="button"
-                onClick={() => onChange(key)}
+              <Link
+                to="/"
+                search={{ tab: key }}
                 aria-current={isActive ? "page" : undefined}
                 aria-label={label}
                 title={label}
@@ -87,7 +93,7 @@ export function DesktopNavRail({ active, onChange }: DesktopNavRailProps) {
                 >
                   {label}
                 </span>
-              </button>
+              </Link>
             </li>
           );
         })}

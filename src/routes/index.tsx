@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { z } from "zod";
 import { Layout } from "@/components/layout/Layout";
 import { ChatList } from "@/components/chat/ChatList";
 import { Updates } from "@/components/updates/Updates";
@@ -11,10 +12,29 @@ import { CallSessionProvider } from "@/hooks/useCallSession";
 import { SettingsSheet } from "@/components/settings/SettingsSheet";
 import { mockChats } from "@/data/mockChats";
 import { mockCalls } from "@/data/mockCalls";
-import type { TabKey } from "@/types/chat";
 import { ChatFAB } from "#/components/chat/ChatListItem";
 
+/**
+ * Search-param schema for the home route (`/`).
+ *
+ * The active view switcher (Chats / Updates / Communities / Calls) is now
+ * persisted in the URL via the `tab` query parameter rather than local
+ * component state. This guarantees the selection survives cross-route
+ * navigation (e.g. entering `/chat/$id` and tapping a nav tab routes back to
+ * `/?tab=<key>` with the correct target, instead of hard-resetting to the
+ * default "chats" view).
+ *
+ * `.default("chats")` makes the parameter **optional on input** (so bare `/`
+ * and `<Link to="/" search={{}}>` both type-check and resolve to "chats") but
+ * **always present on output**, so `Route.useSearch().tab` is a non-nullable
+ * `TabKey` at every consumer.
+ */
+const tabSearchSchema = z.object({
+  tab: z.enum(["chats", "updates", "communities", "calls"]).default("chats"),
+});
+
 export const Route = createFileRoute("/")({
+  validateSearch: tabSearchSchema,
   head: () => ({
     meta: [
       { title: "SilverChat — Futuristic messaging" },
@@ -28,8 +48,9 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<TabKey>("chats");
-  const [communitiesOpen, setCommunitiesOpen] = useState(false);
+  // Single source of truth for the active view — read directly from the URL
+  // search params (validated + defaulted to "chats" by `tabSearchSchema`).
+  const { tab: activeTab } = Route.useSearch();
   const [search, setSearch] = useState("");
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -62,10 +83,6 @@ function Index() {
     <CallSessionProvider>
       <Layout
         activeTab={activeTab}
-        onTabChange={(tab) => {
-          setActiveTab(tab);
-          setCommunitiesOpen(false);
-        }}
         search={search}
         onSearchChange={setSearch}
         searchPlaceholder={searchPlaceholder}
@@ -74,20 +91,9 @@ function Index() {
       >
         {activeTab === "chats" && <ChatList chats={filteredChats} />}
         {activeTab === "updates" && <Updates search={search} />}
-        {activeTab === "communities" && !communitiesOpen && (
+        {activeTab === "communities" && (
           <Communities search={search} onOpen={() => void 0} />
         )}
-        {/* Open communities chats logic (works for everything else)
-        {activeTab === "communities" && !communitiesOpen && (
-          <Communities onOpen={() => setCommunitiesOpen(true)} />
-        )}
-
-        {/* {activeTab === "communities" && communitiesOpen && (
-          <div className="px-6 py-16 text-center text-sm text-muted-foreground">
-            <p className="capitalize text-foreground font-medium mb-1">{activeTab}</p>
-            <p>Coming soon.</p>
-          </div>
-        )} */}
         {activeTab === "calls" && <Calls calls={filteredCalls} />}
       </Layout>
       <CallOverlay />

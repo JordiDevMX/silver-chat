@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { mockChats } from "@/data/mockChats";
 import { getMessages } from "@/data/mockMessages";
@@ -38,7 +38,6 @@ interface ChatViewProps {
 
 function ChatView() {
   const { chat }: ChatViewProps = Route.useLoaderData();
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -54,11 +53,6 @@ function ChatView() {
           // (future: local search filter).
         }}
         activeTab="chats"
-        onTabChange={(tab) => {
-          if (tab !== "chats") {
-            void navigate({ to: "/" });
-          }
-        }}
         onOpenSettings={() => setSettingsOpen(true)}
         conversation={<ConversationPane chat={chat} />}
         aside={
