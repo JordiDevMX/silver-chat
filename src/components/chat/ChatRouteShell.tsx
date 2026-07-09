@@ -19,7 +19,6 @@ interface ChatRouteShellProps {
   /** Top-level tab bar state. */
   activeTab: TabKey;
   onTabChange: (tab: TabKey) => void;
-  badges?: Partial<Record<TabKey, number>>;
   onOpenSettings?: () => void;
   /** The conversation pane (rendered in the right slot). */
   conversation: ReactNode;
@@ -39,6 +38,13 @@ interface ChatRouteShellProps {
  *                       no inset margins.
  *  - >= xl (>=1280px) : Optional right aside (members, context) joins the
  *                       split — `ResponsiveSplit` reveals it.
+ *
+ * Notification badges are intentionally NOT accepted as a prop anymore —
+ * `MobileTabBar` and `DesktopNavRail` read them directly from the global
+ * router context (`useNotifications`), so this shell no longer has to (and
+ * historically didn't, which is why badges vanished on this route). The
+ * counters therefore stay perfectly persistent and synchronized as the user
+ * navigates between the home list and an active conversation.
  */
 export function ChatRouteShell({
   activeChat,
@@ -47,7 +53,6 @@ export function ChatRouteShell({
   onSearchChange,
   activeTab,
   onTabChange,
-  badges,
   onOpenSettings,
   conversation,
   aside,
@@ -70,7 +75,6 @@ export function ChatRouteShell({
           <DesktopNavRail
             active={activeTab}
             onChange={onTabChange}
-            badges={badges}
             onOpenSettings={onOpenSettings}
           />
         ) : null}
@@ -101,9 +105,10 @@ export function ChatRouteShell({
           {/* Mobile/tablet bottom tab bar — mounted as a child of the main
               column so it always sits at the bottom of the content stack,
               regardless of whether the outer wrapper is `flex-col` (mobile)
-              or `flex-row` (tablet). */}
+              or `flex-row` (tablet). Badges self-source from the router
+              context, so they render identically here and on the home view. */}
           {!isDesktop ? (
-            <MobileTabBar active={activeTab} onChange={onTabChange} badges={badges} />
+            <MobileTabBar active={activeTab} onChange={onTabChange} />
           ) : null}
         </div>
 

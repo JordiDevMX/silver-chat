@@ -8,7 +8,6 @@ interface LayoutProps {
   children: ReactNode;
   activeTab: TabKey;
   onTabChange: (tab: TabKey) => void;
-  badges?: Partial<Record<TabKey, number>>;
   search: string;
   onSearchChange: (value: string) => void;
   searchPlaceholder?: string;
@@ -21,13 +20,17 @@ interface LayoutProps {
  * keep working unchanged. The implementation now delegates to the new
  * `ResponsiveShell` — a single source of truth for breakpoint behaviour,
  * which is driven by the `useIsMobile` hook.
+ *
+ * The previous `badges` prop has been removed: notification counters now
+ * flow through the TanStack Router context (see `useNotifications`) and
+ * are read directly by `MobileTabBar` / `DesktopNavRail`, so neither this
+ * shell nor its callers need to thread them anymore.
  */
 export function Layout(props: LayoutProps) {
   const {
     children,
     activeTab,
     onTabChange,
-    badges,
     search,
     onSearchChange,
     searchPlaceholder,
@@ -43,8 +46,8 @@ export function Layout(props: LayoutProps) {
         placeholder: searchPlaceholder,
         onOpenSettings,
       }}
-      mobileTabs={{ active: activeTab, onChange: onTabChange, badges }}
-      desktopRail={{ active: activeTab, onChange: onTabChange, badges, onOpenSettings }}
+      mobileTabs={{ active: activeTab, onChange: onTabChange }}
+      desktopRail={{ active: activeTab, onChange: onTabChange, onOpenSettings }}
       FAB={FAB}
     >
       {children}

@@ -2,12 +2,12 @@ import { LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { useTabItems } from "@/constants/tabs";
+import { useNavBadges } from "@/hooks/useNotifications";
 import type { TabKey } from "@/types/chat";
 
 export interface DesktopNavRailProps {
   active: TabKey;
   onChange: (tab: TabKey) => void;
-  badges?: Partial<Record<TabKey, number>>;
   onOpenSettings?: () => void;
 }
 
@@ -17,10 +17,15 @@ export interface DesktopNavRailProps {
  * Mirrors the icons and semantics of the mobile `MobileTabBar` so the
  * mental model is identical across viewports. The active item is highlighted
  * with the neon gradient pill, exactly like the mobile bar's active state.
+ *
+ * Notification badges are pulled directly from the global router context
+ * (via {@link useNavBadges}) so the rail shows the same counters regardless
+ * of which route mounts it — same single-source-of-truth as the mobile bar.
  */
-export function DesktopNavRail({ active, onChange, badges = {} }: DesktopNavRailProps) {
+export function DesktopNavRail({ active, onChange }: DesktopNavRailProps) {
   const { t } = useTranslation();
   const items = useTabItems();
+  const badges = useNavBadges();
   return (
     <aside
       className={cn(
@@ -42,7 +47,7 @@ export function DesktopNavRail({ active, onChange, badges = {} }: DesktopNavRail
       <ul className="flex flex-col items-center gap-1.5 w-full px-2">
         {items.map(({ key, label, Icon }) => {
           const isActive = active === key;
-          const badge = badges[key] ?? 0;
+          const badge = badges[key];
           return (
             <li key={key} className="w-full group">
               <button

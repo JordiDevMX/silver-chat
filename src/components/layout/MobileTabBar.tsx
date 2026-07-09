@@ -1,22 +1,28 @@
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { useTabItems } from "@/constants/tabs";
+import { useNavBadges } from "@/hooks/useNotifications";
 import type { TabKey } from "@/types/chat";
 
 export interface MobileTabBarProps {
   active: TabKey;
   onChange: (tab: TabKey) => void;
-  badges?: Partial<Record<TabKey, number>>;
 }
 
 /**
  * Bottom tab bar, mounted on mobile AND tablet (anything below Tailwind's
  * `lg` breakpoint, gated by `useIsDesktop()`). The same icon set is
  * mirrored vertically in the `DesktopNavRail` for `lg` and above.
+ *
+ * Notification badges are pulled directly from the global router context
+ * (via {@link useNavBadges}) so the bar shows the same counters regardless
+ * of which route mounts it — home list view or `/chat/$id` — fixing the
+ * earlier "badges vanish when navigating into a conversation" regression.
  */
-export function MobileTabBar({ active, onChange, badges = {} }: MobileTabBarProps) {
+export function MobileTabBar({ active, onChange }: MobileTabBarProps) {
   const { t } = useTranslation();
   const tabs = useTabItems();
+  const badges = useNavBadges();
   return (
     <nav
       className="lg:hidden sticky bottom-0 z-30 border-t border-border/60 bg-gradient-silver backdrop-blur-xl shadow-silver"
@@ -25,7 +31,7 @@ export function MobileTabBar({ active, onChange, badges = {} }: MobileTabBarProp
       <ul className="grid grid-cols-4 px-2 pt-1.5 pb-2">
         {tabs.map(({ key, label, Icon }) => {
           const isActive = active === key;
-          const badge = badges[key] ?? 0;
+          const badge = badges[key];
           return (
             <li key={key}>
               <button

@@ -1,22 +1,23 @@
 import { useTranslation } from "react-i18next";
 import { useTabItems } from "@/constants/tabs";
+import { useNavBadges } from "@/hooks/useNotifications";
 import type { TabKey } from "@/types/chat";
 
 interface FooterProps {
   active: TabKey;
   onChange: (tab: TabKey) => void;
-  badges?: Partial<Record<TabKey, number>>;
 }
 
-export function Footer({ active, onChange, badges = {} }: FooterProps) {
+export function Footer({ active, onChange }: FooterProps) {
   const { t } = useTranslation();
   const tabs = useTabItems();
+  const badges = useNavBadges();
   return (
     <nav className="sticky bottom-0 z-30 bg-gradient-silver border-t border-border/60 backdrop-blur-xl">
       <ul className="grid grid-cols-4 px-2 pt-1.5 pb-2">
         {tabs.map(({ key, label, Icon }) => {
           const isActive = active === key;
-          const badge = badges[key] ?? 0;
+          const badge = badges[key];
           return (
             <li key={key}>
               <button

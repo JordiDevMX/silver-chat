@@ -1,4 +1,3 @@
-import type { QueryClient } from "@tanstack/react-query";
 import { QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -22,6 +21,7 @@ import "@/hooks/pwaInstallStore";
 // route renders. `useTranslation()` then re-renders consumers on
 // `i18n.changeLanguage()` with no provider required.
 import "@/i18n";
+import type { RouterContext } from "@/router";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
@@ -82,7 +82,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
