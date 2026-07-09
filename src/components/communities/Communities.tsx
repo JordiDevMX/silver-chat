@@ -6,6 +6,7 @@ import { communities } from "@/data/mockCommunities";
 import type { Community, SubChannel } from "@/types/community";
 import { NewCommunityDialog } from "./NewCommunityDialog";
 import type { NewCommunityFormValues } from "./NewCommunityDialog";
+import { cn } from "@/lib/utils";
 
 interface CommunitiesProps {
   onOpen?: () => void;
@@ -64,7 +65,14 @@ function ChannelRow({ channel, communityId }: { channel: SubChannel; communityId
 function CommunityBlock({ community }: { community: Community }) {
   const { t } = useTranslation();
   return (
-    <div className="border-b border-border/60 last:border-0">
+    <div
+      className={cn(
+        // < md: inline list-separated block (legacy phone-style stack)
+        "border-b border-border/60 last:border-0",
+        // md+: free-floating glass card in a fluid multi-column grid
+        "md:rounded-2xl md:border md:border-border/60 md:bg-card/40 md:backdrop-blur-xl md:shadow-silver md:overflow-hidden md:last:border",
+      )}
+    >
       <div className="w-full flex items-center gap-3 px-4 py-3">
         <div
           className="size-12 shrink-0 rounded-2xl border border-border shadow-silver"
@@ -106,19 +114,48 @@ export function Communities({ onOpen: _onOpen, search = "" }: CommunitiesProps) 
   }
 
   return (
-    <div className="pb-24">
+    <div className="pb-24 md:pb-6">
       {!isSearching && (
-        <h1 className="px-4 pt-4 pb-2 text-2xl font-semibold tracking-tight text-foreground">
+        <h1 className="px-4 md:px-6 pt-4 pb-2 text-2xl font-semibold tracking-tight text-foreground">
           {t("communities.heading")}
         </h1>
       )}
-      {!isSearching && <NewCommunityRow onClick={() => setDialogOpen(true)} />}
 
-      <div className="mt-2">
+      {/*
+        Fluid presentation: < md is a single-column stack (legacy phone-style
+        list); md+ becomes a responsive multi-column grid that fills the
+        available width edge-to-edge, then expands to three columns on xl.
+        `NewCommunityRow` is rendered as the first grid cell on md+ so the
+        primary CTA stays anchored within the wide layout instead of being
+        stranded as a narrow full-width row above the grid.
+      */}
+      <div
+        className={cn(
+          "mt-2 md:px-4",
+          "md:grid md:grid-cols-2 md:gap-4",
+          "xl:grid-cols-3",
+        )}
+      >
+        {!isSearching && (
+          <div
+            className={cn(
+              "border-b border-border/60 last:border-0",
+              "md:rounded-2xl md:border md:border-dashed md:border-border md:bg-card/20 md:backdrop-blur-xl md:overflow-hidden md:last:border",
+            )}
+          >
+            <NewCommunityRow onClick={() => setDialogOpen(true)} />
+          </div>
+        )}
+
         {filtered.length > 0 ? (
           filtered.map((c) => <CommunityBlock key={c.id} community={c} />)
         ) : (
-          <div className="px-6 py-12 text-center">
+          <div
+            className={cn(
+              "px-6 py-12 text-center",
+              "md:col-span-full md:col-start-1 md:rounded-2xl md:border md:border-dashed md:border-border md:bg-card/20 md:backdrop-blur-xl",
+            )}
+          >
             <p className="text-sm text-muted-foreground mb-3">
               {t("communities.noCommunitiesFound")}
             </p>

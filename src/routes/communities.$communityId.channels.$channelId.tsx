@@ -117,8 +117,17 @@ function ChannelView() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex justify-center">
-      <div className="relative w-full max-w-md min-h-screen flex flex-col bg-background shadow-silver">
+    <div className="h-svh w-full overflow-hidden bg-background text-foreground">
+      {/*
+        Layout container:
+          - < md  : full-viewport column (legacy mobile/phone style).
+          - md+   : fluid edge-to-edge substrate mirroring ChatRouteShell —
+                    no max-width clamp, no shadow, no inset margins. Message
+                    bubbles self-constrain via their own `max-w-[78%]` (see
+                    MessageBubble), so reading width stays comfortable even
+                    when this column stretches to the full viewport.
+      */}
+      <div className="relative flex h-svh w-full flex-col bg-background shadow-silver md:flex-row md:h-svh md:shadow-none">
         <header className="sticky top-0 z-30 bg-gradient-silver border-b border-border/60 backdrop-blur-xl shadow-silver">
           <div className="flex items-center gap-2 px-2 py-3">
             <Link
