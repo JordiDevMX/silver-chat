@@ -5,7 +5,8 @@ import { mockChats } from "@/data/mockChats";
 import { getMessages } from "@/data/mockMessages";
 import { messagesQueryKey } from "@/hooks/useChatMessages";
 import { ChatRouteShell } from "@/components/chat/ChatRouteShell";
-import { ConversationPane } from "@/components/chat/ConversationPane";
+import { ChatLayout } from "@/components/chat/ChatLayout";
+import type { ChatLayoutType } from "@/components/chat/ChatLayout";
 import { SettingsSheet } from "@/components/settings/SettingsSheet";
 import type { Chat } from "@/types/chat";
 
@@ -41,6 +42,8 @@ function ChatView() {
   const { t } = useTranslation();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  const layoutType: ChatLayoutType = chat.isGroup ? "group" : "dm";
+
   return (
     <>
       <ChatRouteShell
@@ -49,12 +52,23 @@ function ChatView() {
         search=""
         onSearchChange={() => {
           // search is local to /chat/$id; the header for the list lives inside
-          // ChatRouteShell, so we accept the value but discard it for now
-          // (future: local search filter).
+          // ChatRouteShell's default sidebar, so we accept the value but discard
+          // it for now (future: local search filter).
         }}
         activeTab="chats"
         onOpenSettings={() => setSettingsOpen(true)}
-        conversation={<ConversationPane chat={chat} />}
+        conversation={
+          <ChatLayout
+            type={layoutType}
+            id={chat.id}
+            name={chat.name}
+            avatarUrl={chat.avatarUrl}
+            isOnline={chat.isOnline}
+            isPinned={chat.isPinned}
+            isMuted={chat.isMuted}
+            participants={chat.participants}
+          />
+        }
         aside={
           <div className="flex h-full flex-col">
             <div className="border-b border-border/60 bg-gradient-silver/60 px-4 py-3">

@@ -11,10 +11,12 @@ import type { Chat, TabKey } from "@/types/chat";
 interface ChatRouteShellProps {
   /** The currently active conversation (if any). */
   activeChat?: Chat;
-  /** Source list of all chats for the desktop sidebar. */
+  /** Source list of all chats for the desktop sidebar. Ignored when
+   *  `sidebar` is provided. */
   chats: Chat[];
-  /** Search input value & handler. */
+  /** Search input value & handler. Ignored when `sidebar` is provided. */
   search: string;
+  /** Ignored when `sidebar` is provided. */
   onSearchChange: (value: string) => void;
   /** Top-level tab bar state (for highlight only — nav is URL-driven). */
   activeTab: TabKey;
@@ -23,6 +25,12 @@ interface ChatRouteShellProps {
   conversation: ReactNode;
   /** Optional aside (members, context). Shown on xl+. */
   aside?: ReactNode;
+  /** Optional custom sidebar. When omitted, the default
+   *  `PaneHeader` + `ChatListPane` composition is rendered (used by the
+   *  DM route). When provided (e.g. by the community-channel route), it
+   *  replaces the chat-list sidebar entirely — letting the channel route
+   *  show its own community/channel navigation without forking the shell. */
+  sidebar?: ReactNode;
 }
 
 /**
@@ -54,9 +62,26 @@ export function ChatRouteShell({
   onOpenSettings,
   conversation,
   aside,
+  sidebar,
 }: ChatRouteShellProps) {
   const isDesktop = useIsDesktop();
   const [mobileOpen] = useState(false);
+
+  // Default sidebar — the DM chat list with its pane header. Overridable
+  // via the `sidebar` prop so the community-channel route can render its
+  // own community/channel navigation without forking the shell.
+  const defaultSidebar = (
+    <div className="flex h-full min-h-0 w-full flex-col">
+      <PaneHeader
+        search={search}
+        onSearchChange={onSearchChange}
+        onOpenSettings={onOpenSettings}
+      />
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <ChatListPane chats={chats} activeId={activeChat?.id} />
+      </div>
+    </div>
+  );
 
   return (
     <div className="h-svh w-full overflow-hidden bg-background text-foreground flex justify-center">
@@ -83,18 +108,7 @@ export function ChatRouteShell({
         >
           <ResponsiveSplit
             className="flex-1 min-h-0"
-            sidebar={
-              <div className="flex h-full min-h-0 w-full flex-col">
-                <PaneHeader
-                  search={search}
-                  onSearchChange={onSearchChange}
-                  onOpenSettings={onOpenSettings}
-                />
-                <div className="flex-1 min-h-0 overflow-y-auto">
-                  <ChatListPane chats={chats} activeId={activeChat?.id} />
-                </div>
-              </div>
-            }
+            sidebar={sidebar ?? defaultSidebar}
             main={conversation}
             aside={aside}
           />
