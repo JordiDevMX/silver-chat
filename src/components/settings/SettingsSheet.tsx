@@ -1,17 +1,13 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  ArrowLeft,
   Bell,
   Check,
   Database,
   Smartphone,
   Globe,
   Info,
-  UserPlus,
-  Mail,
-  ShieldCheck,
-  LogOut,
-  Trash2,
   UserX,
   Image as ImageIcon,
   CircleDot,
@@ -28,13 +24,8 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
 import { SettingsRow } from "@/components/settings/SettingsRow";
+import { ProfileDetails } from "@/components/settings/ProfileDetails";
 import { useTheme } from "@/hooks/useTheme";
 import type { Accent } from "@/hooks/useTheme";
 import { appLocales } from "@/i18n/resources";
@@ -133,7 +124,7 @@ function AccentColorPicker() {
   );
 }
 
-function SectionHeading({ children }: { children: string }) {
+export function SectionHeading({ children }: { children: string }) {
   return (
     <h3 className="px-1 pt-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
       {children}
@@ -141,7 +132,7 @@ function SectionHeading({ children }: { children: string }) {
   );
 }
 
-function CardSurface({ children, className }: { children: React.ReactNode; className?: string }) {
+export function CardSurface({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <div
       className={cn(
@@ -154,9 +145,13 @@ function CardSurface({ children, className }: { children: React.ReactNode; class
   );
 }
 
-function UserCard() {
+function UserCard({ onClick }: { onClick: () => void }) {
   return (
-    <div className="rounded-2xl bg-gradient-silver border border-white/10 backdrop-blur-xl shadow-silver p-4 flex items-center gap-3">
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full rounded-2xl bg-gradient-silver border border-white/10 backdrop-blur-xl shadow-silver p-4 flex items-center gap-3 cursor-pointer transition-colors hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
       <div className="relative shrink-0">
         <div
           className="h-12 w-12 rounded-full grid place-items-center text-sm font-semibold text-primary-foreground ring-1 ring-inset ring-white/30 shadow-silver"
@@ -168,12 +163,12 @@ function UserCard() {
         </div>
         <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-neon ring-2 ring-card shadow-glow" />
       </div>
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 text-left">
         <p className="text-sm font-semibold truncate">Jordi</p>
         <p className="text-xs text-muted-foreground truncate">jordidev@proton.me</p>
       </div>
-      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-    </div>
+      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
+    </button>
   );
 }
 
@@ -306,6 +301,18 @@ function ToggleRow({
 export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
   const { t, i18n } = useTranslation();
 
+  // In-place view swap — the same Sheet stays mounted; its content
+  // switches between the main settings list and the profile details
+  // sub-view via internal state. No nested Radix portals.
+  const [view, setView] = useState<"main" | "profile">("main");
+
+  // Reset to the main view whenever the Sheet closes so reopening it
+  // always lands on the default surface.
+  function handleOpenChange(next: boolean) {
+    if (!next) setView("main");
+    onOpenChange(next);
+  }
+
   // Settings toggles are local UI-only mock state (no backend persistence).
   const [notifMessages, setNotifMessages] = useState(true);
   const [notifSounds, setNotifSounds] = useState(true);
@@ -339,191 +346,151 @@ export function SettingsSheet({ open, onOpenChange }: SettingsSheetProps) {
   );
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent
         side="right"
         className="w-[min(24rem,calc(100vw-2rem))] sm:max-w-none gap-0 border-l border-white/10 bg-card/80 backdrop-blur-2xl p-0 flex flex-col"
       >
-        <SheetHeader className="px-5 pt-5 pb-3 border-b border-white/5">
-          <SheetTitle className="text-lg">{t("settings.title")}</SheetTitle>
-          <SheetDescription>{t("settings.description")}</SheetDescription>
-        </SheetHeader>
-
-        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
-          <UserCard />
-
-          <div>
-            <SectionHeading>{t("settings.quickSettings")}</SectionHeading>
-            <CardSurface>
-              <SettingsRow
-                Icon={Bell}
-                label={t("settings.notifications")}
-                subtitle={t("settings.notificationsSub")}
-                onClick={() => onOpenChange(false)}
-                right={
-                  <span className="flex items-center gap-1.5 text-xs text-neon">
-                    <span className="h-1.5 w-1.5 rounded-full bg-neon shadow-glow" />
-                    {t("settings.on")}
-                  </span>
-                }
-              />
-              <div className="px-3.5 pb-3 pt-1 space-y-2 bg-black/5">
-                <label className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{t("settings.messages")}</span>
-                  <Switch
-                    checked={notifMessages}
-                    onCheckedChange={setNotifMessages}
-                    aria-label={t("settings.toggleMessageNotifications")}
-                  />
-                </label>
-                <label className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{t("settings.sounds")}</span>
-                  <Switch
-                    checked={notifSounds}
-                    onCheckedChange={setNotifSounds}
-                    aria-label={t("settings.toggleSoundNotifications")}
-                  />
-                </label>
-                <label className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{t("settings.previews")}</span>
-                  <Switch
-                    checked={notifPreviews}
-                    onCheckedChange={setNotifPreviews}
-                    aria-label={t("settings.toggleNotificationPreviews")}
-                  />
-                </label>
-              </div>
-              <SettingsRow
-                Icon={Database}
-                label={t("settings.storage")}
-                subtitle={t("settings.storageSub")}
-                right={<StorageIndicator usedGb={2.4} totalGb={15} />}
-              />
-              <SettingsRow
-                Icon={Smartphone}
-                label={t("settings.linkedDevices")}
-                subtitle={t("settings.linkedDevicesSub")}
-                onClick={() => onOpenChange(false)}
-              />
-              <SimpleSelect
-                Icon={Globe}
-                label={t("settings.language")}
-                value={language}
-                options={languageOptions}
-                onChange={(next) => {
-                  void i18n.changeLanguage(next);
-                }}
-              />
-              <AccentColorPicker />
-              <SettingsRow
-                Icon={Info}
-                label={t("settings.about")}
-                subtitle="SilverChat v1.0.0 · build 2026.06.25"
-                onClick={() => onOpenChange(false)}
-              />
-            </CardSurface>
-          </div>
-
-          <div>
-            <SectionHeading>{t("settings.advanced")}</SectionHeading>
-            <Accordion type="multiple" className="space-y-2">
-              <AccordionItem
-                value="account"
-                className="rounded-2xl bg-card/60 border border-white/10 backdrop-blur-xl shadow-silver overflow-hidden"
+        {view === "profile" ? (
+          <SheetHeader className="px-2 pt-4 pb-3 border-b border-white/5">
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setView("main")}
+                aria-label={t("settings.profileBack")}
+                className="h-9 w-9 grid place-items-center rounded-full hover:bg-accent transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <AccordionTrigger className="px-4 py-3 text-sm font-semibold hover:no-underline">
-                  <span className="flex items-center gap-3">
-                    <span className="h-7 w-7 grid place-items-center rounded-md bg-gradient-silver border border-white/10 text-neon">
-                      <UserPlus className="h-3.5 w-3.5" strokeWidth={2.2} />
-                    </span>
-                    {t("settings.accountSettings")}
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="px-0">
-                  <div className="border-t border-white/5 divide-y divide-white/5">
-                    <SettingsRow
-                      Icon={UserPlus}
-                      label={t("settings.addAnotherAccount")}
-                      subtitle={t("settings.addAnotherAccountSub")}
-                    />
-                    <SettingsRow Icon={Mail} label={t("settings.changeEmail")} subtitle="jordi@example.com" />
-                    <SettingsRow
-                      Icon={ShieldCheck}
-                      label={t("settings.twoFactor")}
-                      badge={t("settings.twoFactorBadge")}
-                    />
-                    <div className="my-1 border-t border-white/5" />
-                    <SettingsRow
-                      Icon={LogOut}
-                      label={t("settings.logOut")}
-                      onClick={() => onOpenChange(false)}
-                      danger
-                    />
-                    <SettingsRow
-                      Icon={Trash2}
-                      label={t("settings.deleteAccount")}
-                      subtitle={t("settings.deleteAccountSub")}
-                      onClick={() => onOpenChange(false)}
-                      danger
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+              <SheetTitle className="text-base ml-1">{t("settings.profileTitle")}</SheetTitle>
+            </div>
+          </SheetHeader>
+        ) : (
+          <SheetHeader className="px-5 pt-5 pb-3 border-b border-white/5">
+            <SheetTitle className="text-lg">{t("settings.title")}</SheetTitle>
+            <SheetDescription>{t("settings.description")}</SheetDescription>
+          </SheetHeader>
+        )}
 
-              <AccordionItem
-                value="privacy"
-                className="rounded-2xl bg-card/60 border border-white/10 backdrop-blur-xl shadow-silver overflow-hidden"
-              >
-                <AccordionTrigger className="px-4 py-3 text-sm font-semibold hover:no-underline">
-                  <span className="flex items-center gap-3">
-                    <span className="h-7 w-7 grid place-items-center rounded-md bg-gradient-silver border border-white/10 text-neon">
-                      <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2.2} />
+        {view === "profile" ? (
+          <ProfileDetails onAction={() => {}} />
+        ) : (
+          <div className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
+            <UserCard onClick={() => setView("profile")} />
+
+            <div>
+              <SectionHeading>{t("settings.quickSettings")}</SectionHeading>
+              <CardSurface>
+                <SettingsRow
+                  Icon={Bell}
+                  label={t("settings.notifications")}
+                  subtitle={t("settings.notificationsSub")}
+                  onClick={() => onOpenChange(false)}
+                  right={
+                    <span className="flex items-center gap-1.5 text-xs text-neon">
+                      <span className="h-1.5 w-1.5 rounded-full bg-neon shadow-glow" />
+                      {t("settings.on")}
                     </span>
-                    {t("settings.privacySecurity")}
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="px-0">
-                  <div className="border-t border-white/5 divide-y divide-white/5">
-                    <SettingsRow
-                      Icon={UserX}
-                      label={t("settings.blockedContacts")}
-                      badge="3"
-                      onClick={() => onOpenChange(false)}
+                  }
+                />
+                <div className="px-3.5 pb-3 pt-1 space-y-2 bg-black/5">
+                  <label className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{t("settings.messages")}</span>
+                    <Switch
+                      checked={notifMessages}
+                      onCheckedChange={setNotifMessages}
+                      aria-label={t("settings.toggleMessageNotifications")}
                     />
-                    <SimpleSelect
-                      Icon={ImageIcon}
-                      label={t("settings.profilePhoto")}
-                      value={profileVisibility}
-                      options={photoOptions}
-                      onChange={(next) => setProfileVisibility(next as PhotoVisibility)}
+                  </label>
+                  <label className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{t("settings.sounds")}</span>
+                    <Switch
+                      checked={notifSounds}
+                      onCheckedChange={setNotifSounds}
+                      aria-label={t("settings.toggleSoundNotifications")}
                     />
-                    <ToggleRow
-                      Icon={CircleDot}
-                      label={t("settings.onlineStatus")}
-                      subtitle={t("settings.onlineStatusSub")}
-                      checked={showOnline}
-                      onChange={setShowOnline}
+                  </label>
+                  <label className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{t("settings.previews")}</span>
+                    <Switch
+                      checked={notifPreviews}
+                      onCheckedChange={setNotifPreviews}
+                      aria-label={t("settings.toggleNotificationPreviews")}
                     />
-                    <SimpleSelect
-                      Icon={Eye}
-                      label={t("settings.statusStories")}
-                      value={statusPrivacy}
-                      options={statusPrivacyOptions}
-                      onChange={(next) => setStatusPrivacy(next as StatusPrivacy)}
-                    />
-                    <ToggleRow
-                      Icon={CheckCheck}
-                      label={t("settings.readReceipts")}
-                      subtitle={t("settings.readReceiptsSub")}
-                      checked={readReceipts}
-                      onChange={setReadReceipts}
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+                  </label>
+                </div>
+                <SettingsRow
+                  Icon={Database}
+                  label={t("settings.storage")}
+                  subtitle={t("settings.storageSub")}
+                  right={<StorageIndicator usedGb={2.4} totalGb={15} />}
+                />
+                <SettingsRow
+                  Icon={Smartphone}
+                  label={t("settings.linkedDevices")}
+                  subtitle={t("settings.linkedDevicesSub")}
+                  onClick={() => onOpenChange(false)}
+                />
+                <SimpleSelect
+                  Icon={Globe}
+                  label={t("settings.language")}
+                  value={language}
+                  options={languageOptions}
+                  onChange={(next) => {
+                    void i18n.changeLanguage(next);
+                  }}
+                />
+                <AccentColorPicker />
+                <SettingsRow
+                  Icon={Info}
+                  label={t("settings.about")}
+                  subtitle="SilverChat v1.0.0 · build 2026.06.25"
+                  onClick={() => onOpenChange(false)}
+                />
+              </CardSurface>
+            </div>
+
+            <div>
+              <SectionHeading>{t("settings.privacySecurity")}</SectionHeading>
+              <CardSurface>
+                <SettingsRow
+                  Icon={UserX}
+                  label={t("settings.blockedContacts")}
+                  badge="3"
+                  onClick={() => onOpenChange(false)}
+                />
+                <SimpleSelect
+                  Icon={ImageIcon}
+                  label={t("settings.profilePhoto")}
+                  value={profileVisibility}
+                  options={photoOptions}
+                  onChange={(next) => setProfileVisibility(next as PhotoVisibility)}
+                />
+                <ToggleRow
+                  Icon={CircleDot}
+                  label={t("settings.onlineStatus")}
+                  subtitle={t("settings.onlineStatusSub")}
+                  checked={showOnline}
+                  onChange={setShowOnline}
+                />
+                <SimpleSelect
+                  Icon={Eye}
+                  label={t("settings.statusStories")}
+                  value={statusPrivacy}
+                  options={statusPrivacyOptions}
+                  onChange={(next) => setStatusPrivacy(next as StatusPrivacy)}
+                />
+                <ToggleRow
+                  Icon={CheckCheck}
+                  label={t("settings.readReceipts")}
+                  subtitle={t("settings.readReceiptsSub")}
+                  checked={readReceipts}
+                  onChange={setReadReceipts}
+                />
+              </CardSurface>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="border-t border-white/5 px-5 py-3 text-[11px] text-muted-foreground text-center">
           {t("settings.e2eFooter")}
