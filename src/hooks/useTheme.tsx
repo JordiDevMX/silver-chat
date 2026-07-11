@@ -61,11 +61,14 @@ function applyTheme(mode: ThemeMode) {
   const resolved = resolveMode(mode);
   const root = document.documentElement;
 
-  if (mode === "auto") {
-    root.removeAttribute("data-theme");
-  } else {
-    root.setAttribute("data-theme", mode);
-  }
+  // Always set `data-theme` to the *resolved* value. The dark palette in
+  // styles.css lives exclusively under `:root[data-theme="dark"]`, so the
+  // attribute MUST be present (and equal to "dark") for dark tokens to
+  // apply — regardless of whether the user chose "dark" explicitly or
+  // "auto" resolved to dark via the OS media query. Removing the
+  // attribute (the old behaviour for `auto`) fell back to the light
+  // `:root` palette, breaking auto-dark users on every reload.
+  root.setAttribute("data-theme", resolved);
   root.style.colorScheme = resolved;
 }
 
@@ -81,11 +84,17 @@ function applyAccent(accent: Accent) {
 const CYCLE_ORDER: ThemeMode[] = ["light", "dark", "auto"];
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [mode, setModeState] = useState<ThemeMode>("auto");
-  const [resolved, setResolved] = useState<ResolvedTheme>("light");
-  const [accent, setAccentState] = useState<Accent>(DEFAULT_ACCENT);
+  // Lazy initialisers read directly from storage / media query so the
+  // hook's FIRST render already matches the pre-hydration `noFlash`
+  // script in `__root.tsx`. This kills the one-frame light-flash that
+  // would otherwise appear between React mount and the first `useEffect`.
+  const [mode, setModeState] = useState<ThemeMode>(() => readStoredMode());
+  const [resolved, setResolved] = useState<ResolvedTheme>(() => resolveMode(readStoredMode()));
+  const [accent, setAccentState] = useState<Accent>(() => readStoredAccent());
 
   useEffect(() => {
+    // Re-sync in case storage changed between the lazy init and mount
+    // (e.g. another tab toggled the theme), and ensure the DOM matches.
     const initialMode = readStoredMode();
     setModeState(initialMode);
     setResolved(resolveMode(initialMode));
@@ -102,6 +111,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const onChange = () => {
       const next = resolveMode("auto");
       setResolved(next);
+      // Keep `data-theme` in lockstep with the resolved value so the dark
+      // palette tokens turn over live when the OS theme changes mid-
+      // session (not just `colorScheme`).
+      document.documentElement.setAttribute("data-theme", next);
       document.documentElement.style.colorScheme = next;
     };
     media.addEventListener("change", onChange);
