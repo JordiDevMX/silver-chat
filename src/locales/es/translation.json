@@ -80,7 +80,29 @@
     "languages": {
       "en": "English",
       "es": "Español"
-    }
+    },
+    "profileTitle": "Detalles del perfil",
+    "profileBack": "Volver a ajustes",
+    "displayName": "Nombre para mostrar",
+    "displayNamePlaceholder": "Tu nombre",
+    "username": "Usuario",
+    "usernamePlaceholder": "tu_usuario_unico",
+    "contact": "Contacto",
+    "socialLinks": "Enlaces sociales y web",
+    "socialLinksSub": "Muestra tus perfiles y sitios",
+    "addLink": "Añadir enlace",
+    "addLinkSub": "Conectar otro perfil o sitio",
+    "twitterHandle": "Twitter / X",
+    "websiteLabel": "Sitio web",
+    "securityAccount": "Seguridad y cuenta",
+    "photoActionsTitle": "Foto de perfil",
+    "photoActionsDesc": "Actualiza o elimina tu foto",
+    "viewPhoto": "Ver foto",
+    "takePhoto": "Tomar foto",
+    "takePhotoSub": "Captura con cámara (próximamente)",
+    "uploadFromGallery": "Subir de la galería",
+    "removePhoto": "Eliminar foto",
+    "cancelAction": "Cancelar"
   },
   "chat": {
     "paneHeading": "Chats",
