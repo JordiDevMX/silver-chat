@@ -64,6 +64,13 @@ export interface Chat {
   isGroup?: boolean;
   participants?: User[];
   lastMessageSender?: string;
+  /**
+   * Epoch-milliseconds of the latest message, used by `sortChats` for
+   * chronological ordering within each pinned tier. Optional so the
+   * migration is non-breaking — chats without a `timestamp` sort to
+   * the bottom of their tier (treated as `0`).
+   */
+  timestamp?: number;
 }
 
 // ── Rich content variants for message bubbles ─────────────────────────────
