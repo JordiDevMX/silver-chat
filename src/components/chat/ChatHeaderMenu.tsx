@@ -30,6 +30,12 @@ interface ChatHeaderMenuProps {
    * callback is fired after confirmation; the parent handles routing.
    */
   onLeave?: () => void;
+  /**
+   * Called when the user toggles the pin state via the "Pin to top" /
+   * "Unpin from top" menu item. The parent uses this to mutate the
+   * in-memory chat store so the list re-sorts on the next render.
+   */
+  onPinToggle?: () => void;
 }
 
 /**
@@ -41,7 +47,7 @@ interface ChatHeaderMenuProps {
  * State (muted, delete dialog open) is local to the component so the
  * parent route stays simple.
  */
-export function ChatHeaderMenu({ chat, onLeave }: ChatHeaderMenuProps) {
+export function ChatHeaderMenu({ chat, onLeave, onPinToggle }: ChatHeaderMenuProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [muted, setMuted] = useState(chat.isMuted === true);
@@ -114,9 +120,10 @@ export function ChatHeaderMenu({ chat, onLeave }: ChatHeaderMenuProps) {
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            onSelect={() =>
-              toast.success(chat.isPinned ? t("chat.unpinnedToast") : t("chat.pinnedToast"))
-            }
+            onSelect={() => {
+              onPinToggle?.();
+              toast.success(chat.isPinned ? t("chat.unpinnedToast") : t("chat.pinnedToast"));
+            }}
           >
             <Pin className="h-4 w-4" />
             {chat.isPinned ? t("chat.unpinFromTop") : t("chat.pinToTop")}

@@ -12,6 +12,7 @@ import { CallSessionProvider } from "@/hooks/useCallSession";
 import { SettingsSheet } from "@/components/settings/SettingsSheet";
 import { mockChats } from "@/data/mockChats";
 import { mockCalls } from "@/data/mockCalls";
+import { sortChats } from "@/lib/sortChats";
 import { ChatFAB } from "#/components/chat/ChatListItem";
 
 /**
@@ -54,12 +55,19 @@ function Index() {
   const [search, setSearch] = useState("");
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  // `filteredChats` recomputes on every fresh mount of the Index component
+  // (i.e. whenever the user returns from `/chat/$id`). Because `mockChats`
+  // is a module-level array whose `isPinned` flags may have been mutated in
+  // place by `togglePin()` from the conversation view, the recomputed memo
+  // picks up the new pinned state and `sortChats` re-orders accordingly.
   const filteredChats = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return mockChats;
-    return mockChats.filter(
-      (c) => c.name.toLowerCase().includes(q) || c.lastMessage.toLowerCase().includes(q),
-    );
+    const base = q
+      ? mockChats.filter(
+          (c) => c.name.toLowerCase().includes(q) || c.lastMessage.toLowerCase().includes(q),
+        )
+      : mockChats;
+    return sortChats(base);
   }, [search]);
 
   const filteredCalls = useMemo(() => {

@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { mockChats } from "@/data/mockChats";
+import { mockChats, togglePin } from "@/data/mockChats";
 import { getMessages } from "@/data/mockMessages";
 import { messagesQueryKey } from "@/hooks/useChatMessages";
 import { ChatRouteShell } from "@/components/chat/ChatRouteShell";
 import { ChatLayout } from "@/components/chat/ChatLayout";
 import type { ChatLayoutType } from "@/components/chat/ChatLayout";
 import { SettingsSheet } from "@/components/settings/SettingsSheet";
+import { sortChats } from "@/lib/sortChats";
 import type { Chat } from "@/types/chat";
 
 export const Route = createFileRoute("/chat/$id")({
@@ -37,6 +38,11 @@ interface ChatViewProps {
   chat: Chat;
 }
 
+// Sort once at module level — the chat list in the sidebar is static
+// at this route (no search filter here yet), so the sort doesn't need
+// to re-compute on every render.
+const sortedChats = sortChats(mockChats);
+
 function ChatView() {
   const { chat }: ChatViewProps = Route.useLoaderData();
   const { t } = useTranslation();
@@ -48,7 +54,7 @@ function ChatView() {
     <>
       <ChatRouteShell
         activeChat={chat}
-        chats={mockChats}
+        chats={sortedChats}
         search=""
         onSearchChange={() => {
           // search is local to /chat/$id; the header for the list lives inside
@@ -67,6 +73,7 @@ function ChatView() {
             isPinned={chat.isPinned}
             isMuted={chat.isMuted}
             participants={chat.participants}
+            onPinToggle={() => togglePin(chat.id)}
           />
         }
         aside={

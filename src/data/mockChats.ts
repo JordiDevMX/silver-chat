@@ -5,15 +5,21 @@ import sungJinwooAvatar from "@/assets/images/avatars/mocks/sung-jinwoo.webp?url
 // Most users fall back to the derived-initials avatar; a handful are
 // wired to a real mock image (`sungJinwooAvatar`) or a deliberately
 // broken path to exercise the onError fallback in `<Avatar />`.
+//
+// `timestamp` is the epoch-ms of the latest message — the canonical
+// chronological key used by `sortChats` for Tier-2 ordering within each
+// pinned tier. Values are deliberately descending so the raw array is
+// already roughly chronological, making the sort's Tier-1 pinned-bubble
+// effect dramatically visible (pinned chats scattered later in the
+// array jump to the top after sort).
 export const rawChats: Chat[] = [
   {
     id: "1",
     name: "Blast Puto",
-    // Real profile image (mock asset). Renders via <Avatar /> with
-    // the image variant; onError would fall back to initials.
     avatarUrl: sungJinwooAvatar,
     lastMessage: "Pides mucho we 😡",
     time: "09:42",
+    timestamp: 1752156120000,
     unread: 0,
     isOnline: true,
     isPinned: false,
@@ -31,25 +37,25 @@ export const rawChats: Chat[] = [
     name: "Orion Labs",
     lastMessage: "Deploy successful on the silver mesh.",
     time: "09:15",
+    timestamp: 1752154500000,
     unread: 0,
     isOnline: true,
+    isPinned: true,
     isMuted: false,
     isGroup: false,
     isVerified: false,
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-
     status: "read",
   },
   {
     id: "3",
     name: "Lyra Chen",
-    // Deliberately broken path — exercises the onError fallback in
-    // <Avatar />, which flips to the derived initials.
     avatarUrl: "/avatars/missing/lyra-chen.png",
     lastMessage: "What's your freaking problem?",
     time: "03:20",
+    timestamp: 1752133200000,
     unread: 5,
     isOnline: false,
     isMuted: false,
@@ -65,6 +71,7 @@ export const rawChats: Chat[] = [
     name: "Atlas Crew",
     lastMessage: "Mira: holographic mockups uploaded",
     time: "Yesterday",
+    timestamp: 1752105600000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -73,7 +80,6 @@ export const rawChats: Chat[] = [
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-
     status: "sent",
   },
   {
@@ -81,6 +87,7 @@ export const rawChats: Chat[] = [
     name: "Kairo Sato",
     lastMessage: "thanks, that worked ⚡",
     time: "Yesterday",
+    timestamp: 1752105000000,
     unread: 0,
     isOnline: false,
     isMuted: false,
@@ -96,15 +103,16 @@ export const rawChats: Chat[] = [
     name: "Echo Network",
     lastMessage: "New signal detected in sector 7.",
     time: "Mon",
+    timestamp: 1751932800000,
     unread: 1,
     isOnline: false,
+    isPinned: true,
     isMuted: false,
     isGroup: false,
     isVerified: false,
     isBlocked: false,
     isArchived: false,
     isFavorite: false,
-
     status: "delivered",
   },
   {
@@ -112,6 +120,7 @@ export const rawChats: Chat[] = [
     name: "Rin Akiyama",
     lastMessage: "haha ok see you then",
     time: "Sun",
+    timestamp: 1751846400000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -127,6 +136,7 @@ export const rawChats: Chat[] = [
     name: "Vault 0x9",
     lastMessage: "Key rotation complete.",
     time: "Sun",
+    timestamp: 1751846000000,
     unread: 0,
     isOnline: false,
     isMuted: false,
@@ -142,6 +152,7 @@ export const rawChats: Chat[] = [
     name: "Nova Vega",
     lastMessage: "Sent you the encrypted file",
     time: "09:42",
+    timestamp: 1752156120000,
     unread: 2,
     isOnline: true,
     isPinned: false,
@@ -152,6 +163,7 @@ export const rawChats: Chat[] = [
     name: "Ex-girlfriend",
     lastMessage: "I just put a lawsuit on you, check your email",
     time: "yesterday",
+    timestamp: 1752104000000,
     unread: 2,
     isOnline: false,
     isPinned: false,
@@ -164,6 +176,7 @@ export const rawChats: Chat[] = [
     lastMessage:
       "You should've advised us about it 2 weeks in advance, not now that the project is delayed and we are losing money",
     time: "17/04/2025",
+    timestamp: 1744867200000,
     unread: 5,
     isBlocked: true,
     status: "delivered",
@@ -173,6 +186,7 @@ export const rawChats: Chat[] = [
     name: "Tacos el Güero",
     lastMessage: "en_camino.mp4",
     time: "27/09/2026",
+    timestamp: 1727433600000,
     unread: 1,
     isArchived: true,
     isVerified: true,
@@ -183,6 +197,7 @@ export const rawChats: Chat[] = [
     name: "MysticKarax",
     lastMessage: "lolis.pdf",
     time: "27/09/2026",
+    timestamp: 1752150000000,
     unread: 0,
     isPinned: true,
     isFavorite: true,
@@ -193,6 +208,7 @@ export const rawChats: Chat[] = [
     name: "Discord Group",
     lastMessage: "mas malo que el cigarro",
     time: "08:46 PM",
+    timestamp: 1752180360000,
     unread: 0,
     status: "read",
     fromSelf: false,
@@ -212,6 +228,7 @@ export const rawChats: Chat[] = [
     name: "Tio Salo",
     lastMessage: "It's hard... you know, I-",
     time: "09:42",
+    timestamp: 1752156120000,
     unread: 0,
     status: "draft",
     fromSelf: false,
@@ -221,6 +238,7 @@ export const rawChats: Chat[] = [
     name: "Base Gatitos Felices 🐈🐈",
     lastMessage: "Ahi andan siendo felices",
     time: "08:46 PM",
+    timestamp: 1752180360000,
     unread: 0,
     status: "read",
     fromSelf: true,
@@ -237,22 +255,21 @@ export const rawChats: Chat[] = [
     name: "Gustambo",
     lastMessage: "voice call",
     time: "09:42",
+    timestamp: 1752156120000,
     unread: 1,
+    isPinned: true,
     status: "delivered",
     fromSelf: false,
   },
 
   // ── Scenario audit threads (one scenario per chat) ─────────────────────
-  // Each scenario below owns a unique thread so the layout can be audited
-  // in isolation. lastMessage is the chat-list preview; the rich payload
-  // (attachment / callLog) lives in src/data/mockMessages.ts.
-
   // A — Missed incoming call
   {
     id: "17",
     name: "Nova Vega",
     lastMessage: "Missed voice call",
     time: "9:24 AM",
+    timestamp: 1752152640000,
     unread: 1,
     isOnline: true,
     isMuted: false,
@@ -271,6 +288,7 @@ export const rawChats: Chat[] = [
     name: "Rin Akiyama",
     lastMessage: "No answer",
     time: "8:31 AM",
+    timestamp: 1752149460000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -289,6 +307,7 @@ export const rawChats: Chat[] = [
     name: "Lyra Chen",
     lastMessage: "Voice call · 14:22 mins",
     time: "9:02 AM",
+    timestamp: 1752151320000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -307,6 +326,7 @@ export const rawChats: Chat[] = [
     name: "Atlas Crew",
     lastMessage: "Video call · 22:07 mins",
     time: "Mon",
+    timestamp: 1751932800000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -325,6 +345,7 @@ export const rawChats: Chat[] = [
     name: "DocuPort",
     lastMessage: "📄 Q3_Financial_Report.pdf",
     time: "10:42",
+    timestamp: 1752159720000,
     unread: 0,
     isOnline: false,
     isMuted: false,
@@ -343,6 +364,7 @@ export const rawChats: Chat[] = [
     name: "PixelStream",
     lastMessage: "🖼️ setup_hacker_den.png",
     time: "10:55",
+    timestamp: 1752160500000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -361,6 +383,7 @@ export const rawChats: Chat[] = [
     name: "CineLink",
     lastMessage: "🎥 cinematic_demo.mp4",
     time: "11:02",
+    timestamp: 1752160920000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -379,6 +402,7 @@ export const rawChats: Chat[] = [
     name: "Sticker Lab",
     lastMessage: "👻 [Sticker]",
     time: "11:18",
+    timestamp: 1752161880000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -398,6 +422,7 @@ export const rawChats: Chat[] = [
     name: "Zara Vex",
     lastMessage: "Missed video call",
     time: "3:47 PM",
+    timestamp: 1752167220000,
     unread: 1,
     isOnline: true,
     isMuted: false,
@@ -416,6 +441,7 @@ export const rawChats: Chat[] = [
     name: "Aria Cipher",
     lastMessage: "Video call · 08:34 mins",
     time: "11:08 AM",
+    timestamp: 1752161280000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -434,6 +460,7 @@ export const rawChats: Chat[] = [
     name: "Nyx Protocol",
     lastMessage: "Call rejected",
     time: "4:22 PM",
+    timestamp: 1752169320000,
     unread: 0,
     isOnline: false,
     isMuted: false,
@@ -453,6 +480,7 @@ export const rawChats: Chat[] = [
     name: "Orion Stratos",
     lastMessage: "Missed voice call",
     time: "11:24 AM",
+    timestamp: 1752164640000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -471,6 +499,7 @@ export const rawChats: Chat[] = [
     name: "Vega Solis",
     lastMessage: "Video call · 05:08 mins",
     time: "10:14 AM",
+    timestamp: 1752160440000,
     unread: 0,
     isOnline: true,
     isMuted: false,
@@ -489,6 +518,7 @@ export const rawChats: Chat[] = [
     name: "+1 (415) 555-0142",
     lastMessage: "Missed voice call",
     time: "Yesterday, 4:31 PM",
+    timestamp: 1752121860000,
     unread: 0,
     isOnline: false,
     isMuted: false,
@@ -507,6 +537,7 @@ export const rawChats: Chat[] = [
     name: "Kairo Nexus",
     lastMessage: "Voice call · 08:13 mins",
     time: "Yesterday, 2:17 PM",
+    timestamp: 1752117420000,
     unread: 0,
     isOnline: false,
     isMuted: false,
@@ -525,6 +556,7 @@ export const rawChats: Chat[] = [
     name: "Vault Helix",
     lastMessage: "No answer",
     time: "Sunday, 9:40 AM",
+    timestamp: 1751785200000,
     unread: 0,
     isOnline: false,
     isMuted: false,
@@ -543,6 +575,7 @@ export const rawChats: Chat[] = [
     name: "Echo Cascade",
     lastMessage: "Missed video call",
     time: "Sunday, 1:05 PM",
+    timestamp: 1751810700000,
     unread: 0,
     isOnline: false,
     isMuted: false,
@@ -560,3 +593,16 @@ export const rawChats: Chat[] = [
 export const mockChats = rawChats.filter(
   (c, i, self) => self.findIndex((ch) => ch.id === c.id) === i,
 );
+
+/**
+ * Mutates the `isPinned` flag of the chat with the given id, in place,
+ * inside the shared module-level `mockChats` array. This is the mock-
+ * data equivalent of a backend mutation: since `index.tsx` re-mounts
+ * (and thus re-runs its `useMemo`) when the user navigates back from
+ * `/chat/$id`, the mutated array is re-sorted on arrival without a
+ * global store or context provider.
+ */
+export function togglePin(chatId: string) {
+  const chat = mockChats.find((c) => c.id === chatId);
+  if (chat) chat.isPinned = !chat.isPinned;
+}

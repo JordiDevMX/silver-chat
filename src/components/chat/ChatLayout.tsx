@@ -73,6 +73,13 @@ interface ChatLayoutProps {
   /** Optional aside content — currently unused; reserved for future
    *  right-rail panels (pinned messages, shared media). */
   aside?: React.ReactNode;
+  /**
+   * Called when the user toggles the pin state via the header's ⋯ menu.
+   * The parent uses this to mutate the in-memory chat store so the list
+   * re-sorts on the next render. DM/group only — channels don't support
+   * pinning.
+   */
+  onPinToggle?: () => void;
 }
 
 interface DateGroup {
@@ -167,6 +174,7 @@ export function ChatLayout({
   backTo,
   headerActions,
   aside: _aside,
+  onPinToggle,
 }: ChatLayoutProps) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
@@ -311,7 +319,7 @@ export function ChatLayout({
             </>
           ) : null}
 
-          <ChatHeaderMenu chat={headerChat} />
+          <ChatHeaderMenu chat={headerChat} onPinToggle={onPinToggle} />
         </div>
       </header>
 
