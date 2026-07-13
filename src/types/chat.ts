@@ -1,6 +1,20 @@
 import type { CallType, CallDirection, CallStatus } from "./call";
 
 export type TabKey = "chats" | "updates" | "communities" | "calls";
+
+/**
+ * Top-level chat list filter pills shown above the conversation list.
+ *
+ *  - `all`       : no predicate — renders the complete sorted list.
+ *  - `favorites` : `isFavorite === true` (starred conversations).
+ *  - `unread`    : `unread > 0` (any conversation with pending messages).
+ *  - `groups`    : `isGroup === true` (multi-participant group chats).
+ *
+ * The filter is applied BEFORE the search query and BEFORE `sortChats`,
+ * so pinned priority + chronological ordering remain intact within any
+ * filtered slice.
+ */
+export type ChatFilter = "all" | "favorites" | "unread" | "groups";
 export type MessageStatus =
   | "sent"
   | "delivered"

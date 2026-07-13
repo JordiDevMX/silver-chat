@@ -118,6 +118,13 @@
     "messagesWith": "Mensajes con {{name}}",
     "back": "Volver",
     "chatOptions": "Opciones del chat",
+    "filter": {
+      "label": "Filtrar chats",
+      "all": "Todos",
+      "favorites": "Favoritos",
+      "unread": "Sin leer",
+      "groups": "Grupos"
+    },
     "deletedToast": "Chat eliminado",
     "deletedToastDesc": "La conversación con {{name}} se eliminó de tu dispositivo.",
     "mutedToast": "Notificaciones silenciadas",
