@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { Layout } from "@/components/layout/Layout";
 import { ChatList } from "@/components/chat/ChatList";
+import { ChatFilterBar } from "@/components/chat/ChatFilterBar";
 import { Updates } from "@/components/updates/Updates";
 import { Communities } from "@/components/communities/Communities";
 import { Calls, CallsFAB } from "@/components/calls/Calls";
@@ -12,7 +13,8 @@ import { CallSessionProvider } from "@/hooks/useCallSession";
 import { SettingsSheet } from "@/components/settings/SettingsSheet";
 import { mockChats } from "@/data/mockChats";
 import { mockCalls } from "@/data/mockCalls";
-import { sortChats } from "@/lib/sortChats";
+import { applyChatFilter, sortChats } from "@/lib/sortChats";
+import type { ChatFilter } from "@/types/chat";
 import { ChatFAB } from "#/components/chat/ChatListItem";
 
 /**
@@ -55,20 +57,33 @@ function Index() {
   const [search, setSearch] = useState("");
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  // Top-level chat list filter — drives the horizontal pill bar shown
+  // above the conversation list on the Chats tab. Defaults to "all" so
+  // the unfiltered pipeline renders first; the pill bar's `onChange`
+  // mutates this state and the `filteredChats` memo recomputes.
+  const [activeFilter, setActiveFilter] = useState<ChatFilter>("all");
+
   // `filteredChats` recomputes on every fresh mount of the Index component
   // (i.e. whenever the user returns from `/chat/$id`). Because `mockChats`
   // is a module-level array whose `isPinned` flags may have been mutated in
   // place by `togglePin()` from the conversation view, the recomputed memo
   // picks up the new pinned state and `sortChats` re-orders accordingly.
+  //
+  // Pipeline order: search filter → chat filter pill → sort (pinned + chronological).
+  // This stacks cleanly: with "Unread" active AND a search query, only
+  // chats matching BOTH predicates make it through, then pinned priority
+  // and chronological ordering are applied last so they remain intact
+  // within any filtered slice.
   const filteredChats = useMemo(() => {
     const q = search.trim().toLowerCase();
-    const base = q
+    let base = q
       ? mockChats.filter(
           (c) => c.name.toLowerCase().includes(q) || c.lastMessage.toLowerCase().includes(q),
         )
       : mockChats;
+    if (activeFilter !== "all") base = applyChatFilter(base, activeFilter);
     return sortChats(base);
-  }, [search]);
+  }, [search, activeFilter]);
 
   const filteredCalls = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -97,7 +112,12 @@ function Index() {
         FAB={activeTab === "calls" ? <CallsFAB /> : activeTab === "chats" ? <ChatFAB /> : null}
         onOpenSettings={() => setSettingsOpen(true)}
       >
-        {activeTab === "chats" && <ChatList chats={filteredChats} />}
+        {activeTab === "chats" && (
+          <>
+            <ChatFilterBar active={activeFilter} onChange={setActiveFilter} />
+            <ChatList chats={filteredChats} />
+          </>
+        )}
         {activeTab === "updates" && <Updates search={search} />}
         {activeTab === "communities" && (
           <Communities search={search} onOpen={() => void 0} />

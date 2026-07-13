@@ -28,7 +28,7 @@ export const rawChats: Chat[] = [
     isVerified: false,
     isBlocked: false,
     isArchived: false,
-    isFavorite: false,
+    isFavorite: true,
     status: "delivered",
     fromSelf: true,
   },
@@ -63,7 +63,7 @@ export const rawChats: Chat[] = [
     isVerified: false,
     isBlocked: false,
     isArchived: false,
-    isFavorite: false,
+    isFavorite: true,
     status: "delivered",
   },
   {
